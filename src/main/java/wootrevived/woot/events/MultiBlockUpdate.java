@@ -47,10 +47,10 @@ public class MultiBlockUpdate {
     @SubscribeEvent
     public static void onChunkLoad(ChunkWatchEvent.Sent event){
         ServerLevel level = event.getLevel();
-        level.getServer().execute(() -> event.getChunk().getBlockEntities().values().stream()
-                .filter(MultiBlockFactoryEntity.class::isInstance)
-                .map(MultiBlockFactoryEntity.class::cast)
-                .forEach(entity -> entity.updatePattern(level)));
+        for(BlockEntity be : event.getChunk().getBlockEntities().values()){
+            if(be instanceof MultiBlockFactoryEntity entity)
+                entity.updatePattern(level);
+        }
     }
 
     @SubscribeEvent
@@ -67,7 +67,8 @@ public class MultiBlockUpdate {
     }
 
     private static void updateMultiblocksPattern(ServerLevel level, List<BlockPos> positions){
-        double minX = 0, minY = 0, minZ = 0, maxX = 0, maxY = 0, maxZ = 0;
+        double minX = Double.POSITIVE_INFINITY, minY = Double.POSITIVE_INFINITY, minZ = Double.POSITIVE_INFINITY,
+               maxX = Double.NEGATIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
         for(BlockPos pos : positions){
             AABB area = Patterns.getSearchAABB(pos);
             if(minX > area.minX) minX = area.minX;
