@@ -33,6 +33,10 @@ public class WootTags {
         public static final String YELLOW_TAG = "Yellow";
         public static final String BLUE_TAG = "Blue";
         public static final String WHITE_TAG = "White";
+        public static final String RED_INVENTORY_TAG = "RedInventory";
+        public static final String YELLOW_INVENTORY_TAG = "YellowInventory";
+        public static final String BLUE_INVENTORY_TAG = "BlueInventory";
+        public static final String WHITE_INVENTORY_TAG = "WhiteInventory";
     }
 
     public static class DirectionProperties {

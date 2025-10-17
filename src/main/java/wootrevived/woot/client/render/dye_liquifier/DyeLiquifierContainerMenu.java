@@ -44,7 +44,10 @@ public class DyeLiquifierContainerMenu extends WootContainerMenu {
     }
 
     private void createMachineInputSlots(IItemHandler machineInventory){
-        this.addSlot(new SlotItemHandler(machineInventory, 0, 40, 39));
+        this.addSlot(new SlotItemHandler(machineInventory, 0, 31, 29));
+        this.addSlot(new SlotItemHandler(machineInventory, 1, 51, 29));
+        this.addSlot(new SlotItemHandler(machineInventory, 2, 31, 49));
+        this.addSlot(new SlotItemHandler(machineInventory, 3, 51, 49));
     }
 
     private void createPlayerInventory(Inventory playerInventory) {
@@ -71,13 +74,13 @@ public class DyeLiquifierContainerMenu extends WootContainerMenu {
         int startIndex;
         int endIndex;
 
-        final int MACHINE_INV_SIZE = 1;
+        final int MACHINE_INV_SIZE = 4;
         final int PLAYER_INV_SIZE = 27;
         final int TOOLBAR_INV_SIZE = 9;
 
         if (index >= MACHINE_INV_SIZE) {
             // player slot
-            if (DyeLiquifierRecipe.Validator.isIngredientValid(stack)) {
+            if (DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.ANY)) {
                 // -> machine
                 startIndex = 0;
                 endIndex = MACHINE_INV_SIZE;

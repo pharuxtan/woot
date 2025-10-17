@@ -240,7 +240,10 @@ public class English extends LanguageProvider {
 
         add("info.woot_revived.enchanted_liquifier.input", "Enchanted Book Input");
         add("info.woot_revived.enchanted_liquifier.output", "Enchanted Fluid Output");
-        add("info.woot_revived.dye_liquifier.input", "Dye Input");
+        add("info.woot_revived.dye_liquifier.red_input", "Red Dye Input");
+        add("info.woot_revived.dye_liquifier.yellow_input", "Yellow Dye Input");
+        add("info.woot_revived.dye_liquifier.blue_input", "Blue Dye Input");
+        add("info.woot_revived.dye_liquifier.white_input", "White Dye Input");
         add("info.woot_revived.dye_liquifier.output", "Pure Dye Output");
 
         add("info.woot_revived.factory.invalid", "INVALID");

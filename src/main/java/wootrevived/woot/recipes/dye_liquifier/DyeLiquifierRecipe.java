@@ -1,5 +1,6 @@
 package wootrevived.woot.recipes.dye_liquifier;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -104,7 +105,7 @@ public class DyeLiquifierRecipe implements Recipe<WootContainer> {
         maxMultiplier = 0;
         for(Recipe<?> recipe : manager.getRecipes()) {
             if(recipe instanceof DyeLiquifierRecipe dyeLiquifierRecipe) {
-                Validator.add(dyeLiquifierRecipe.getIngredient());
+                Validator.add(dyeLiquifierRecipe.getIngredient(), dyeLiquifierRecipe);
                 if(maxMultiplier < dyeLiquifierRecipe.getInternalRed()) maxMultiplier = dyeLiquifierRecipe.getInternalRed();
                 if(maxMultiplier < dyeLiquifierRecipe.getInternalYellow()) maxMultiplier = dyeLiquifierRecipe.getInternalYellow();
                 if(maxMultiplier < dyeLiquifierRecipe.getInternalBlue()) maxMultiplier = dyeLiquifierRecipe.getInternalBlue();
@@ -114,23 +115,38 @@ public class DyeLiquifierRecipe implements Recipe<WootContainer> {
     }
 
     public static class Validator {
-        private static final List<Ingredient> validIngredients = new ArrayList<>();
+        private static final List<Pair<Ingredient, DyeLiquifierRecipe>> validIngredients = new ArrayList<>();
 
-        public static boolean isIngredientValid(ItemStack item){
-            for(Ingredient ingredient : validIngredients){
-                if(ingredient.test(item))
-                    return true;
+        public static boolean isIngredientValid(ItemStack item, Colors colors) {
+            for(Pair<Ingredient, DyeLiquifierRecipe> ingredient : validIngredients){
+                if(ingredient.getFirst().test(item)){
+                    if(colors == Colors.ANY)
+                        return true;
+                    DyeLiquifierRecipe recipe = ingredient.getSecond();
+                    return (colors == Colors.RED && recipe.getInternalRed() > 0.0f) ||
+                            (colors == Colors.YELLOW && recipe.getInternalYellow() > 0.0f) ||
+                            (colors == Colors.BLUE && recipe.getInternalBlue() > 0.0f) ||
+                            (colors == Colors.WHITE && recipe.getInternalWhite() > 0.0f);
+                }
             }
             return false;
         }
 
-        protected static void add(Ingredient ingredient){
-            validIngredients.add(ingredient);
+        protected static void add(Ingredient ingredient, DyeLiquifierRecipe recipe){
+            validIngredients.add(Pair.of(ingredient, recipe));
         }
 
         protected static void clear(){
             validIngredients.clear();
         }
+    }
+
+    public enum Colors {
+        RED,
+        YELLOW,
+        BLUE,
+        WHITE,
+        ANY
     }
 
     @Override
