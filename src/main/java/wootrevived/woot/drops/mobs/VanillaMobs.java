@@ -13,6 +13,7 @@ public class VanillaMobs {
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.SPIDER, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.STRAY, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOMBIE, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
+        registration.registerFactoryMob(new WootFactoryMob<>(EntityType.GIANT, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.SKELETON, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.DROWNED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
