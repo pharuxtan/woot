@@ -6,6 +6,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import wootrevived.woot.datagen.languages.English;
+import wootrevived.woot.datagen.languages.SimplifiedChinese;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ public class Languages implements DataProvider {
 
     public Languages(PackOutput packOutput) {
         languages = List.of(
-                new English(packOutput)
+                new English(packOutput),
+                new SimplifiedChinese(packOutput)
         );
     }
 
