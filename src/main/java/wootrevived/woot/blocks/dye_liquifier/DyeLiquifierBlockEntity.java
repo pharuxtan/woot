@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.client.render.dye_liquifier.DyeLiquifierContainerMenu;
@@ -37,9 +38,7 @@ import wootrevived.woot.util.handlers.WootItemHandlerWrapper;
 import wootrevived.woot.util.handlers.WootItemStackHandler;
 import wootrevived.woot.util.recipes.WootContainer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements MenuProvider {
@@ -48,14 +47,17 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     private int blue = 0;
     private int white = 0;
 
-    private final List<Map<MachineSide, MachineSideProperty>> directionsProperties = new ArrayList<>(2);
+    private final List<Map<MachineSide, MachineSideProperty>> directionsProperties = new ArrayList<>(5);
 
     public static final int OUTPUT_FLUID_PROPERTY = 0;
-    public static final int INGREDIENT_PROPERTY = 1;
+    public static final int RED_INGREDIENT_PROPERTY = 1;
+    public static final int YELLOW_INGREDIENT_PROPERTY = 2;
+    public static final int BLUE_INGREDIENT_PROPERTY = 3;
+    public static final int WHITE_INGREDIENT_PROPERTY = 4;
 
     public DyeLiquifierBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.DYE_LIQUIFIER_BLOCK_ENTITY.get(), pos, state);
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < 5; i++){
             Map<MachineSide, MachineSideProperty> properties = Maps.newEnumMap(MachineSide.class);
             for(MachineSide side : MachineSide.values()){
                 properties.put(side, MachineSideProperty.ENABLED);
@@ -81,7 +83,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         tickFluid(outputTankHandler, pos, DyeLiquifierConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getOutputFluidProperty());
     }
 
-    public final WootItemStackHandler inventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemStackHandler redInventoryHandler = new WootItemStackHandler(false) {
         @Override
         protected void onContentsChanged(int slot) {
             DyeLiquifierBlockEntity.this.onContentsChanged(slot);
@@ -90,16 +92,68 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return DyeLiquifierRecipe.Validator.isIngredientValid(stack);
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.RED);
+        }
+    };
+
+    public final WootItemStackHandler yellowInventoryHandler = new WootItemStackHandler(false) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            DyeLiquifierBlockEntity.this.onContentsChanged(slot);
+            setChanged();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.YELLOW);
+        }
+    };
+
+    public final WootItemStackHandler blueInventoryHandler = new WootItemStackHandler(false) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            DyeLiquifierBlockEntity.this.onContentsChanged(slot);
+            setChanged();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.BLUE);
+        }
+    };
+
+    public final WootItemStackHandler whiteInventoryHandler = new WootItemStackHandler(false) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            DyeLiquifierBlockEntity.this.onContentsChanged(slot);
+            setChanged();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.WHITE);
         }
     };
 
     public static int INPUT_SLOT = 0;
-    public IItemHandler getInventory() { return inventoryHandler; }
+    private final IItemHandler allSlotsHandler = new CombinedInvWrapper(redInventoryHandler, yellowInventoryHandler, blueInventoryHandler, whiteInventoryHandler);
+    public IItemHandler getInventory() { return allSlotsHandler; }
 
     public record Properties(DyeLiquifierBlockEntity entity, MachineSide machineSide){
-        public MachineSideProperty getIngredientProperty(){
-            return entity.directionsProperties.get(INGREDIENT_PROPERTY).get(machineSide);
+        public MachineSideProperty getRedIngredientProperty(){
+            return entity.directionsProperties.get(RED_INGREDIENT_PROPERTY).get(machineSide);
+        }
+
+        public MachineSideProperty getYellowIngredientProperty(){
+            return entity.directionsProperties.get(YELLOW_INGREDIENT_PROPERTY).get(machineSide);
+        }
+
+        public MachineSideProperty getBlueIngredientProperty(){
+            return entity.directionsProperties.get(BLUE_INGREDIENT_PROPERTY).get(machineSide);
+        }
+
+        public MachineSideProperty getWhiteIngredientProperty(){
+            return entity.directionsProperties.get(WHITE_INGREDIENT_PROPERTY).get(machineSide);
         }
 
         public MachineSideProperty getOutputFluidProperty(){
@@ -116,7 +170,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         Properties properties = blockEntity.getProperties(side);
 
         return new WootItemHandlerWrapper()
-                .addHandler(blockEntity.inventoryHandler, properties::getIngredientProperty);
+                .addHandler(blockEntity.redInventoryHandler, properties::getRedIngredientProperty)
+                .addHandler(blockEntity.blueInventoryHandler, properties::getBlueIngredientProperty)
+                .addHandler(blockEntity.yellowInventoryHandler, properties::getYellowIngredientProperty)
+                .addHandler(blockEntity.whiteInventoryHandler, properties::getWhiteIngredientProperty);
     }
 
     public static IFluidHandler getFluidHandlerCapability(DyeLiquifierBlockEntity blockEntity, Direction side){
@@ -131,7 +188,19 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         super.load(tag);
 
         if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            inventoryHandler.deserializeNBT(tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
+            redInventoryHandler.deserializeNBT(tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
+
+        if(tag.contains(WootTags.DyeLiquifier.RED_INVENTORY_TAG))
+            redInventoryHandler.deserializeNBT(tag.getCompound(WootTags.DyeLiquifier.RED_INVENTORY_TAG));
+
+        if(tag.contains(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG))
+            yellowInventoryHandler.deserializeNBT(tag.getCompound(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG));
+
+        if(tag.contains(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG))
+            blueInventoryHandler.deserializeNBT(tag.getCompound(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG));
+
+        if(tag.contains(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG))
+            whiteInventoryHandler.deserializeNBT(tag.getCompound(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG));
 
         if(tag.contains(WootTags.DyeLiquifier.INTERNAL_DYE_TANKS_TAG)){
             CompoundTag dyeTag = tag.getCompound(WootTags.DyeLiquifier.INTERNAL_DYE_TANKS_TAG);
@@ -146,7 +215,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     public void saveAdditional(@NotNull CompoundTag tag){
         super.saveAdditional(tag);
 
-        tag.put(WootTags.INPUT_INVENTORY_TAG, inventoryHandler.serializeNBT());
+        tag.put(WootTags.DyeLiquifier.RED_INVENTORY_TAG, redInventoryHandler.serializeNBT());
+        tag.put(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG, yellowInventoryHandler.serializeNBT());
+        tag.put(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG, blueInventoryHandler.serializeNBT());
+        tag.put(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG, whiteInventoryHandler.serializeNBT());
 
         CompoundTag dyeTag = new CompoundTag();
         dyeTag.putInt(WootTags.DyeLiquifier.RED_TAG, red);
@@ -158,11 +230,31 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     public void dropContents(Level level, BlockPos pos) {
         List<ItemStack> drops = new ArrayList<>();
-        ItemStack itemStack = inventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+
+        ItemStack itemStack = redInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            inventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            redInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
         }
+
+        itemStack = yellowInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        if (!itemStack.isEmpty()) {
+            drops.add(itemStack);
+            yellowInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+        }
+
+        itemStack = blueInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        if (!itemStack.isEmpty()) {
+            drops.add(itemStack);
+            blueInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+        }
+
+        itemStack = whiteInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        if (!itemStack.isEmpty()) {
+            drops.add(itemStack);
+            whiteInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+        }
+
         super.dropContents(drops);
     }
 
@@ -193,7 +285,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         }
     }
 
-    private DyeLiquifierRecipe recipe = null;
+    private final Map<Integer, DyeLiquifierRecipe> recipes = new HashMap<>();
 
     @Override
     protected boolean hasEnergy() { return energyHandler.getEnergyStored() > 0; }
@@ -205,12 +297,12 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     @Override
     protected void clearRecipe() {
-        recipe = null;
+        recipes.clear();
     }
 
     @Override
     protected int getRecipeEnergy() {
-        return recipe != null ? recipe.getEnergy() : 0;
+        return recipes.values().stream().mapToInt(DyeLiquifierRecipe::getEnergy).sum();
     }
 
     private void generatePureFluid() {
@@ -226,31 +318,63 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     @Override
     protected void processFinished() {
-        if (recipe == null)
+        if(recipes.values().stream().allMatch(Objects::isNull))
             getRecipe();
-        if (recipe == null) {
+        if (recipes.values().stream().allMatch(Objects::isNull)) {
             processOff();
             return;
         }
 
-        DyeLiquifierRecipe recipe = this.recipe;
-
-        red += recipe.getRed();
-        yellow += recipe.getYellow();
-        blue += recipe.getBlue();
-        white += recipe.getWhite();
+        for(DyeLiquifierRecipe recipe : this.recipes.values()){
+            red += recipe.getRed();
+            yellow += recipe.getYellow();
+            blue += recipe.getBlue();
+            white += recipe.getWhite();
+        }
 
         red = Mth.clamp(red, 0, DyeLiquifierConfig.RED_TANK_CAPACITY.get());
         yellow = Mth.clamp(yellow, 0, DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get());
         blue = Mth.clamp(blue, 0, DyeLiquifierConfig.BLUE_TANK_CAPACITY.get());
         white = Mth.clamp(white, 0, DyeLiquifierConfig.WHITE_TANK_CAPACITY.get());
 
-        ItemStack item = inventoryHandler.getStackInSlot(INPUT_SLOT);
-        if(item.getItem().hasCraftingRemainingItem(item)){
-            inventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-        } else {
-            int ingredientAmount = recipe.ingredientCount(inventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-            inventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+        if(this.recipes.containsKey(0)){
+            ItemStack item = redInventoryHandler.getStackInSlot(INPUT_SLOT);
+            if(item.getItem().hasCraftingRemainingItem(item)){
+                redInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
+            } else {
+                int ingredientAmount = recipes.get(0).ingredientCount(redInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
+                redInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            }
+        }
+
+        if(this.recipes.containsKey(1)){
+            ItemStack item = yellowInventoryHandler.getStackInSlot(INPUT_SLOT);
+            if(item.getItem().hasCraftingRemainingItem(item)){
+                yellowInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
+            } else {
+                int ingredientAmount = recipes.get(1).ingredientCount(yellowInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
+                yellowInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            }
+        }
+
+        if(this.recipes.containsKey(2)){
+            ItemStack item = blueInventoryHandler.getStackInSlot(INPUT_SLOT);
+            if(item.getItem().hasCraftingRemainingItem(item)){
+                blueInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
+            } else {
+                int ingredientAmount = recipes.get(2).ingredientCount(blueInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
+                blueInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            }
+        }
+
+        if(this.recipes.containsKey(3)){
+            ItemStack item = whiteInventoryHandler.getStackInSlot(INPUT_SLOT);
+            if(item.getItem().hasCraftingRemainingItem(item)){
+                whiteInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
+            } else {
+                int ingredientAmount = recipes.get(3).ingredientCount(whiteInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
+                whiteInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            }
         }
 
         setChanged();
@@ -262,15 +386,49 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
             return false;
 
         getRecipe();
-        return recipe != null && canStoreInternal(recipe);
+        if(recipes.values().stream().allMatch(Objects::isNull))
+            return false;
+
+        int red = 0, yellow = 0, blue = 0, white = 0;
+        for(DyeLiquifierRecipe recipe : this.recipes.values()){
+            red += recipe.getRed();
+            yellow += recipe.getYellow();
+            blue += recipe.getBlue();
+            white += recipe.getWhite();
+        }
+
+        return canStoreInternal(red, yellow, blue, white);
     }
     //endregion
 
     private void getRecipe() {
         RecipeHolder<DyeLiquifierRecipe> recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
-                new WootContainer(Either.left(inventoryHandler.getStackInSlot(INPUT_SLOT))),
+                new WootContainer(Either.left(redInventoryHandler.getStackInSlot(INPUT_SLOT))),
                 level).orElse(null);
-        recipe = recipeHolder == null ? null : recipeHolder.value();
+
+        if(recipeHolder != null) recipes.put(0, recipeHolder.value());
+        else recipes.remove(0);
+
+        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+                new WootContainer(Either.left(yellowInventoryHandler.getStackInSlot(INPUT_SLOT))),
+                level).orElse(null);
+
+        if(recipeHolder != null) recipes.put(1, recipeHolder.value());
+        else recipes.remove(1);
+
+        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+                new WootContainer(Either.left(blueInventoryHandler.getStackInSlot(INPUT_SLOT))),
+                level).orElse(null);
+
+        if(recipeHolder != null) recipes.put(2, recipeHolder.value());
+        else recipes.remove(2);
+
+        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+                new WootContainer(Either.left(whiteInventoryHandler.getStackInSlot(INPUT_SLOT))),
+                level).orElse(null);
+
+        if(recipeHolder != null) recipes.put(3, recipeHolder.value());
+        else recipes.remove(3);
     }
 
     public int getRed() { return this.red; }
@@ -278,16 +436,16 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     public int getBlue() { return this.blue; }
     public int getWhite() { return this.white; }
 
-    private boolean canStoreInternal(DyeLiquifierRecipe recipe) {
-        boolean redHasSpace = recipe.getRed() + red <= DyeLiquifierConfig.RED_TANK_CAPACITY.get();
-        boolean yellowHasSpace = recipe.getYellow() + yellow <= DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get();
-        boolean blueHasSpace = recipe.getBlue() + blue <= DyeLiquifierConfig.BLUE_TANK_CAPACITY.get();
-        boolean whiteHasSpace = recipe.getWhite() + white <= DyeLiquifierConfig.WHITE_TANK_CAPACITY.get();
+    private boolean canStoreInternal(int recipeRed, int recipeYellow, int recipeBlue, int recipeWhite) {
+        boolean redHasSpace = recipeRed + red <= DyeLiquifierConfig.RED_TANK_CAPACITY.get();
+        boolean yellowHasSpace = recipeYellow + yellow <= DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get();
+        boolean blueHasSpace = recipeBlue + blue <= DyeLiquifierConfig.BLUE_TANK_CAPACITY.get();
+        boolean whiteHasSpace = recipeWhite + white <= DyeLiquifierConfig.WHITE_TANK_CAPACITY.get();
 
-        return recipe.getRed() > 0 && redHasSpace ||
-                recipe.getYellow() > 0 && yellowHasSpace ||
-                recipe.getBlue() > 0 && blueHasSpace ||
-                recipe.getWhite() > 0 && whiteHasSpace;
+        return recipeRed > 0 && redHasSpace ||
+                recipeYellow > 0 && yellowHasSpace ||
+                recipeBlue > 0 && blueHasSpace ||
+                recipeWhite > 0 && whiteHasSpace;
     }
 
     private boolean canCreateOutput() {
