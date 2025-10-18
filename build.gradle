@@ -17,8 +17,6 @@ archivesBaseName = "woot-revived"
 def buildVersion = "${mod_version}"
 version = "${mc_version}-${buildVersion}"
 
-minecraft.accessTransformers.file file('src/main/resources/META-INF/accesstransformer.cfg')
-
 runs {
     configureEach {
         workingDirectory project.file('run')
