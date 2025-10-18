@@ -1,5 +1,6 @@
 package wootrevived.woot.util.factory;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -18,6 +19,8 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     private final Tier factoryTier;
     private final WootFactoryMob<?> factoryMob;
     private CompoundTag factoryMobTag;
+    private final ServerLevel heartLevel;
+    private final BlockPos heartPos;
 
     private ItemStack mainHandItem = Items.NETHERITE_SWORD.getDefaultInstance();
     private ItemStack offHandItem = ItemStack.EMPTY;
@@ -27,10 +30,12 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     private boolean doSimulateChargedCreeper = false;
     private ResourceKey<Level> dimension = Level.OVERWORLD;
 
-    public WootFactorySpawnProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag) {
+    public WootFactorySpawnProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, ServerLevel heartLevel, BlockPos heartPos) {
         this.factoryTier = factoryTier;
         this.factoryMob = factoryMob;
         this.factoryMobTag = factoryMobTag;
+        this.heartLevel = heartLevel;
+        this.heartPos = heartPos;
     }
 
     @Override
@@ -138,5 +143,15 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     @Override
     public void setDimension(@NotNull ResourceKey<Level> dimension) {
         this.dimension = dimension;
+    }
+
+    @Override
+    public @NotNull ServerLevel getHeartLevel() {
+        return heartLevel;
+    }
+
+    @Override
+    public @NotNull BlockPos getHeartPos() {
+        return heartPos;
     }
 }

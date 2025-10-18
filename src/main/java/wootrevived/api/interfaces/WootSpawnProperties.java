@@ -1,5 +1,6 @@
 package wootrevived.api.interfaces;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -59,5 +60,12 @@ public interface WootSpawnProperties {
 
     @ApiStatus.AvailableSince("1.0.6")
     @NotNull ResourceKey<Level> getDimension();
+    @ApiStatus.AvailableSince("1.0.6")
     void setDimension(@NotNull ResourceKey<Level> dimension);
+
+    @ApiStatus.AvailableSince("1.1.4")
+    @NotNull ServerLevel getHeartLevel();
+
+    @ApiStatus.AvailableSince("1.1.4")
+    @NotNull BlockPos getHeartPos();
 }

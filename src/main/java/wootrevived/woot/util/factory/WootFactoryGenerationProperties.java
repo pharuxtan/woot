@@ -1,5 +1,6 @@
 package wootrevived.woot.util.factory;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -14,15 +15,19 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     private final Tier factoryTier;
     private final WootFactoryMob<?> factoryMob;
     private final CompoundTag factoryMobTag;
+    private final ServerLevel heartLevel;
+    private final BlockPos heartPos;
 
     private int spawnRate;
     private int vitalityFuelCost;
     private int numberOfSimulations = 1;
 
-    public WootFactoryGenerationProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, int spawnRate, int vitalityFuelCost){
+    public WootFactoryGenerationProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, ServerLevel heartLevel, BlockPos heartPos, int spawnRate, int vitalityFuelCost){
         this.factoryTier = factoryTier;
         this.factoryMob = factoryMob;
         this.factoryMobTag = factoryMobTag;
+        this.heartLevel = heartLevel;
+        this.heartPos = heartPos;
 
         this.spawnRate = spawnRate;
         this.vitalityFuelCost = vitalityFuelCost;
@@ -86,5 +91,15 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     @Override
     public @NotNull CompoundTag getFactoryMobTag() {
         return factoryMobTag.copy();
+    }
+
+    @Override
+    public @NotNull ServerLevel getHeartLevel() {
+        return heartLevel;
+    }
+
+    @Override
+    public @NotNull BlockPos getHeartPos() {
+        return heartPos;
     }
 }

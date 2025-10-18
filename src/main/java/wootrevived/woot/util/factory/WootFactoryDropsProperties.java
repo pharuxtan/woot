@@ -1,5 +1,6 @@
 package wootrevived.woot.util.factory;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -120,5 +121,15 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     @Override
     public @NotNull ResourceKey<Level> getDimension() {
         return wootSpawnProperties.getDimension();
+    }
+
+    @Override
+    public @NotNull ServerLevel getHeartLevel() {
+        return wootSpawnProperties.getHeartLevel();
+    }
+
+    @Override
+    public @NotNull BlockPos getHeartPos() {
+        return wootSpawnProperties.getHeartPos();
     }
 }
