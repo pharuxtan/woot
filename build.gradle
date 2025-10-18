@@ -23,7 +23,6 @@ version = "${mc_version}-${buildVersion}"
 
 minecraft {
     mappings channel: 'official', version: "${mc_version}"
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         configureEach {

@@ -1,12 +1,24 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "wootrevived.woot.mixin",
+  "package": "wootrevived.woot.mixins.impl",
   "refmap": "woot_revived.mixins.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "CreeperMixin",
+    "EndDragonFightMixin",
+    "EnderDragonMixin",
+    "GuiGraphicsMixin",
+    "LevelMixin",
     "LivingEntityMixin",
-    "EnderDragonMixin"
-  ]
+    "PersistentEntitySectionManagerMixin",
+    "ServerLevelMixin"
+  ],
+  "client": [
+    "SpriteSourcesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

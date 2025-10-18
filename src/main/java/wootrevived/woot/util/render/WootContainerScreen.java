@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import wootrevived.woot.Woot;
+import wootrevived.woot.mixins.impl.GuiGraphicsMixin;
 import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.common.RedstoneMode;
@@ -409,12 +410,12 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
 
     public static void renderColorBarBg(@NotNull GuiGraphics gui, int x, int y, float[] color){
         gui.blit(GUI, x, y, 177, 57, 56, 11);
-        gui.innerBlit(GUI, x + 3, x + 53, y + 3, y + 8, 0, 180F / 256F, 230F / 256F, 69F / 256F, 74F / 256F, color[0], color[1], color[2], 1F);
+        ((GuiGraphicsMixin) gui).woot$innerBlit(GUI, x + 3, x + 53, y + 3, y + 8, 0, 180F / 256F, 230F / 256F, 69F / 256F, 74F / 256F, color[0], color[1], color[2], 1F);
     }
 
     public static void renderColorBar(@NotNull GuiGraphics gui, int x, int y, int fill, int capacity, float[] color){
         int fillWidth = Mth.clamp(fill * 50 / capacity, 0, 50);
-        gui.innerBlit(GUI, x + 3, x + 3 + fillWidth, y + 3, y + 8, 0, 180F / 256F, (180F + (float)fillWidth) / 256F, 75F / 256F, 80F / 256F, color[0], color[1], color[2], 1F);
+        ((GuiGraphicsMixin) gui).woot$innerBlit(GUI, x + 3, x + 3 + fillWidth, y + 3, y + 8, 0, 180F / 256F, (180F + (float)fillWidth) / 256F, 75F / 256F, 80F / 256F, color[0], color[1], color[2], 1F);
     }
 
     public void renderColorBarTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName) {

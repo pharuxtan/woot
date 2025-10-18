@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
-import net.minecraft.client.renderer.texture.atlas.SpriteSources;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
@@ -18,6 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.woot.Woot;
+import wootrevived.woot.mixins.impl.SpriteSourcesMixin;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 
@@ -36,7 +36,7 @@ public class FactoryUpgradeDynamicSpriteSource implements SpriteSource {
 
         Atlas() {
             Codec<FactoryUpgradeDynamicSpriteSource> CODEC = Codec.unit(() -> new FactoryUpgradeDynamicSpriteSource(this));
-            type = SpriteSources.register(Woot.MOD_ID + ":" + BlocksRegistry.FACTORY_UPGRADE_TAG, CODEC);
+            type = SpriteSourcesMixin.woot$register(Woot.MOD_ID + ":" + BlocksRegistry.FACTORY_UPGRADE_TAG, CODEC);
         }
 
         private static void register() {}
