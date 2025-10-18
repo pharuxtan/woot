@@ -1,9 +1,11 @@
 package wootrevived.api.interfaces;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
@@ -42,4 +44,10 @@ public interface WootGenerationProperties {
     @NotNull Tier getFactoryTier();
     @NotNull WootFactoryMob<?> getFactoryMob();
     @NotNull CompoundTag getFactoryMobTag();
+
+    @ApiStatus.AvailableSince("1.1.4")
+    @NotNull ServerLevel getHeartLevel();
+
+    @ApiStatus.AvailableSince("1.1.4")
+    @NotNull BlockPos getHeartPos();
 }

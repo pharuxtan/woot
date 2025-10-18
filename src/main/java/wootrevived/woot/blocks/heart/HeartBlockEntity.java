@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -215,7 +216,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
     }
 
     private @NotNull WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, CompoundTag mobTag) {
-        WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobTag, mob.getSpawnTickRate(), mob.getVitalityFuelCost());
+        WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos(), mob.getSpawnTickRate(), mob.getVitalityFuelCost());
         for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
             if(upgradeBlockEntity == null) continue;
             WootUpgradeItem upgradeItem = upgradeBlockEntity.getUpgradeItem();
@@ -245,7 +246,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
         List<FluidStack> unconcatFluids = new ArrayList<>();
 
         for (int i = 0; i < fakeSpawner.getNumberOfSimulations(); i++) {
-            WootSpawnProperties spawnProperties = new WootFactorySpawnProperties(tier, mob, mobTag);
+            WootSpawnProperties spawnProperties = new WootFactorySpawnProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos());
 
             for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
                 if(upgradeBlockEntity == null) continue;
