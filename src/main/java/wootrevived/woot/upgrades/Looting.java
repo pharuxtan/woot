@@ -1,6 +1,7 @@
 package wootrevived.woot.upgrades;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ public class Looting extends WootUpgradeItem {
     public Looting(int level) { super(new Properties(), level); }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
         ItemStack itemStack = properties.getMainHandItem();
 
         if(itemStack.getItem().isEnchantable(itemStack))

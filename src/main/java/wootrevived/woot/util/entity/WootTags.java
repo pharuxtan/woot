@@ -17,6 +17,7 @@ public class WootTags {
     public static class Factory {
         public static final String FACTORY_TIER = "Tier";
         public static final String UPGRADE_ITEM = "UpgradeItem";
+        public static final String UPGRADE_ITEM_NBT = "UpgradeItemNBT";
 
         public static final String NUMBER_OF_SIMULATIONS = "NumOfSim";
         public static final String VITALITY_COST = "VitalityCost";

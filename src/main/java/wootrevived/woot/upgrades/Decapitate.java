@@ -1,6 +1,7 @@
 package wootrevived.woot.upgrades;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +27,7 @@ public class Decapitate extends WootUpgradeItem {
     public Decapitate(int level) { super(new Properties(), level); }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -40,7 +41,7 @@ public class Decapitate extends WootUpgradeItem {
     );
 
     @Override
-    public void modifyDrops(WootDropsProperties properties) {
+    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){

@@ -1,6 +1,7 @@
 package wootrevived.woot.upgrades;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -29,7 +30,7 @@ public class Dimension extends WootUpgradeItem {
     }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
         properties.setDimension(dimension);
     }
 
