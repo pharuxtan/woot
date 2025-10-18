@@ -22,7 +22,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
-import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
@@ -218,11 +217,8 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
     private @NotNull WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, CompoundTag mobTag) {
         WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos(), mob.getSpawnTickRate(), mob.getVitalityFuelCost());
         for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
-            if(upgradeBlockEntity == null) continue;
-            WootUpgradeItem upgradeItem = upgradeBlockEntity.getUpgradeItem();
-            if(upgradeItem != null){
-                upgradeItem.applyGenerationProperties(properties);
-            }
+            if(upgradeBlockEntity != null)
+                upgradeBlockEntity.applyGenerationProperties(properties);
         }
         return properties;
     }
@@ -249,11 +245,8 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
             WootSpawnProperties spawnProperties = new WootFactorySpawnProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos());
 
             for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
-                if(upgradeBlockEntity == null) continue;
-                WootUpgradeItem upgradeItem = upgradeBlockEntity.getUpgradeItem();
-                if(upgradeItem != null){
-                    upgradeItem.applySpawnProperties(spawnProperties);
-                }
+                if(upgradeBlockEntity != null)
+                    upgradeBlockEntity.applySpawnProperties(spawnProperties);
             }
 
             LivingEntity entity = DropSimulator.loadEntity(mob, spawnProperties.getFactoryMobTag());
@@ -280,11 +273,8 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
             mob.modifyDrops(WootFactoryMob.Phase.AFTER_DROP_CALLBACKS, generationProperties);
 
             for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
-                if(upgradeBlockEntity == null) continue;
-                WootUpgradeItem upgradeItem = upgradeBlockEntity.getUpgradeItem();
-                if(upgradeItem != null){
-                    upgradeItem.modifyDrops(generationProperties);
-                }
+                if(upgradeBlockEntity != null)
+                    upgradeBlockEntity.modifyDrops(generationProperties);
             }
 
             mob.modifyDrops(WootFactoryMob.Phase.AFTER_UPGRADES, generationProperties);

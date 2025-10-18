@@ -1,5 +1,6 @@
 package wootrevived.woot.upgrades;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,7 @@ public class Mass extends WootUpgradeItem {
     public Mass(int level) { super(new Properties(), level); }
 
     @Override
-    public void applyGenerationProperties(WootGenerationProperties properties) {
+    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
         properties.setNumberOfSimulations(2 * getLevel());
     }
 

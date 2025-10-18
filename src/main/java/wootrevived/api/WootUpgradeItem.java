@@ -1,11 +1,14 @@
 package wootrevived.api;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.ApiStatus;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -34,12 +37,46 @@ public abstract class WootUpgradeItem extends Item {
     }
 
     /**
+     * Initialize the per-upgrade persistent data container.
+     * <p>
+     * This method is called when the upgrade is installed into a factory.
+     * Addons can use the provided {@code upgradeTag} to store any default keys
+     * or values they need to persist while the upgrade remains installed.
+     * <p>
+     * The same {@code upgradeTag} instance is passed to later hooks so stored data
+     * can be read or updated across lifecycle stages.
+     * <p>
+     * Note that the tag is <strong>reset each time the player removes and re-adds
+     * the upgrade</strong> to the factory. It should therefore only be used
+     * for runtime or per-installation state, not for long-term persistence.
+     *
+     * @param upgradeTag persistent data for this upgrade instance
+     * @param lookupProvider access to the current registry view
+     */
+    public void initUpgradeTag(CompoundTag upgradeTag, HolderLookup.Provider lookupProvider) {
+    }
+
+    /**
      * Allows upgrades to adjust factory generation properties
      * before any ingredients or vitality fuel are consumed.
      *
      * @param properties mutable generation properties
+     * @deprecated since 1.1.4; use {@link #applyGenerationProperties(WootGenerationProperties, CompoundTag)}
      */
+    @Deprecated(since = "1.1.4", forRemoval = true)
     public void applyGenerationProperties(WootGenerationProperties properties) {
+    }
+
+    /**
+     * Allows upgrades to adjust factory generation properties
+     * before any ingredients or vitality fuel are consumed.
+     * <p>
+     * @param properties mutable generation properties
+     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     */
+    @ApiStatus.AvailableSince("1.1.4")
+    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
+        applyGenerationProperties(properties);
     }
 
     /**
@@ -47,16 +84,42 @@ public abstract class WootUpgradeItem extends Item {
      * before the simulation begins.
      *
      * @param properties mutable spawn properties
+     * @deprecated since 1.1.4; use {@link #applySpawnProperties(WootSpawnProperties, CompoundTag)}
      */
+    @Deprecated(since = "1.1.4", forRemoval = true)
     public void applySpawnProperties(WootSpawnProperties properties){
+    }
+
+    /**
+     * Allows upgrades to adjust the mob's spawn properties
+     * before the simulation begins.
+     * <p>
+     * @param properties mutable spawn properties
+     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     */
+    @ApiStatus.AvailableSince("1.1.4")
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag){
+        applySpawnProperties(properties);
     }
 
     /**
      * Allows upgrades to inspect and modify drops produced by the simulation.
      *
      * @param properties mutable access to item/fluids/XP drops and context
+     * @deprecated since 1.1.4; use {@link #modifyDrops(WootDropsProperties, CompoundTag)}
      */
+    @Deprecated(since = "1.1.4", forRemoval = true)
     public void modifyDrops(WootDropsProperties properties) {
+    }
+
+    /**
+     * Allows upgrades to inspect and modify drops produced by the simulation.
+     * <p>
+     * @param properties mutable access to item/fluids/XP drops and context
+     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     */
+    @ApiStatus.AvailableSince("1.1.4")
+    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
     }
 
     /**

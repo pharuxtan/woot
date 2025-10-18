@@ -17,8 +17,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.interfaces.WootDropsProperties;
+import wootrevived.api.interfaces.WootGenerationProperties;
+import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.client.model.factory_upgrade.FactoryUpgradeBakedModel;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
@@ -29,12 +31,25 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     public FactoryUpgradeBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.FACTORY_UPGRADE_BLOCK_ENTITY.get(), pos, state);
         this.upgradeItem = null;
+        this.upgradeNBT = new CompoundTag();
     }
 
     private WootUpgradeItem upgradeItem;
+    private CompoundTag upgradeNBT;
 
-    public @Nullable WootUpgradeItem getUpgradeItem() {
-        return upgradeItem;
+    public void applyGenerationProperties(WootGenerationProperties properties){
+        if(upgradeItem != null)
+            upgradeItem.applyGenerationProperties(properties, upgradeNBT);
+    }
+
+    public void applySpawnProperties(WootSpawnProperties properties){
+        if(upgradeItem != null)
+            upgradeItem.applySpawnProperties(properties, upgradeNBT);
+    }
+
+    public void modifyDrops(WootDropsProperties properties){
+        if(upgradeItem != null)
+            upgradeItem.modifyDrops(properties, upgradeNBT);
     }
 
     public String getUpgradeItemName() {
@@ -51,6 +66,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
 
         WootUpgradeItem oldUpgradeItem = upgradeItem;
         upgradeItem = newUpgradeItem;
+        newUpgradeItem.initUpgradeTag(upgradeNBT = new CompoundTag(), level.registryAccess());
         setChanged();
         player.swing(hand);
 
@@ -69,6 +85,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     public void removeUpgrade(Level level, Player player, InteractionHand hand){
         WootUpgradeItem oldUpgradeItem = upgradeItem;
         upgradeItem = null;
+        upgradeNBT = new CompoundTag();
         setChanged();
         player.swing(hand);
 
@@ -97,6 +114,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     protected void saveAdditional(@NotNull CompoundTag tag){
         super.saveAdditional(tag);
         tag.put(WootTags.Factory.UPGRADE_ITEM, StringTag.valueOf(getUpgradeItemName()));
+        tag.put(WootTags.Factory.UPGRADE_ITEM_NBT, upgradeNBT);
     }
 
     @Override
@@ -108,6 +126,10 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
             this.upgradeItem = !item.isEmpty() && UpgradeItemsRegistry.has(item) ? UpgradeItemsRegistry.get(item).get() : null;
         } else {
             this.upgradeItem = null;
+        }
+
+        if(tag.contains(WootTags.Factory.UPGRADE_ITEM_NBT)) {
+            this.upgradeNBT = tag.getCompound(WootTags.Factory.UPGRADE_ITEM_NBT);
         }
     }
 
