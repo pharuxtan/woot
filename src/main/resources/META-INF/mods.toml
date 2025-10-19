@@ -4,9 +4,9 @@ issueTrackerURL = "https://github.com/wootrevived/wootrevived/issues"
 license = "LGPLv3"
 
 [[mods]]
-modId = "${file.modId}"
-version = "${file.jarVersion}"
-displayName = "Woot Revived"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
 displayURL = "https://github.com/wootrevived/wootrevived"
 logoFile = "woot_revived.png"
 authors = "pharuxtan"
@@ -16,42 +16,42 @@ description = '''A formidable multiblock mod to harvest mob drops. You'll either
 [[mixins]]
 config = "woot_revived.mixins.json"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 type = "required"
 versionRange = "[${mc_version}]"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId = "neoforge"
 type = "required"
 versionRange = "[${neo_version},)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="guideme"
 type = "required"
 versionRange = "[${guideme_version},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="jei"
 type = "optional"
 versionRange = "[${jei_version},)"
 ordering="NONE"
 side="CLIENT"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="jade"
 type = "optional"
 versionRange = "[${jade_version},)"
 ordering="NONE"
 side="CLIENT"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="kubejs"
 type = "optional"
 versionRange = "[${kubejs_version},)"
