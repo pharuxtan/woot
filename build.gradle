@@ -173,6 +173,8 @@ tasks.register('apiJar', Jar) {
     }
 }
 
+obfuscation.reobfuscate(tasks.named('apiJar'), sourceSets.main)
+
 tasks.register('apiSourcesJar', Jar) {
     dependsOn classes
     archiveClassifier = 'api-sources'
