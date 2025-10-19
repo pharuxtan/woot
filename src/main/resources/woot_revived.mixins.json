@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "package": "wootrevived.woot.mixins.impl",
   "refmap": "woot_revived.mixins.refmap.json",
-  "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "CreeperMixin",

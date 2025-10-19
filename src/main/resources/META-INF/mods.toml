@@ -4,16 +4,16 @@ issueTrackerURL = "https://github.com/wootrevived/wootrevived/issues"
 license = "LGPLv3"
 
 [[mods]]
-modId = "${file.modId}"
-version = "${file.jarVersion}"
-displayName = "Woot Revived"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
 displayURL = "https://github.com/wootrevived/wootrevived"
 logoFile = "woot_revived.png"
 authors = "pharuxtan"
 credits = "Ipsis"
 description = '''A formidable multiblock mod to harvest mob drops. You'll either fall in love or despise it! No middle ground.'''
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
 type = "required"
@@ -21,35 +21,35 @@ versionRange = "${mc_version}"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId = "forge"
 mandatory = true
 versionRange = "[${neo_version},)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="guideme"
 mandatory = true
 versionRange = "[${guideme_version},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="jei"
 mandatory = false
 versionRange = "[${jei_version},)"
 ordering="NONE"
 side="CLIENT"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="jade"
 mandatory = false
 versionRange = "[${jade_version},)"
 ordering="NONE"
 side="CLIENT"
 
-[[dependencies.${file.modId}]]
+[[dependencies.${mod_id}]]
 modId="kubejs"
 mandatory = false
 versionRange = "[${kubejs_version},)"
