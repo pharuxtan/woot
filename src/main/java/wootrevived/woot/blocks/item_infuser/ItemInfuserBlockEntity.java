@@ -297,8 +297,13 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
             return false;
 
         ItemStack output = outputSlotHandler.getStackInSlot(OUTPUT_SLOT);
-        if(!output.isEmpty() && output.getItem() != recipe.getOutput().getItem())
-            return false;
+        if(!output.isEmpty()){
+            if(output.getItem() != recipe.getOutput().getItem())
+                return false;
+
+            if(output.getCount() + recipe.getOutput().getCount() > output.getMaxStackSize())
+                return false;
+        }
 
         return inputTankHandler.getFluid().getAmount() >= recipe.getFluid().getAmount();
     }
