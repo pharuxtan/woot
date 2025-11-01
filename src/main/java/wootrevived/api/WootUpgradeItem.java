@@ -120,6 +120,7 @@ public abstract class WootUpgradeItem extends Item {
      */
     @ApiStatus.AvailableSince("1.1.4")
     public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+        modifyDrops(properties);
     }
 
     /**
