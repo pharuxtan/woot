@@ -1,8 +1,5 @@
 package wootrevived.woot.blocks.factory_upgrade;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -16,13 +13,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
-import wootrevived.woot.client.model.factory_upgrade.FactoryUpgradeBakedModel;
 import wootrevived.woot.data.FactoryUpgradeData;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
@@ -101,6 +98,11 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         }
     }
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropItem(level, pos);
+    }
+
     public void dropItem(Level level, BlockPos pos) {
         if (upgradeItem == null)
             return;
@@ -154,28 +156,23 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         loadAdditional(tag, lookupProvider);
     }
 
-    @Override
+    private static final ModelProperty<String> UPGRADE_MODEL_PROPERTY = new ModelProperty<>();
+
     public @NotNull ModelData getModelData(){
-        BlockState state = getBlockState();
-
-        BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
-        BakedModel model = renderer.getBlockModel(state);
-
-        return model.getModelData(level, getBlockPos(), getBlockState(), super.getModelData());
+        return super.getModelData().derive().with(UPGRADE_MODEL_PROPERTY, getUpgradeItemName()).build();
     }
 
     @OnlyIn(Dist.CLIENT)
-    @SuppressWarnings("UnstableApiUsage")
     public void tryRequestModelDataUpdate(){
         if(level == null || level.getModelDataManager() == null)
             return;
 
         ModelData data = level.getModelDataManager().getAt(getBlockPos());
-        if(data.has(FactoryUpgradeBakedModel.UPGRADE_PROPERTY)){
-            if(upgradeItem == null && !data.get(FactoryUpgradeBakedModel.UPGRADE_PROPERTY).isEmpty()){
+        if(data.has(UPGRADE_MODEL_PROPERTY)){
+            if(upgradeItem == null && !data.get(UPGRADE_MODEL_PROPERTY).isEmpty()){
                 requestModelDataUpdate();
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            } else if(upgradeItem != null && !data.get(FactoryUpgradeBakedModel.UPGRADE_PROPERTY).equalsIgnoreCase(UpgradeItemsRegistry.getNameFromItem(upgradeItem))){
+            } else if(upgradeItem != null && !data.get(UPGRADE_MODEL_PROPERTY).equalsIgnoreCase(UpgradeItemsRegistry.getNameFromItem(upgradeItem))){
                 requestModelDataUpdate();
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }

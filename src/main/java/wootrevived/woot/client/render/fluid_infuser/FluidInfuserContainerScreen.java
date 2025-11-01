@@ -1,6 +1,7 @@
 package wootrevived.woot.client.render.fluid_infuser;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -68,12 +69,12 @@ public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuse
     }
 
     public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 177, 81, 65, 24);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 81, 65, 24, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 65 / 100, 0, 65);
-        gui.blit(GUI, x, y, 177, 106, fillWidth, 25);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 106, fillWidth, 25, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){

@@ -25,4 +25,5 @@ runs
 forge*changelog.txt
 
 # Generated Resources Cache
-src/main/generated/.cache
+src/main/generated/client/.cache
+src/main/generated/server/.cache

@@ -12,6 +12,8 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.drops.simulator.DropSimulatorDimension;
 
+import java.util.Set;
+
 @EventBusSubscriber(modid = Woot.MOD_ID)
 public class DropSimulatorDimensionGuard {
     @SubscribeEvent
@@ -29,7 +31,7 @@ public class DropSimulatorDimensionGuard {
         if(DropSimulatorDimension.DROP_SIMULATOR_LEVEL == player.level().dimension()){
             ServerLevel overworld = player.getServer().overworld();
             BlockPos respawnPos = overworld.getSharedSpawnPos();
-            player.teleportTo(overworld, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+            player.teleportTo(overworld, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
         }
     }
 }

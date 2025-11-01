@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -22,8 +23,8 @@ import wootrevived.woot.util.block.FactoryBlockBase;
 import java.util.function.Supplier;
 
 public abstract class MultiBlockFactory extends FactoryBlockBase implements EntityBlock {
-    public MultiBlockFactory(Supplier<BlockEntityType<?>> entity, Properties properties) {
-        super(entity, properties);
+    public MultiBlockFactory(Supplier<BlockEntityType<?>> entity, String tag, Properties properties) {
+        super(entity, tag, properties);
     }
 
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
@@ -76,8 +77,8 @@ public abstract class MultiBlockFactory extends FactoryBlockBase implements Enti
         }
 
         @Override
-        public void onRemove(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-            super.onRemove(level, pos, newState, isMoving);
+        public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
+            super.affectNeighborsAfterRemoval(level, pos, movedByPiston);
 
             if (level.isClientSide())
                 return;

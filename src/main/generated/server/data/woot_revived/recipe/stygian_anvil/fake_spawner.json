@@ -1,0 +1,10 @@
+{
+  "type": "woot_revived:stygian_anvil",
+  "base": "woot_revived:mob_shard",
+  "first_complementary": "woot_revived:prism",
+  "output": {
+    "count": 1,
+    "id": "woot_revived:fake_spawner"
+  },
+  "second_complementary": "woot_revived:factory_base"
+}

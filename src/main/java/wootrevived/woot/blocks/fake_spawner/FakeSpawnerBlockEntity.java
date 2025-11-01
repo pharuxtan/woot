@@ -2,6 +2,7 @@ package wootrevived.woot.blocks.fake_spawner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
@@ -183,8 +184,8 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        FakeSpawnerData.Component component = input.get(ComponentsRegistry.FAKE_SPAWNER_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        FakeSpawnerData.Component component = getter.get(ComponentsRegistry.FAKE_SPAWNER_DATA);
         if(component == null)
             return;
 
@@ -217,12 +218,12 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        redstoneMode = RedstoneMode.byIndex(tag.getInt(WootTags.REDSTONE_MODE_TAG));
-        numOfSim = tag.getInt(WootTags.Factory.NUMBER_OF_SIMULATIONS);
-        vitalityCost = tag.getInt(WootTags.Factory.VITALITY_COST);
-        totalDrained = tag.getInt(WootTags.Factory.TOTAL_DRAINED);
-        perTickRatio = tag.getDouble(WootTags.Factory.PER_TICK_RATIO);
-        accumulator = tag.getDouble(WootTags.Factory.ACCUMULATOR);
+        tag.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
+        tag.getInt(WootTags.Factory.NUMBER_OF_SIMULATIONS).ifPresent(num -> numOfSim = num);
+        tag.getInt(WootTags.Factory.VITALITY_COST).ifPresent(cost -> vitalityCost = cost);
+        tag.getInt(WootTags.Factory.TOTAL_DRAINED).ifPresent(drained -> totalDrained = drained);
+        tag.getDouble(WootTags.Factory.PER_TICK_RATIO).ifPresent(ratio -> perTickRatio = ratio);
+        tag.getDouble(WootTags.Factory.ACCUMULATOR).ifPresent(acc -> accumulator = acc);
 
         FakeSpawnerData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
     }

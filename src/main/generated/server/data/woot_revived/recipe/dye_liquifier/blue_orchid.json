@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:dye_liquifier",
+  "blue_multiplier": 0.5,
+  "energy": 500,
+  "ingredients": "minecraft:blue_orchid",
+  "red_multiplier": 0.0,
+  "white_multiplier": 0.5,
+  "yellow_multiplier": 0.0
+}

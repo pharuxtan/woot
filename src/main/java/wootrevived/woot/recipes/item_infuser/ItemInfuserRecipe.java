@@ -53,13 +53,23 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<WootRecipeInput>> getSerializer() {
         return RecipesRegistry.ITEM_INFUSER_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<WootRecipeInput>> getType() {
         return RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return augment.map(value -> PlacementInfo.create(List.of(ingredient, value))).orElseGet(() -> PlacementInfo.create(ingredient));
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipesRegistry.ITEM_INFUSER_RECIPE_BOOK_CATEGORY.get();
     }
 
     public @NotNull FluidStack getFluid(){
@@ -83,24 +93,11 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     public int ingredientCount(Item item){
-        for(ItemStack stack : ingredient.getItems()){
-            if(stack.is(item))
-                return stack.getCount();
-        }
-
-        return 0;
+        return ingredient.test(item.getDefaultInstance()) ? 1 : 0;
     }
 
     public int augmentCount(Item item){
-        if(augment.isEmpty())
-            return 0;
-
-        for(ItemStack stack : augment.get().getItems()){
-            if(stack.is(item))
-                return stack.getCount();
-        }
-
-        return 0;
+        return augment.filter(value -> value.test(item.getDefaultInstance())).map(value -> 1).orElse(0);
     }
 
     @Override
@@ -114,9 +111,9 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
         return getAugment().isEmpty() || getAugment().get().test(input.getItem(2));
     }
 
-    public static void loadRecipes(@NotNull RecipeManager manager){
+    public static void loadRecipes(@NotNull RecipeMap map){
         Validator.clear();
-        for(RecipeHolder<ItemInfuserRecipe> recipeHolder : manager.getAllRecipesFor(RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get())) {
+        for(RecipeHolder<ItemInfuserRecipe> recipeHolder : map.byType(RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get())) {
             Validator.add(recipeHolder.value().ingredient, recipeHolder.value().augment, recipeHolder.value().fluid);
         }
     }
@@ -165,16 +162,6 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int i, int i1) {
-        return true;
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 

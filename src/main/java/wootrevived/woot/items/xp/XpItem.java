@@ -1,27 +1,36 @@
 package wootrevived.woot.items.xp;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
+import wootrevived.woot.Woot;
+import wootrevived.woot.registries.ComponentsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.util.render.WootStyles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class XpItem extends Item {
     private static final int STACK_SIZE = 64;
@@ -30,8 +39,10 @@ public class XpItem extends Item {
     private static final int SPLINTER_XP = 1;
 
     final Variant variant;
-    public XpItem(Variant variant) {
-        super(new Item.Properties().stacksTo(STACK_SIZE));
+    public XpItem(Variant variant, String tag) {
+        super(new Item.Properties().stacksTo(STACK_SIZE)
+                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                .component(ComponentsRegistry.XP_ITEM_TOOLTIP, Tooltip.INSTANCE));
         this.variant = variant;
     }
 
@@ -87,13 +98,13 @@ public class XpItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level level, @NotNull Player player, @NotNull InteractionHand usedHand){
+    public InteractionResult use(Level level, @NotNull Player player, @NotNull InteractionHand usedHand){
         if(level.isClientSide())
-            return InteractionResultHolder.pass(player.getItemInHand(usedHand));
+            return InteractionResult.PASS;
 
         ItemStack itemStack = player.getItemInHand(usedHand);
         if(itemStack.isEmpty())
-            return InteractionResultHolder.pass(player.getItemInHand(usedHand));
+            return InteractionResult.PASS;
 
         ItemStack advancementStack = itemStack.copy();
 
@@ -129,15 +140,27 @@ public class XpItem extends Item {
                     CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, advancementStack);
             }
         }
-        return InteractionResultHolder.success(itemStack);
+        return InteractionResult.SUCCESS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext ctx, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, ctx, tooltip, flag);
+    @SuppressWarnings("deprecation")
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
+        if(display.shows(ComponentsRegistry.XP_ITEM_TOOLTIP.get()))
+            components().get(ComponentsRegistry.XP_ITEM_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
+    }
 
-        tooltip.add(Component.translatable("info.woot_revived.shard.0").setStyle(WootStyles.DESCRIPTION_STYLE));
-        tooltip.add(Component.translatable("info.woot_revived.shard.1").setStyle(WootStyles.DESCRIPTION_STYLE));
+    public record Tooltip() implements TooltipProvider {
+        public static final Tooltip INSTANCE = new Tooltip();
+
+        public static final String ID = "xp_item_tooltip";
+        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+
+        @Override
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
+            consumer.accept(Component.translatable("info.woot_revived.shard.0").setStyle(WootStyles.DESCRIPTION_STYLE));
+            consumer.accept(Component.translatable("info.woot_revived.shard.1").setStyle(WootStyles.DESCRIPTION_STYLE));
+        }
     }
 }

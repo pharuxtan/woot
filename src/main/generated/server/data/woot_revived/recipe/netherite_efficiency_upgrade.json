@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:vitality_fuel_fluid_bucket",
+    "b": "#c:ingots/netherite",
+    "c": "woot_revived:diamond_efficiency_upgrade"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_efficiency_upgrade"
+  }
+}

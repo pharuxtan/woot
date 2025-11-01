@@ -1,15 +1,14 @@
 package wootrevived.woot.util.fluid;
 
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class WootFluidType extends FluidType {
     private final ResourceLocation stillTexture;
@@ -18,7 +17,7 @@ public class WootFluidType extends FluidType {
     private final int fogColorR;
     private final int fogColorG;
     private final int fogColorB;
-    private final Vector3f fogColor;
+    private final Vector4f fogColor;
 
     public WootFluidType(final ResourceLocation stillTexture, final ResourceLocation flowingTexture, final ResourceLocation overlayTexture, final int fogColorR, int fogColorG, int fogColorB, final Properties properties) {
         super(properties);
@@ -28,7 +27,7 @@ public class WootFluidType extends FluidType {
         this.fogColorR = fogColorR;
         this.fogColorG = fogColorG;
         this.fogColorB = fogColorB;
-        this.fogColor = new Vector3f((float)fogColorR / 255f, (float)fogColorG / 255f, (float)fogColorB / 255f);
+        this.fogColor = new Vector4f((float)fogColorR / 255f, (float)fogColorG / 255f, (float)fogColorB / 255f, 1.0f);
     }
 
     public final IClientFluidTypeExtensions EXTENSION = new IClientFluidTypeExtensions() {
@@ -48,14 +47,13 @@ public class WootFluidType extends FluidType {
         }
 
         @Override
-        public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor){
+        public @NotNull Vector4f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor){
             return fogColor;
         }
 
         @Override
-        public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape){
-            RenderSystem.setShaderFogStart(1f);
-            RenderSystem.setShaderFogEnd(6f);
+        public FogParameters modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, FogParameters fogParameters){
+            return new FogParameters(1f, 6f, fogParameters.shape(), fogParameters.red(), fogParameters.green(), fogParameters.blue(), fogParameters.alpha());
         }
     };
 
@@ -79,7 +77,7 @@ public class WootFluidType extends FluidType {
         return getColor();
     }
 
-    public Vector3f getFogColor(){
+    public Vector4f getFogColor(){
         return this.fogColor;
     }
 }

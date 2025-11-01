@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
@@ -29,13 +28,11 @@ import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public record FactoryUpgradeDynamicSpriteSource(ResourceLocation id) implements SpriteSource {
-    private static final MapCodec<FactoryUpgradeDynamicSpriteSource> CODEC = RecordCodecBuilder.mapCodec(instance ->
+    public static final MapCodec<FactoryUpgradeDynamicSpriteSource> CODEC = RecordCodecBuilder.mapCodec(instance ->
                 instance.group(
                         ResourceLocation.CODEC.fieldOf("id").forGetter(FactoryUpgradeDynamicSpriteSource::id)
                 ).apply(instance, FactoryUpgradeDynamicSpriteSource::new)
     );
-
-    public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
 
     @Override
     public void run(@NotNull ResourceManager manager, @NotNull Output output){
@@ -56,6 +53,11 @@ public record FactoryUpgradeDynamicSpriteSource(ResourceLocation id) implements 
         }
     }
 
+    @Override
+    public MapCodec<? extends SpriteSource> codec() {
+        return CODEC;
+    }
+
     private Resource getResource(ResourceManager resourceManager, ResourceLocation resourceLocation){
         Optional<Resource> optionalResource = resourceManager.getResource(resourceLocation);
         if(optionalResource.isPresent()){
@@ -63,11 +65,6 @@ public record FactoryUpgradeDynamicSpriteSource(ResourceLocation id) implements 
         } else {
             throw new RuntimeException("Could not find resource: " + resourceLocation);
         }
-    }
-
-    @Override
-    public @NotNull SpriteSourceType type() {
-        return TYPE;
     }
 
     public record UpgradeSpriteSupplier(WootUpgradeItem upgradeItem, LazyLoadedImage lazyFactoryImage, LazyLoadedImage lazyUpgradeImage, ResourceLocation location) implements SpriteSource.SpriteSupplier {

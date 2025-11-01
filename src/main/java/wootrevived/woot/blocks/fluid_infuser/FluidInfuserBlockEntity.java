@@ -5,10 +5,12 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -147,8 +149,8 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        FluidInfuserData.Component component = input.get(ComponentsRegistry.FLUID_INFUSER_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        FluidInfuserData.Component component = getter.get(ComponentsRegistry.FLUID_INFUSER_DATA);
         if(component == null)
             return;
 
@@ -176,10 +178,14 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            inventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
+        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inventoryHandler.deserializeNBT(provider, handler));
 
         FluidInfuserData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropContents(level, pos);
     }
 
     public void dropContents(Level level, BlockPos pos) {
@@ -252,12 +258,15 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
         FluidInfuserRecipe recipe = this.recipe;
 
         ItemStack item = inventoryHandler.getStackInSlot(INPUT_SLOT);
-        if(item.getItem().hasCraftingRemainingItem(item)){
-            inventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-        } else {
-            int ingredientAmount = recipe.ingredientCount(inventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-            inventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+        int ingredientAmount = recipe.ingredientCount(item.getItem());
+        for(int i = 0; i < ingredientAmount; i++){
+            ItemStack remainder = item.getCraftingRemainder();
+            if(!remainder.isEmpty())
+                item = remainder;
+            else
+                item.shrink(1);
         }
+        inventoryHandler.setStackInSlot(INPUT_SLOT, item);
 
         inputTankHandler.drain(recipe.getInputFluid().getAmount(), IFluidHandler.FluidAction.EXECUTE);
 
@@ -285,6 +294,9 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
     //endregion
 
     private void getRecipe() {
+        if(!(level instanceof ServerLevel serverLevel))
+            return;
+
         clearRecipe();
 
         FluidStack inFluid = inputTankHandler.getFluid();
@@ -299,7 +311,7 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
             return;
         }
 
-        RecipeHolder<FluidInfuserRecipe> recipeHolder = level.getRecipeManager().getRecipeFor(
+        RecipeHolder<FluidInfuserRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(
                 RecipesRegistry.FLUID_INFUSER_RECIPE_TYPE.get(),
                 new WootRecipeInput(
                         Either.right(inputTankHandler.getFluid()),

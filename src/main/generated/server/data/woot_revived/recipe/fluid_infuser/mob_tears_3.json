@@ -1,0 +1,21 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:string",
+    "minecraft:gunpowder",
+    "minecraft:rotten_flesh",
+    "minecraft:prismarine_shard",
+    "minecraft:prismarine_crystals",
+    "minecraft:phantom_membrane",
+    "minecraft:bone"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 500,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

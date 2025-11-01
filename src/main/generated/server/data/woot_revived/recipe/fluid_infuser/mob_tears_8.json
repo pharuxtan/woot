@@ -1,0 +1,16 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:totem_of_undying",
+    "minecraft:sculk_catalyst"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 15000,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

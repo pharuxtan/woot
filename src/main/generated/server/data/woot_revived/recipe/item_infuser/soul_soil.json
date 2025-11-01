@@ -1,0 +1,14 @@
+{
+  "type": "woot_revived:item_infuser",
+  "augment": "#c:sands",
+  "energy": 5000,
+  "fluid": {
+    "amount": 1000,
+    "id": "woot_revived:mob_tears_fluid"
+  },
+  "ingredient": "minecraft:soul_sand",
+  "output": {
+    "count": 1,
+    "id": "minecraft:soul_soil"
+  }
+}

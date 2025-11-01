@@ -5,10 +5,12 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -218,8 +220,8 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        DyeLiquifierData.Component component = input.get(ComponentsRegistry.DYE_LIQUIFIER_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        DyeLiquifierData.Component component = getter.get(ComponentsRegistry.DYE_LIQUIFIER_DATA);
         if(component == null)
             return;
 
@@ -250,22 +252,17 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            redInventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.DyeLiquifier.RED_INVENTORY_TAG))
-            redInventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.DyeLiquifier.RED_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG))
-            yellowInventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG))
-            blueInventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG))
-            whiteInventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG));
+        tag.getCompound(WootTags.DyeLiquifier.RED_INVENTORY_TAG).ifPresent(handler -> redInventoryHandler.deserializeNBT(provider, handler));
+        tag.getCompound(WootTags.DyeLiquifier.YELLOW_INVENTORY_TAG).ifPresent(handler -> yellowInventoryHandler.deserializeNBT(provider, handler));
+        tag.getCompound(WootTags.DyeLiquifier.BLUE_INVENTORY_TAG).ifPresent(handler -> blueInventoryHandler.deserializeNBT(provider, handler));
+        tag.getCompound(WootTags.DyeLiquifier.WHITE_INVENTORY_TAG).ifPresent(handler -> whiteInventoryHandler.deserializeNBT(provider, handler));
 
         DyeLiquifierData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropContents(level, pos);
     }
 
     public void dropContents(Level level, BlockPos pos) {
@@ -379,42 +376,54 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
         if(this.recipes.containsKey(0)){
             ItemStack item = redInventoryHandler.getStackInSlot(INPUT_SLOT);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                redInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                int ingredientAmount = recipes.get(0).ingredientCount(redInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-                redInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            int ingredientAmount = recipes.get(0).ingredientCount(item.getItem());
+            for(int i = 0; i < ingredientAmount; i++){
+                ItemStack remainder = item.getCraftingRemainder();
+                if(!remainder.isEmpty())
+                    item = remainder;
+                else
+                    item.shrink(1);
             }
+            redInventoryHandler.setStackInSlot(INPUT_SLOT, item);
         }
 
         if(this.recipes.containsKey(1)){
             ItemStack item = yellowInventoryHandler.getStackInSlot(INPUT_SLOT);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                yellowInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                int ingredientAmount = recipes.get(1).ingredientCount(yellowInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-                yellowInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            int ingredientAmount = recipes.get(1).ingredientCount(item.getItem());
+            for (int i = 0; i < ingredientAmount; i++) {
+                ItemStack remainder = item.getCraftingRemainder();
+                if(!remainder.isEmpty())
+                    item = remainder;
+                else
+                    item.shrink(1);
             }
+            yellowInventoryHandler.setStackInSlot(INPUT_SLOT, item);
         }
 
         if(this.recipes.containsKey(2)){
             ItemStack item = blueInventoryHandler.getStackInSlot(INPUT_SLOT);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                blueInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                int ingredientAmount = recipes.get(2).ingredientCount(blueInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-                blueInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            int ingredientAmount = recipes.get(2).ingredientCount(item.getItem());
+            for (int i = 0; i < ingredientAmount; i++) {
+                ItemStack remainder = item.getCraftingRemainder();
+                if(!remainder.isEmpty())
+                    item = remainder;
+                else
+                    item.shrink(1);
             }
+            blueInventoryHandler.setStackInSlot(INPUT_SLOT, item);
         }
 
         if(this.recipes.containsKey(3)){
             ItemStack item = whiteInventoryHandler.getStackInSlot(INPUT_SLOT);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                whiteInventoryHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                int ingredientAmount = recipes.get(3).ingredientCount(whiteInventoryHandler.getStackInSlot(INPUT_SLOT).getItem());
-                whiteInventoryHandler.extractItem(INPUT_SLOT, ingredientAmount, false);
+            int ingredientAmount = recipes.get(3).ingredientCount(item.getItem());
+            for (int i = 0; i < ingredientAmount; i++) {
+                ItemStack remainder = item.getCraftingRemainder();
+                if(!remainder.isEmpty())
+                    item = remainder;
+                else
+                    item.shrink(1);
             }
+            whiteInventoryHandler.setStackInSlot(INPUT_SLOT, item);
         }
 
         setChanged();
@@ -442,28 +451,31 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     //endregion
 
     private void getRecipe() {
-        RecipeHolder<DyeLiquifierRecipe> recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+        if(!(level instanceof ServerLevel serverLevel))
+            return;
+
+        RecipeHolder<DyeLiquifierRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
                 new WootRecipeInput(Either.left(redInventoryHandler.getStackInSlot(INPUT_SLOT))),
                 level).orElse(null);
 
         if(recipeHolder != null) recipes.put(0, recipeHolder.value());
         else recipes.remove(0);
 
-        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+        recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
                 new WootRecipeInput(Either.left(yellowInventoryHandler.getStackInSlot(INPUT_SLOT))),
                 level).orElse(null);
 
         if(recipeHolder != null) recipes.put(1, recipeHolder.value());
         else recipes.remove(1);
 
-        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+        recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
                 new WootRecipeInput(Either.left(blueInventoryHandler.getStackInSlot(INPUT_SLOT))),
                 level).orElse(null);
 
         if(recipeHolder != null) recipes.put(2, recipeHolder.value());
         else recipes.remove(2);
 
-        recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
+        recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get(),
                 new WootRecipeInput(Either.left(whiteInventoryHandler.getStackInSlot(INPUT_SLOT))),
                 level).orElse(null);
 

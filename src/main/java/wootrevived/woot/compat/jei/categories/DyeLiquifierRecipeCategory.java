@@ -6,8 +6,8 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
@@ -54,18 +54,18 @@ public class DyeLiquifierRecipeCategory implements IRecipeCategory<DyeLiquifierR
         int progress = (GlobalClientTicker.tickCounter % totalProgressTick) * 100 / totalProgressTick;
 
         WootContainerScreen.renderVanillaSlot(gui, INPUT_SLOT_X, INPUT_SLOT_Y);
-        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, DyeColor.RED.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, DyeColor.YELLOW.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, DyeColor.BLUE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, DyeColor.WHITE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, DyeColor.BLUE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBarBg(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, DyeColor.WHITE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
         WootContainerScreen.renderEnergyBg(gui, ENERGY_X, ENERGY_Y);
         DyeLiquifierContainerScreen.renderProgressBg(gui, PROGRESS_X, PROGRESS_Y);
 
         WootContainerScreen.renderEnergy(gui, ENERGY_X, ENERGY_Y, recipe.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get());
-        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, recipe.getRed(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.RED.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, recipe.getYellow(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.YELLOW.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, recipe.getBlue(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.BLUE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, recipe.getWhite(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.WHITE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, recipe.getRed(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, recipe.getYellow(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, recipe.getBlue(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.BLUE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        WootContainerScreen.renderColorBar(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, recipe.getWhite(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.WHITE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
         DyeLiquifierContainerScreen.renderProgress(gui, PROGRESS_X, PROGRESS_Y, progress);
 
         WootContainerScreen._renderEnergyTooltip(gui, (int)mouseX, (int)mouseY, ENERGY_X, ENERGY_Y, recipe.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get(), false, false);
@@ -87,7 +87,7 @@ public class DyeLiquifierRecipeCategory implements IRecipeCategory<DyeLiquifierR
     }
 
     @Override
-    public @NotNull RecipeType<DyeLiquifierRecipe> getRecipeType() {
+    public @NotNull IRecipeType<DyeLiquifierRecipe> getRecipeType() {
         return WootJeiPluginTypes.DYE_LIQUIFIER_TYPE;
     }
 
@@ -104,10 +104,10 @@ public class DyeLiquifierRecipeCategory implements IRecipeCategory<DyeLiquifierR
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DyeLiquifierRecipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X + 1, INPUT_SLOT_Y + 1)
-                .addIngredients(recipe.getIngredient());
+                .add(recipe.getIngredient());
 
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addFluidStack(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), 1)
-                .addItemStack(FluidsRegistry.PURE_DYE_FLUID_BUCKET.get().getDefaultInstance());
+                .add(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), 1)
+                .add(FluidsRegistry.PURE_DYE_FLUID_BUCKET.get().getDefaultInstance());
     }
 }

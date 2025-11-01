@@ -1,7 +1,9 @@
 package wootrevived.woot.recipes.item_infuser;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -15,14 +17,14 @@ import java.util.Optional;
 public class ItemInfuserRecipeBuilder {
     private FluidStack fluid;
     private Ingredient ingredient;
-    private Ingredient augment;
+    private Optional<Ingredient> augment;
     private final ItemStack output;
     private int energy;
 
     protected ItemInfuserRecipeBuilder(ItemLike output, int count) {
         this.output = output.asItem().getDefaultInstance();
         this.output.setCount(count);
-        this.augment = Ingredient.EMPTY;
+        this.augment = Optional.empty();
     }
 
     public static ItemInfuserRecipeBuilder itemInfuserRecipe(ItemLike output, int count) {
@@ -54,7 +56,7 @@ public class ItemInfuserRecipeBuilder {
     }
 
     public ItemInfuserRecipeBuilder augment(Ingredient augment){
-        this.augment = augment;
+        this.augment = Optional.of(augment);
         return this;
     }
 
@@ -69,8 +71,8 @@ public class ItemInfuserRecipeBuilder {
 
     public void save(RecipeOutput recipeOutput, String path){
         recipeOutput.accept(
-                Woot.location(BlocksRegistry.ITEM_INFUSER_TAG + "/" + path),
-                new ItemInfuserRecipe(energy, fluid, ingredient, augment.isEmpty() ? Optional.empty() : Optional.of(augment), output),
+                ResourceKey.create(Registries.RECIPE, Woot.location(BlocksRegistry.ITEM_INFUSER_TAG + "/" + path)),
+                new ItemInfuserRecipe(energy, fluid, ingredient, augment, output),
                 null
         );
     }

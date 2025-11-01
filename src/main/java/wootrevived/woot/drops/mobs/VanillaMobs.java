@@ -15,6 +15,7 @@ public class VanillaMobs {
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOMBIE, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.GIANT, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.SKELETON, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
+        registration.registerFactoryMob(new WootFactoryMob<>(EntityType.BOGGED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.DROWNED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOMBIFIED_PIGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
@@ -30,6 +31,7 @@ public class VanillaMobs {
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.PIGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_3)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.PIGLIN_BRUTE, new WootFactoryMob.Properties().tier(Tier.TIER_3)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.BLAZE, new WootFactoryMob.Properties().tier(Tier.TIER_3)));
+        registration.registerFactoryMob(new WootFactoryMob<>(EntityType.BREEZE, new WootFactoryMob.Properties().tier(Tier.TIER_3)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.IRON_GOLEM, new WootFactoryMob.Properties().tier(Tier.TIER_3)));
 
         /* Tier 4 */

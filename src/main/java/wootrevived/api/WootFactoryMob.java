@@ -1,7 +1,7 @@
 package wootrevived.api;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -44,10 +44,10 @@ public class WootFactoryMob<T extends Entity> {
      * Override to provide a custom display name based on the mob's NBT.
      *
      * @param mobTag the mob's saved tag
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return a localized display name
      */
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
         return Component.translatable(entityType.getDescriptionId());
     }
 
@@ -55,14 +55,14 @@ public class WootFactoryMob<T extends Entity> {
      * Returns the name shown in the descriptive tooltip that instructs
      * which mob to kill on the Mob Shard.
      * <p>
-     * By default, delegates to {@link #getDisplayName(CompoundTag, HolderLookup.Provider)}.
+     * By default, delegates to {@link #getDisplayName(CompoundTag, RegistryAccess)}.
      *
      * @param mobTag the mob's saved tag
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return a localized tooltip name
      */
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        return getDisplayName(mobTag, lookupProvider);
+    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        return getDisplayName(mobTag, registryAccess);
     }
 
     /**
@@ -72,12 +72,12 @@ public class WootFactoryMob<T extends Entity> {
      * The default implementation copies the {@code id} from the supplied tag.
      *
      * @param mobTag the source tag from the captured entity
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return a saved tag used by the factory
      */
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
         CompoundTag tag = new CompoundTag();
-        tag.putString("id", mobTag.getString("id"));
+        tag.putString("id", mobTag.getString("id").orElse("minecraft:pig"));
         return tag;
     }
 
@@ -90,10 +90,10 @@ public class WootFactoryMob<T extends Entity> {
      *
      * @param shardTag the shard's stored tag
      * @param mobTag   the candidate mob's tag
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return {@code true} if they match; otherwise {@code false}
      */
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
         return shardTag.getString("id").equals(mobTag.getString("id"));
     }
 
@@ -117,15 +117,15 @@ public class WootFactoryMob<T extends Entity> {
         if(level == null || !mobTag.contains("id"))
             return null;
 
-        Entity entity = EntityType.loadEntityRecursive(mobTag, level, e -> e);
+        Entity entity = EntityType.loadEntityRecursive(mobTag, level, EntitySpawnReason.SPAWNER, e -> e);
 
         if(!(entity instanceof LivingEntity livingEntity))
             return null;
 
         if(entity instanceof Mob mob){
-            var event = new FinalizeSpawnEvent(mob, level, 0, 0, 0, level.getCurrentDifficultyAt(BlockPos.ZERO), MobSpawnType.SPAWNER, null, null);
+            var event = new FinalizeSpawnEvent(mob, level, 0, 0, 0, level.getCurrentDifficultyAt(BlockPos.ZERO), EntitySpawnReason.SPAWNER, null, null);
             NeoForge.EVENT_BUS.post(event);
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.ZERO), MobSpawnType.SPAWNER, null);
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.ZERO), EntitySpawnReason.SPAWNER, null);
         }
 
         return livingEntity;
@@ -149,10 +149,10 @@ public class WootFactoryMob<T extends Entity> {
      * Called before simulation. The list size is limited to 36 stacks.
      *
      * @param mobTag the mob's saved tag
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return a list of required item stacks (may be empty)
      */
-    public List<ItemStack> getImportItems(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
         return List.of();
     }
 
@@ -162,10 +162,10 @@ public class WootFactoryMob<T extends Entity> {
      * Called before simulation. The list size is limited to 8 stacks.
      *
      * @param mobTag the mob's saved tag
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      * @return a list of required fluid stacks (may be empty)
      */
-    public List<FluidStack> getImportFluids(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public List<FluidStack> getImportFluids(CompoundTag mobTag, RegistryAccess registryAccess){
         return List.of();
     }
 

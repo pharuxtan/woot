@@ -1,6 +1,8 @@
 package wootrevived.woot.blocks.creative_power;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -12,11 +14,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 
 public class CreativePowerBlock extends Block implements EntityBlock {
-    public CreativePowerBlock() {
+    public CreativePowerBlock(String tag) {
         super(Properties.of()
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL));
     }

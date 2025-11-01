@@ -1,6 +1,8 @@
 package wootrevived.woot.datagen.recipes;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -15,7 +17,9 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
 public class StygianAnvil {
-    public static void registerRecipes(Recipes recipes, RecipeOutput output){
+    public static void registerRecipes(Recipes recipes, HolderLookup.Provider registries, RecipeOutput output){
+        HolderLookup.RegistryLookup<Item> itemRegistry = registries.lookupOrThrow(Registries.ITEM);
+
         StygianAnvilRecipeBuilder.anvilRecipe(ItemsRegistry.PLATE_MOLD_ITEM.get())
                 .base(Ingredient.of(Items.IRON_TRAPDOOR))
                 .ingredient(Ingredient.of(Items.QUARTZ))
@@ -29,7 +33,7 @@ public class StygianAnvil {
                 .save(output, ItemsRegistry.SHARD_MOLD_TAG);
 
         StygianAnvilRecipeBuilder.anvilRecipe(ItemsRegistry.DYE_CASING_MOLD_ITEM.get())
-                .base(Ingredient.of(Tags.Items.DYES))
+                .base(Ingredient.of(itemRegistry.getOrThrow(Tags.Items.DYES)))
                 .ingredient(Ingredient.of(Items.QUARTZ))
                 .ingredient(Ingredient.of(ItemsRegistry.STYGIAN_INGOT_ITEM.get()))
                 .save(output, ItemsRegistry.DYE_CASING_MOLD_TAG);
@@ -93,7 +97,7 @@ public class StygianAnvil {
         for(Casing c : casings) {
             StygianAnvilRecipeBuilder.anvilRecipe(c.casing.get())
                     .base(Ingredient.of(ItemsRegistry.DYE_CASING_MOLD_ITEM.get()))
-                    .ingredient(Ingredient.of(c.tag))
+                    .ingredient(Ingredient.of(itemRegistry.getOrThrow(c.tag)))
                     .save(output, c.name);
         }
     }

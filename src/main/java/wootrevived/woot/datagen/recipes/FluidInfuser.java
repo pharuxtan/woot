@@ -1,5 +1,6 @@
 package wootrevived.woot.datagen.recipes;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -10,7 +11,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
 public class FluidInfuser {
-    public static void registerRecipes(Recipes recipes, RecipeOutput output) {
+    public static void registerRecipes(Recipes recipes, HolderLookup.Provider registries, RecipeOutput output) {
         class IngredientRecipe {
             final Ingredient ingredient;
             final int outputAmount;

@@ -1,7 +1,7 @@
 package wootrevived.woot.util.factory;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -74,8 +74,8 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     }
 
     @Override
-    public @NotNull HolderLookup.Provider getLookupProvider() {
-        return DropSimulator.getLookupProvider();
+    public @NotNull RegistryAccess getRegistryAccess() {
+        return DropSimulator.getRegistryAccess();
     }
 
     @Override

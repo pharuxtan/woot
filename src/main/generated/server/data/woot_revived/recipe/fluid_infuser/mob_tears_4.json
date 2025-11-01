@@ -1,0 +1,16 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:spider_eye",
+    "minecraft:slime_ball"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 1000,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

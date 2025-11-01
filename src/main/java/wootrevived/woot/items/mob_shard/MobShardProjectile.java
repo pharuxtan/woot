@@ -1,10 +1,12 @@
 package wootrevived.woot.items.mob_shard;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +29,8 @@ public class MobShardProjectile extends ThrowableItemProjectile {
         super(entityType, level);
     }
 
-    public MobShardProjectile(Player player, Level level) {
-        super(ItemsRegistry.MOB_SHARD_PROJECTILE.get(), player, level);
+    public MobShardProjectile(LivingEntity owner, Level level, ItemStack item) {
+        super(ItemsRegistry.MOB_SHARD_PROJECTILE.get(), owner, level, item);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
     protected void onHitEntity(@NotNull EntityHitResult result) {
         super.onHitEntity(result);
 
-        if(!this.level().isClientSide) {
+        if(this.level() instanceof ServerLevel serverLevel) {
             Entity target = result.getEntity();
             Entity shooter = this.getOwner();
             ItemStack itemStack = this.getItem();
@@ -85,7 +87,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
 
                 DamageSources sources = new DamageSources(this.level().registryAccess());
                 realTarget.addTag(MOB_SHARD_KILLED_BY_PROJECTILE);
-                target.hurt(sources.playerAttack(player), 1f);
+                target.hurtServer(serverLevel, sources.playerAttack(player), 1f);
 
                 if(realTarget instanceof Mob mob){
                     Item item = itemStack.getItem();

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:dropper",
+    "b": "minecraft:bucket",
+    "c": "minecraft:piston",
+    "d": "woot_revived:factory_base"
+  },
+  "pattern": [
+    " a ",
+    "cdc",
+    " b "
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:item_infuser"
+  }
+}

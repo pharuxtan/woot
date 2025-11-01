@@ -1,6 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
@@ -35,7 +36,7 @@ public class EnderDragonMob extends WootFactoryMob<EnderDragon> {
         AtomicInteger looting = new AtomicInteger();
         ItemStack stack = properties.getMainHandItem();
         if(EnchantmentHelper.hasAnyEnchantments(stack)){
-            HolderLookup.Provider accessor = properties.getLookupProvider();
+            HolderLookup.Provider accessor = properties.getRegistryAccess();
             HolderLookup.RegistryLookup<Enchantment> lookup = accessor.lookupOrThrow(Registries.ENCHANTMENT);
 
             lookup.get(Enchantments.LOOTING).ifPresent(enchantment -> {
@@ -53,7 +54,7 @@ public class EnderDragonMob extends WootFactoryMob<EnderDragon> {
     }
 
     @Override
-    public List<ItemStack> getImportItems(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
         ItemStack endCrystal = Items.END_CRYSTAL.getDefaultInstance();
         endCrystal.setCount(4);
         return List.of(endCrystal);

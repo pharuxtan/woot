@@ -1,5 +1,7 @@
 package wootrevived.woot.datagen.recipes;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -16,29 +18,31 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
 public class ItemInfuser {
-    public static void registerRecipes(Recipes recipes, RecipeOutput consumer) {
+    public static void registerRecipes(Recipes recipes, HolderLookup.Provider registries, RecipeOutput consumer) {
+        HolderLookup.RegistryLookup<Item> itemRegistry = registries.lookupOrThrow(Registries.ITEM);
+
         ItemInfuserRecipeBuilder.itemInfuserRecipe(ItemsRegistry.PRISM_ITEM.get())
-                .ingredient(Ingredient.of(Tags.Items.GLASS_BLOCKS))
+                .ingredient(Ingredient.of(itemRegistry.getOrThrow(Tags.Items.GLASS_BLOCKS)))
                 .fluid(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), 1000)
                 .energy(5000)
                 .save(consumer);
 
         ItemInfuserRecipeBuilder.itemInfuserRecipe(Items.SOUL_SOIL)
                 .ingredient(Ingredient.of(Items.SOUL_SAND))
-                .augment(Ingredient.of(Tags.Items.SANDS))
+                .augment(Ingredient.of(itemRegistry.getOrThrow(Tags.Items.SANDS)))
                 .fluid(FluidsRegistry.SOURCE_MOB_TEARS_FLUID.get(), 1000)
                 .energy(5000)
                 .save(consumer);
 
         ItemInfuserRecipeBuilder.itemInfuserRecipe(Items.CRYING_OBSIDIAN)
-                .ingredient(Ingredient.of(Tags.Items.OBSIDIANS))
+                .ingredient(Ingredient.of(itemRegistry.getOrThrow(Tags.Items.OBSIDIANS)))
                 .fluid(FluidsRegistry.SOURCE_MOB_TEARS_FLUID.get(), 1000)
                 .energy(5000)
                 .save(consumer);
 
         ItemInfuserRecipeBuilder.itemInfuserRecipe(Items.FIRE_CHARGE, 3)
                 .ingredient(Ingredient.of(Items.GUNPOWDER))
-                .augment(Ingredient.of(ItemTags.COALS))
+                .augment(Ingredient.of(itemRegistry.getOrThrow(ItemTags.COALS)))
                 .fluid(Fluids.LAVA, 1000)
                 .energy(5000)
                 .save(consumer);

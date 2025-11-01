@@ -3,6 +3,8 @@ package wootrevived.woot.util.block;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -23,6 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.util.render.WootShapes;
 
 import java.util.function.Supplier;
@@ -30,8 +33,8 @@ import java.util.function.Supplier;
 public abstract class FactoryBlockBase extends Block implements EntityBlock {
     protected final Supplier<BlockEntityType<?>> entity;
 
-    public FactoryBlockBase(Supplier<BlockEntityType<?>> entity, Properties properties) {
-        super(properties);
+    public FactoryBlockBase(Supplier<BlockEntityType<?>> entity, String tag, Properties properties) {
+        super(properties.setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag))));
         this.entity = entity;
     }
 
@@ -76,7 +79,7 @@ public abstract class FactoryBlockBase extends Block implements EntityBlock {
         public @NotNull RenderShape getRenderShape() {
             if(getValue(BlockStateProperties.ENABLED) && getValue(BlockStateProperties.ATTACHED))
                 return RenderShape.MODEL;
-            return RenderShape.ENTITYBLOCK_ANIMATED;
+            return RenderShape.INVISIBLE;
         }
 
         @Override

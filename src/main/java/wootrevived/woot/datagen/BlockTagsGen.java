@@ -5,7 +5,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
@@ -14,8 +13,8 @@ import wootrevived.woot.registries.BlocksRegistry;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagsGen extends BlockTagsProvider {
-    public BlockTagsGen(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(packOutput, lookupProvider, Woot.MOD_ID, existingFileHelper);
+    public BlockTagsGen(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, Woot.MOD_ID);
     }
 
     @Override

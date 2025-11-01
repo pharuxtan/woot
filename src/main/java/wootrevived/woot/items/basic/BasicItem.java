@@ -1,18 +1,22 @@
 package wootrevived.woot.items.basic;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import wootrevived.woot.Woot;
 
 public class BasicItem extends Item {
     final Type itemType;
 
-    public BasicItem(Type itemType, int stackSize) {
-        super(new Properties().stacksTo(stackSize));
+    public BasicItem(Type itemType, String tag, int stackSize) {
+        super(new Properties().stacksTo(stackSize)
+                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
         this.itemType = itemType;
     }
 
-    public BasicItem(Type itemType) { this(itemType, 64); }
+    public BasicItem(Type itemType, String tag) { this(itemType, tag, 64); }
 
     @Override
     public boolean isFoil(@NotNull ItemStack stack) {

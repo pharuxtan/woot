@@ -7,8 +7,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -71,7 +71,7 @@ public class EnchantedLiquifierRecipeCategory implements IRecipeCategory<Enchant
     }
 
     @Override
-    public @NotNull RecipeType<EnchantedLiquifierRecipe> getRecipeType() {
+    public @NotNull IRecipeType<EnchantedLiquifierRecipe> getRecipeType() {
         return WootJeiPluginTypes.ENCHANTED_LIQUIFIER_TYPE;
     }
 
@@ -88,14 +88,14 @@ public class EnchantedLiquifierRecipeCategory implements IRecipeCategory<Enchant
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EnchantedLiquifierRecipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X + 1, INPUT_SLOT_Y + 1)
-                .addIngredients(recipe.getIngredient());
+                .addItemStacks(recipe.getIngredients());
 
         FluidStack outputFluid = recipe.getOutput();
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_FLUID_X + 3, OUTPUT_FLUID_Y + 3)
-                .addFluidStack(outputFluid.getFluid(), outputFluid.getAmount())
+                .add(outputFluid.getFluid(), outputFluid.getAmount())
                 .setCustomRenderer(NeoForgeTypes.FLUID_STACK, new WootJeiCustomFluidRenderer(EnchantedLiquifierConfig.OUTPUT_TANK_CAPACITY.get()));
 
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addItemStack(outputFluid.getFluid().getBucket().getDefaultInstance());
+                .add(outputFluid.getFluid().getBucket().getDefaultInstance());
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:stygian_ingot",
+    "b": "woot_revived:stygian_plate",
+    "c": "minecraft:crying_obsidian"
+  },
+  "pattern": [
+    "aba",
+    "bcb",
+    "aba"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:factory_base"
+  }
+}

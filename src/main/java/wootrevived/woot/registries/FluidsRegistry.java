@@ -1,6 +1,8 @@
 package wootrevived.woot.registries;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
@@ -67,8 +69,8 @@ public class FluidsRegistry {
     );
     public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_VITALITY_FUEL_FLUID = FLUIDS.register(VITALITY_FUEL_FLUID_TAG, () -> new BaseFlowingFluid.Source(FluidsRegistry.VITALITY_FUEL_FLUID_PROPERTIES));
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_VITALITY_FUEL_FLUID = FLUIDS.register(VITALITY_FUEL_FLUID_TAG + "_flowing", () -> new BaseFlowingFluid.Flowing(FluidsRegistry.VITALITY_FUEL_FLUID_PROPERTIES));
-    public static final DeferredHolder<Block, LiquidBlock> VITALITY_FUEL_FLUID_BLOCK = BLOCKS.register(VITALITY_FUEL_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_VITALITY_FUEL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable()));
-    public static final DeferredHolder<Item, BucketItem> VITALITY_FUEL_FLUID_BUCKET = ITEMS.register(VITALITY_FUEL_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_VITALITY_FUEL_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> VITALITY_FUEL_FLUID_BLOCK = BLOCKS.register(VITALITY_FUEL_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_VITALITY_FUEL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable().setId(ResourceKey.create(Registries.BLOCK, Woot.location(VITALITY_FUEL_FLUID_TAG + "_block")))));
+    public static final DeferredHolder<Item, BucketItem> VITALITY_FUEL_FLUID_BUCKET = ITEMS.register(VITALITY_FUEL_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_VITALITY_FUEL_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(ResourceKey.create(Registries.ITEM, Woot.location(VITALITY_FUEL_FLUID_TAG + "_bucket")))));
     public static final BaseFlowingFluid.Properties VITALITY_FUEL_FLUID_PROPERTIES = new BaseFlowingFluid.Properties(VITALITY_FUEL_FLUID_TYPE, SOURCE_VITALITY_FUEL_FLUID, FLOWING_VITALITY_FUEL_FLUID)
             .block(VITALITY_FUEL_FLUID_BLOCK)
             .bucket(VITALITY_FUEL_FLUID_BUCKET);
@@ -87,8 +89,8 @@ public class FluidsRegistry {
     );
     public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_PURE_DYE_FLUID = FLUIDS.register(PURE_DYE_FLUID_TAG, () -> new BaseFlowingFluid.Source(FluidsRegistry.PURE_DYE_FLUID_PROPERTIES));
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_PURE_DYE_FLUID = FLUIDS.register(PURE_DYE_FLUID_TAG + "_flowing", () -> new BaseFlowingFluid.Flowing(FluidsRegistry.PURE_DYE_FLUID_PROPERTIES));
-    public static final DeferredHolder<Block, LiquidBlock> PURE_DYE_FLUID_BLOCK = BLOCKS.register(PURE_DYE_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_PURE_DYE_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable()));
-    public static final DeferredHolder<Item, BucketItem> PURE_DYE_FLUID_BUCKET = ITEMS.register(PURE_DYE_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_PURE_DYE_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> PURE_DYE_FLUID_BLOCK = BLOCKS.register(PURE_DYE_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_PURE_DYE_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable().setId(ResourceKey.create(Registries.BLOCK, Woot.location(PURE_DYE_FLUID_TAG + "_block")))));
+    public static final DeferredHolder<Item, BucketItem> PURE_DYE_FLUID_BUCKET = ITEMS.register(PURE_DYE_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_PURE_DYE_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(ResourceKey.create(Registries.ITEM, Woot.location(PURE_DYE_FLUID_TAG + "_bucket")))));
     public static final BaseFlowingFluid.Properties PURE_DYE_FLUID_PROPERTIES = new BaseFlowingFluid.Properties(PURE_DYE_FLUID_TYPE, SOURCE_PURE_DYE_FLUID, FLOWING_PURE_DYE_FLUID)
             .block(PURE_DYE_FLUID_BLOCK)
             .bucket(PURE_DYE_FLUID_BUCKET);
@@ -107,8 +109,8 @@ public class FluidsRegistry {
     );
     public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_ENCHANTED_FLUID = FLUIDS.register(ENCHANTED_FLUID_TAG, () -> new BaseFlowingFluid.Source(FluidsRegistry.ENCHANTED_FLUID_PROPERTIES));
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_ENCHANTED_FLUID = FLUIDS.register(ENCHANTED_FLUID_TAG + "_flowing", () -> new BaseFlowingFluid.Flowing(FluidsRegistry.ENCHANTED_FLUID_PROPERTIES));
-    public static final DeferredHolder<Block, LiquidBlock> ENCHANTED_FLUID_BLOCK = BLOCKS.register(ENCHANTED_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_ENCHANTED_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable()));
-    public static final DeferredHolder<Item, BucketItem> ENCHANTED_FLUID_BUCKET = ITEMS.register(ENCHANTED_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_ENCHANTED_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1)) {
+    public static final DeferredHolder<Block, LiquidBlock> ENCHANTED_FLUID_BLOCK = BLOCKS.register(ENCHANTED_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_ENCHANTED_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.WATER).noLootTable().setId(ResourceKey.create(Registries.BLOCK, Woot.location(ENCHANTED_FLUID_TAG + "_block")))));
+    public static final DeferredHolder<Item, BucketItem> ENCHANTED_FLUID_BUCKET = ITEMS.register(ENCHANTED_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_ENCHANTED_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(ResourceKey.create(Registries.ITEM, Woot.location(ENCHANTED_FLUID_TAG + "_bucket")))) {
         @Override
         public boolean isFoil(@NotNull ItemStack stack) {
             return true;
@@ -132,8 +134,8 @@ public class FluidsRegistry {
     );
     public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_MOB_TEARS_FLUID = FLUIDS.register(MOB_TEARS_FLUID_TAG, () -> new BaseFlowingFluid.Source(FluidsRegistry.MOB_TEARS_FLUID_PROPERTIES));
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_MOB_TEARS_FLUID = FLUIDS.register(MOB_TEARS_FLUID_TAG + "_flowing", () -> new BaseFlowingFluid.Flowing(FluidsRegistry.MOB_TEARS_FLUID_PROPERTIES));
-    public static final DeferredHolder<Block, LiquidBlock> MOB_TEARS_FLUID_BLOCK = BLOCKS.register(MOB_TEARS_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_MOB_TEARS_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
-    public static final DeferredHolder<Item, BucketItem> MOB_TEARS_FLUID_BUCKET = ITEMS.register(MOB_TEARS_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_MOB_TEARS_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> MOB_TEARS_FLUID_BLOCK = BLOCKS.register(MOB_TEARS_FLUID_TAG + "_block", () -> new LiquidBlock(SOURCE_MOB_TEARS_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable().setId(ResourceKey.create(Registries.BLOCK, Woot.location(MOB_TEARS_FLUID_TAG + "_block")))));
+    public static final DeferredHolder<Item, BucketItem> MOB_TEARS_FLUID_BUCKET = ITEMS.register(MOB_TEARS_FLUID_TAG + "_bucket", () -> new BucketItem(SOURCE_MOB_TEARS_FLUID.get(), new BucketItem.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(ResourceKey.create(Registries.ITEM, Woot.location(MOB_TEARS_FLUID_TAG + "_bucket")))));
     public static final BaseFlowingFluid.Properties MOB_TEARS_FLUID_PROPERTIES = new BaseFlowingFluid.Properties(MOB_TEARS_FLUID_TYPE, SOURCE_MOB_TEARS_FLUID, FLOWING_MOB_TEARS_FLUID)
             .block(MOB_TEARS_FLUID_BLOCK)
             .bucket(MOB_TEARS_FLUID_BUCKET);

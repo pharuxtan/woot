@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/iron",
+    "b": "#c:dusts/redstone",
+    "c": "woot_revived:copper_rate_upgrade"
+  },
+  "pattern": [
+    "aba",
+    "bcb",
+    "aba"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:iron_rate_upgrade"
+  }
+}

@@ -1,22 +1,22 @@
 package wootrevived.woot.items.dye_casing;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.MapColor;
+import wootrevived.woot.Woot;
+import wootrevived.woot.util.common.WootDyeItem;
 
-public class DyeCasingItem extends Item {
+public class DyeCasingItem extends WootDyeItem {
     final DyeColor color;
 
-    public DyeCasingItem(DyeColor color) {
-        super(new Properties().stacksTo(64));
+    public DyeCasingItem(DyeColor color, String tag) {
+        super(new Properties().stacksTo(64)
+                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
         this.color = color;
     }
 
     public int getColor() {
-        int rgbColor = color.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH);
-        return 0xFF000000 |
-                ((rgbColor & 0xFF) << 16) |
-                (((rgbColor >> 8) & 0xFF) << 8) |
-                ((rgbColor >> 16) & 0xFF);
+        return color.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH);
     }
 }

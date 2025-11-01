@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/netherite",
+    "b": "minecraft:stick",
+    "c": "woot_revived:diamond_looting_upgrade"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_looting_upgrade"
+  }
+}

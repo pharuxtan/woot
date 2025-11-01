@@ -11,7 +11,8 @@ plugins {
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version.toInteger())
 java.withSourcesJar()
 
-sourceSets.main.resources.srcDirs += "src/main/generated"
+sourceSets.main.resources.srcDirs += "src/main/generated/client"
+sourceSets.main.resources.srcDirs += "src/main/generated/server"
 
 group = 'wootrevived'
 def buildVersion = "${mod_version}"
@@ -41,12 +42,20 @@ neoForge {
             systemProperty "guideme.woot_revived.guide.sourcesNamespace", "woot_revived"
         }
 
-        data {
-            data()
+        clientData {
+            clientData()
 
             gameDirectory = file('runs/data')
 
-            programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/main/generated/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/main/generated/client/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        serverData {
+            serverData()
+
+            gameDirectory = file('runs/data')
+
+            programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/main/generated/server/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
         server {
@@ -74,8 +83,7 @@ tasks.withType(ProcessResources).configureEach {
             neo_version       : neo_version,
             guideme_version   : guideme_version,
             jei_version       : jei_version,
-            jade_version      : jade_version,
-            kubejs_version    : kubejs_version
+            jade_version      : jade_version
     ]
     inputs.properties replaceProperties
 
@@ -112,10 +120,6 @@ dependencies {
     // GuideME
     compileOnly "org.appliedenergistics:guideme:${guideme_version}:api"
     localRuntime "org.appliedenergistics:guideme:${guideme_version}"
-
-    // KubeJS
-    implementation "maven.modrinth:kubejs:${kubejs_version}+KubeJS-1.21.1"
-    implementation "maven.modrinth:rhino:${rhino_version}+Rhino-1.21"
 
     // Optimizations
     localRuntime "maven.modrinth:ferrite-core:${ferritecore_version}"

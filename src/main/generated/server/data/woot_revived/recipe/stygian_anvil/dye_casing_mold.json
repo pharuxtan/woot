@@ -1,0 +1,10 @@
+{
+  "type": "woot_revived:stygian_anvil",
+  "base": "#c:dyes",
+  "first_complementary": "minecraft:quartz",
+  "output": {
+    "count": 1,
+    "id": "woot_revived:dye_casing_mold"
+  },
+  "second_complementary": "woot_revived:stygian_ingot"
+}

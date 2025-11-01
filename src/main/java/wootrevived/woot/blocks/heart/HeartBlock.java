@@ -4,9 +4,9 @@ import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,8 +34,8 @@ import wootrevived.woot.util.render.WootShapes;
 import java.util.function.Supplier;
 
 public class HeartBlock extends MultiBlockFactory {
-    public HeartBlock(Supplier<BlockEntityType<?>> entity) {
-        super(entity, Block.Properties.of()
+    public HeartBlock(Supplier<BlockEntityType<?>> entity, String tag) {
+        super(entity, tag, Block.Properties.of()
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -77,24 +77,24 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
             if (level.isClientSide)
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
 
             if(!getValue(BlockStateProperties.ENABLED))
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
 
             if (!(level.getBlockEntity(hit.getBlockPos()) instanceof HeartBlockEntity heart))
                 throw new IllegalStateException("BlockEntity is missing");
 
             player.openMenu(heart, buf -> buf.writeBlockPos(hit.getBlockPos()));
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS_SERVER;
         }
 
         @Override
         public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
-            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit).result();
+            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
         public BlockState rotate(LevelAccessor level, BlockPos pos, Rotation rotation) {
@@ -119,7 +119,7 @@ public class HeartBlock extends MultiBlockFactory {
         public @NotNull RenderShape getRenderShape() {
             if(getValue(BlockStateProperties.ENABLED))
                 return RenderShape.MODEL;
-            return RenderShape.ENTITYBLOCK_ANIMATED;
+            return RenderShape.INVISIBLE;
         }
 
         @Override
@@ -129,9 +129,9 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public void onRemove(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
             if(getValue(BlockStateProperties.ENABLED))
-                super.onRemove(level, pos, newState, isMoving);
+                super.affectNeighborsAfterRemoval(level, pos, movedByPiston);
         }
     }
 }

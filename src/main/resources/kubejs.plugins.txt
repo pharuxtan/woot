@@ -1,1 +1,0 @@
-wootrevived.woot.compat.kubejs.WootKubeJSPlugin

@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:stygian_anvil",
+  "base": "woot_revived:dye_casing_mold",
+  "first_complementary": "#c:dyes/white",
+  "output": {
+    "count": 1,
+    "id": "woot_revived:white_dye_casing"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:iron_shard",
+    "b": "#c:ingots/gold",
+    "c": "woot_revived:iron_shard_drop_upgrade"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:gold_shard_drop_upgrade"
+  }
+}

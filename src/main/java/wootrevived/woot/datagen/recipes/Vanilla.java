@@ -1,6 +1,11 @@
 package wootrevived.woot.datagen.recipes;
 
-import net.minecraft.data.recipes.*;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
@@ -14,10 +19,10 @@ import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
 
 public class Vanilla {
-    public static void registerRecipes(Recipes recipes, RecipeOutput output){
+    public static void registerRecipes(Recipes recipes, HolderLookup.Provider registries, RecipeOutput output){
         /* Stygian Related */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.STYGIAN_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.STYGIAN_BLOCK.get())
                 .pattern("aaa")
                 .pattern("aaa")
                 .pattern("aaa")
@@ -26,13 +31,13 @@ public class Vanilla {
                 .unlockedBy("a", recipes.hasItem(ItemsRegistry.STYGIAN_INGOT_ITEM.get()))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.STYGIAN_INGOT_ITEM.get(), 9)
+        recipes.buildShapeless(RecipeCategory.MISC, ItemsRegistry.STYGIAN_INGOT_ITEM.get(), 9)
                 .requires(BlocksRegistry.STYGIAN_BLOCK.get())
                 .group(Woot.MOD_ID)
                 .unlockedBy("0", recipes.hasItem(BlocksRegistry.STYGIAN_BLOCK.get()))
-                .save(output, Woot.location("stygian_ingot_block"));
+                .save(output, ResourceKey.create(Registries.RECIPE, Woot.location("stygian_ingot_block")));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.STYGIAN_DUST_ITEM.get(), 2)
+        recipes.buildShapeless(RecipeCategory.MISC, ItemsRegistry.STYGIAN_DUST_ITEM.get(), 2)
                 .requires(Blocks.SOUL_SOIL)
                 .requires(Tags.Items.GEMS_AMETHYST)
                 .requires(Tags.Items.INGOTS_IRON)
@@ -51,9 +56,9 @@ public class Vanilla {
                         1.0F, 200)
                 .group(Woot.MOD_ID)
                 .unlockedBy("0", recipes.hasItem(ItemsRegistry.STYGIAN_DUST_ITEM.get()))
-                .save(output, Woot.location("stygian_ingot_cook"));
+                .save(output, ResourceKey.create(Registries.RECIPE, Woot.location("stygian_ingot_cook")));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemsRegistry.STYGIAN_HAMMER_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ItemsRegistry.STYGIAN_HAMMER_ITEM.get())
                 .pattern(" ba")
                 .pattern(" cb")
                 .pattern("c  ")
@@ -68,7 +73,7 @@ public class Vanilla {
 
         /* Xp Shard */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemsRegistry.XP_SHARD_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ItemsRegistry.XP_SHARD_ITEM.get())
                 .pattern("aaa")
                 .pattern("aaa")
                 .pattern("aaa")
@@ -79,7 +84,7 @@ public class Vanilla {
 
         /* Anvil */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.STYGIAN_ANVIL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.STYGIAN_ANVIL_BLOCK.get())
                 .pattern("aaa")
                 .pattern(" b ")
                 .pattern("ccc")
@@ -94,7 +99,7 @@ public class Vanilla {
 
         /* Layout */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.LAYOUT_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.LAYOUT_BLOCK.get())
                 .pattern(" b ")
                 .pattern("bcb")
                 .pattern(" a ")
@@ -109,7 +114,7 @@ public class Vanilla {
 
         /* Machines */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.ITEM_INFUSER_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.ITEM_INFUSER_BLOCK.get())
                 .pattern(" a ")
                 .pattern("cdc")
                 .pattern(" b ")
@@ -124,7 +129,7 @@ public class Vanilla {
                 .unlockedBy("d", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FLUID_INFUSER_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FLUID_INFUSER_BLOCK.get())
                 .pattern(" a ")
                 .pattern("cdc")
                 .pattern(" b ")
@@ -139,7 +144,7 @@ public class Vanilla {
                 .unlockedBy("d", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.DYE_LIQUIFIER_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.DYE_LIQUIFIER_BLOCK.get())
                 .pattern("rgy")
                 .pattern("lfm")
                 .pattern("bnw")
@@ -157,7 +162,7 @@ public class Vanilla {
                 .unlockedBy("f", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get())
                 .pattern("tpt")
                 .pattern("tct")
                 .pattern("tbt")
@@ -174,7 +179,7 @@ public class Vanilla {
 
         /* Factory Blocks */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_BASE_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_BASE_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -187,7 +192,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Blocks.CRYING_OBSIDIAN))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.COPPER_CELL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.COPPER_CELL_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -200,7 +205,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.IRON_CELL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.IRON_CELL_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -213,7 +218,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.GOLD_CELL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.GOLD_CELL_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -226,7 +231,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_CELL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_CELL_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -239,7 +244,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_CELL_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_CELL_BLOCK.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -252,7 +257,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.COPPER_PYLON_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.COPPER_PYLON_BLOCK.get())
                 .pattern("aba")
                 .pattern("aca")
                 .pattern("aba")
@@ -265,7 +270,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.IRON_PYLON_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.IRON_PYLON_BLOCK.get())
                 .pattern("aba")
                 .pattern("aca")
                 .pattern("aba")
@@ -278,7 +283,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.GOLD_PYLON_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.GOLD_PYLON_BLOCK.get())
                 .pattern("aba")
                 .pattern("aca")
                 .pattern("aba")
@@ -291,7 +296,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_PYLON_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_PYLON_BLOCK.get())
                 .pattern("aba")
                 .pattern("aca")
                 .pattern("aba")
@@ -304,7 +309,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_PYLON_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_PYLON_BLOCK.get())
                 .pattern("aba")
                 .pattern("aca")
                 .pattern("aba")
@@ -317,7 +322,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.COPPER_PLINTH_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.COPPER_PLINTH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("aaa")
@@ -330,7 +335,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.IRON_PLINTH_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.IRON_PLINTH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("aaa")
@@ -343,7 +348,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.GOLD_PLINTH_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.GOLD_PLINTH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("aaa")
@@ -356,7 +361,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_PLINTH_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_PLINTH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("aaa")
@@ -369,7 +374,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_PLINTH_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_PLINTH_BLOCK.get())
                 .pattern("aaa")
                 .pattern("bcb")
                 .pattern("aaa")
@@ -382,7 +387,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.HEART_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.HEART_BLOCK.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -395,7 +400,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(ItemsRegistry.PURPLE_DYE_PLATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CONNECT_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CONNECT_BLOCK.get())
                 .pattern("bab")
                 .pattern("bcb")
                 .pattern("bab")
@@ -408,7 +413,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.IMPORT_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.IMPORT_BLOCK.get())
                 .pattern("bab")
                 .pattern("bcb")
                 .pattern("bab")
@@ -421,7 +426,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.EXPORT_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.EXPORT_BLOCK.get())
                 .pattern("bab")
                 .pattern("bcb")
                 .pattern("bab")
@@ -434,7 +439,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get())
                 .pattern("cdc")
                 .pattern("aba")
                 .pattern("cdc")
@@ -449,7 +454,7 @@ public class Vanilla {
                 .unlockedBy("d", recipes.hasItem(ItemsRegistry.PRISM_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get())
                 .pattern("cdc")
                 .pattern("aba")
                 .pattern("cdc")
@@ -466,7 +471,7 @@ public class Vanilla {
 
         /* Upgrade Items */
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get())
                 .pattern(" a ")
                 .pattern("aba")
                 .pattern(" a ")
@@ -477,7 +482,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(ItemsRegistry.BLACK_DYE_PLATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_UPGRADE_BLOCK.get())
+        recipes.buildShaped(RecipeCategory.MISC, BlocksRegistry.FACTORY_UPGRADE_BLOCK.get())
                 .pattern(" a ")
                 .pattern("aba")
                 .pattern(" a ")
@@ -488,7 +493,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(BlocksRegistry.FACTORY_BASE_BLOCK.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Decapitate.COPPER_DECAPITATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Decapitate.COPPER_DECAPITATE_ITEM.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -501,7 +506,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Tags.Items.INGOTS_COPPER))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Decapitate.IRON_DECAPITATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Decapitate.IRON_DECAPITATE_ITEM.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -514,7 +519,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Tags.Items.INGOTS_IRON))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Decapitate.GOLD_DECAPITATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Decapitate.GOLD_DECAPITATE_ITEM.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -527,7 +532,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Tags.Items.INGOTS_GOLD))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Decapitate.DIAMOND_DECAPITATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Decapitate.DIAMOND_DECAPITATE_ITEM.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -540,7 +545,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Tags.Items.GEMS_DIAMOND))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Decapitate.NETHERITE_DECAPITATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Decapitate.NETHERITE_DECAPITATE_ITEM.get())
                 .pattern("cac")
                 .pattern("aba")
                 .pattern("cac")
@@ -553,7 +558,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Tags.Items.INGOTS_NETHERITE))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Efficiency.COPPER_EFFICIENCY_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Efficiency.COPPER_EFFICIENCY_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -566,7 +571,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Efficiency.IRON_EFFICIENCY_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Efficiency.IRON_EFFICIENCY_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -579,7 +584,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Efficiency.COPPER_EFFICIENCY_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Efficiency.GOLD_EFFICIENCY_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Efficiency.GOLD_EFFICIENCY_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -592,7 +597,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Efficiency.IRON_EFFICIENCY_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Efficiency.DIAMOND_EFFICIENCY_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Efficiency.DIAMOND_EFFICIENCY_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -605,7 +610,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Efficiency.GOLD_EFFICIENCY_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Efficiency.NETHERITE_EFFICIENCY_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Efficiency.NETHERITE_EFFICIENCY_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -618,7 +623,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Efficiency.DIAMOND_EFFICIENCY_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Looting.COPPER_LOOTING_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Looting.COPPER_LOOTING_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -631,7 +636,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Looting.IRON_LOOTING_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Looting.IRON_LOOTING_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -644,7 +649,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Looting.COPPER_LOOTING_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Looting.GOLD_LOOTING_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Looting.GOLD_LOOTING_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -657,7 +662,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Looting.IRON_LOOTING_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Looting.DIAMOND_LOOTING_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Looting.DIAMOND_LOOTING_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -670,7 +675,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Looting.GOLD_LOOTING_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Looting.NETHERITE_LOOTING_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Looting.NETHERITE_LOOTING_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -683,7 +688,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Looting.DIAMOND_LOOTING_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Mass.COPPER_MASS_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Mass.COPPER_MASS_ITEM.get())
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
@@ -694,7 +699,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Mass.IRON_MASS_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Mass.IRON_MASS_ITEM.get())
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
@@ -705,7 +710,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(Mass.COPPER_MASS_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Mass.GOLD_MASS_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Mass.GOLD_MASS_ITEM.get())
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
@@ -716,7 +721,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(Mass.IRON_MASS_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Mass.DIAMOND_MASS_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Mass.DIAMOND_MASS_ITEM.get())
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
@@ -727,7 +732,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(Mass.GOLD_MASS_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Mass.NETHERITE_MASS_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Mass.NETHERITE_MASS_ITEM.get())
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
@@ -738,7 +743,7 @@ public class Vanilla {
                 .unlockedBy("b", recipes.hasItem(Mass.DIAMOND_MASS_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Rate.COPPER_RATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Rate.COPPER_RATE_ITEM.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -751,7 +756,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Rate.IRON_RATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Rate.IRON_RATE_ITEM.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -764,7 +769,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Rate.COPPER_RATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Rate.GOLD_RATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Rate.GOLD_RATE_ITEM.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -777,7 +782,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Rate.IRON_RATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Rate.DIAMOND_RATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Rate.DIAMOND_RATE_ITEM.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -790,7 +795,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Rate.GOLD_RATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Rate.NETHERITE_RATE_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Rate.NETHERITE_RATE_ITEM.get())
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("aba")
@@ -803,7 +808,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Rate.DIAMOND_RATE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ShardDrop.IRON_SHARD_DROP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ShardDrop.IRON_SHARD_DROP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -816,7 +821,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ShardDrop.GOLD_SHARD_DROP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ShardDrop.GOLD_SHARD_DROP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -829,7 +834,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(ShardDrop.IRON_SHARD_DROP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ShardDrop.DIAMOND_SHARD_DROP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ShardDrop.DIAMOND_SHARD_DROP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -842,7 +847,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(ShardDrop.GOLD_SHARD_DROP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ShardDrop.NETHERITE_SHARD_DROP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, ShardDrop.NETHERITE_SHARD_DROP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -855,7 +860,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(ShardDrop.DIAMOND_SHARD_DROP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Xp.COPPER_XP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Xp.COPPER_XP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -868,7 +873,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Xp.IRON_XP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Xp.IRON_XP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -881,7 +886,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Xp.COPPER_XP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Xp.GOLD_XP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Xp.GOLD_XP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -894,7 +899,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Xp.IRON_XP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Xp.DIAMOND_XP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Xp.DIAMOND_XP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -907,7 +912,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Xp.GOLD_XP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Xp.NETHERITE_XP_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Xp.NETHERITE_XP_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -920,7 +925,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Xp.DIAMOND_XP_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Burn.BURN_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Burn.BURN_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -933,7 +938,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Dimension.NETHER_DIMENSION_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Dimension.NETHER_DIMENSION_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -946,7 +951,7 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Dimension.END_DIMENSION_ITEM.get())
+        recipes.buildShaped(RecipeCategory.MISC, Dimension.END_DIMENSION_ITEM.get())
                 .pattern("bab")
                 .pattern("aca")
                 .pattern("bab")
@@ -961,7 +966,7 @@ public class Vanilla {
 
         /* Guide Book */
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemsRegistry.GUIDE_BOOK_ITEM.get())
+        recipes.buildShapeless(RecipeCategory.MISC, ItemsRegistry.GUIDE_BOOK_ITEM.get())
                 .requires(Items.BOOK)
                 .requires(ItemsRegistry.STYGIAN_INGOT_ITEM.get())
                 .group(Woot.MOD_ID)

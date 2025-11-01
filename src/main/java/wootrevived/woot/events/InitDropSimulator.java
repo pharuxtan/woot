@@ -5,6 +5,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -41,7 +42,7 @@ public class InitDropSimulator {
                 }
 
                 try {
-                    Entity entity = entityType.create(level);
+                    Entity entity = entityType.create(level, EntitySpawnReason.SPAWNER);
                     if(!(entity instanceof LivingEntity)) {
                         WootFactoryMobsRegistry.removeFactoryMob(entityType);
                         continue;

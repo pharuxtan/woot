@@ -3,6 +3,7 @@ package wootrevived.woot.events.client;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.locale.Language;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -43,7 +44,7 @@ public class GuideCacheLivingEntities {
             }
 
             try {
-                Entity entity = entityType.create(level);
+                Entity entity = entityType.create(level, EntitySpawnReason.SPAWNER);
                 if(!(entity instanceof LivingEntity livingEntity)) {
                     WootFactoryMobsRegistry.removeFactoryMob(entityType);
                     continue;

@@ -5,10 +5,12 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -172,8 +174,8 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        ItemInfuserData.Component component = input.get(ComponentsRegistry.ITEM_INFUSER_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        ItemInfuserData.Component component = getter.get(ComponentsRegistry.ITEM_INFUSER_DATA);
         if(component == null)
             return;
 
@@ -192,7 +194,6 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
 
         tag.put(WootTags.INPUT_INVENTORY_TAG, inputSlotHandler.serializeNBT(provider));
         tag.put(WootTags.AUGMENT_INVENTORY_TAG, augmentSlotHandler.serializeNBT(provider));
-
         tag.put(WootTags.OUTPUT_INVENTORY_TAG, outputSlotHandler.serializeNBT(provider));
 
         ItemInfuserData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
@@ -204,16 +205,16 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            inputSlotHandler.deserializeNBT(provider, tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.AUGMENT_INVENTORY_TAG))
-            augmentSlotHandler.deserializeNBT(provider, tag.getCompound(WootTags.AUGMENT_INVENTORY_TAG));
-
-        if(tag.contains(WootTags.OUTPUT_INVENTORY_TAG))
-            outputSlotHandler.deserializeNBT(provider, tag.getCompound(WootTags.OUTPUT_INVENTORY_TAG));
+        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inputSlotHandler.deserializeNBT(provider, handler));
+        tag.getCompound(WootTags.AUGMENT_INVENTORY_TAG).ifPresent(handler -> augmentSlotHandler.deserializeNBT(provider, handler));
+        tag.getCompound(WootTags.OUTPUT_INVENTORY_TAG).ifPresent(handler -> outputSlotHandler.deserializeNBT(provider, handler));
 
         ItemInfuserData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropContents(level, pos);
     }
 
     public void dropContents(Level level, BlockPos pos) {
@@ -298,21 +299,27 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         ItemInfuserRecipe recipe = this.recipe;
 
         ItemStack item = inputSlotHandler.getStackInSlot(INPUT_SLOT);
-        if(item.getItem().hasCraftingRemainingItem(item)){
-            inputSlotHandler.setStackInSlot(INPUT_SLOT, item.getItem().getCraftingRemainingItem(item));
-        } else {
-            int inputSize = recipe.ingredientCount(inputSlotHandler.getStackInSlot(INPUT_SLOT).getItem());
-            inputSlotHandler.extractItem(INPUT_SLOT, inputSize, false);
+        int ingredientAmount = recipe.ingredientCount(item.getItem());
+        for(int i = 0; i < ingredientAmount; i++){
+            ItemStack remainder = item.getCraftingRemainder();
+            if(!remainder.isEmpty())
+                item = remainder;
+            else
+                item.shrink(1);
         }
+        inputSlotHandler.setStackInSlot(INPUT_SLOT, item);
 
         if (recipe.getAugment().isPresent()){
             ItemStack augment = augmentSlotHandler.getStackInSlot(AUGMENT_SLOT);
-            if(augment.getItem().hasCraftingRemainingItem(augment)){
-                augmentSlotHandler.setStackInSlot(AUGMENT_SLOT, augment.getItem().getCraftingRemainingItem(augment));
-            } else {
-                int augmentSize = recipe.augmentCount(augmentSlotHandler.getStackInSlot(AUGMENT_SLOT).getItem());
-                augmentSlotHandler.extractItem(AUGMENT_SLOT, augmentSize, false);
+            int augmentAmount = recipe.augmentCount(item.getItem());
+            for(int i = 0; i < augmentAmount; i++){
+                ItemStack remainder = augment.getCraftingRemainder();
+                if(!remainder.isEmpty())
+                    augment = remainder;
+                else
+                    augment.shrink(1);
             }
+            augmentSlotHandler.setStackInSlot(AUGMENT_SLOT, augment);
         }
 
         ItemStack itemStack = recipe.getOutput();
@@ -350,12 +357,15 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     //endregion
 
     private void getRecipe() {
+        if(!(level instanceof ServerLevel serverLevel))
+            return;
+
         if (inputTankHandler.isEmpty() || inputTankHandler.getFluid().getFluid().getBucket() == null) {
             clearRecipe();
             return;
         }
 
-        RecipeHolder<ItemInfuserRecipe> recipeHolder = level.getRecipeManager().getRecipeFor(
+        RecipeHolder<ItemInfuserRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(
                 RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get(),
                 new WootRecipeInput(
                         Either.right(inputTankHandler.getFluid()),

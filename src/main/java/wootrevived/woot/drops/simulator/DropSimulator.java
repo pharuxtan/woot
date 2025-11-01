@@ -2,7 +2,7 @@ package wootrevived.woot.drops.simulator;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -32,9 +33,9 @@ import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.woot.Woot;
+import wootrevived.woot.mixins.accessors.LevelMixinAccessor;
 import wootrevived.woot.mixins.accessors.ServerLevelMixinAccessor;
 import wootrevived.woot.mixins.impl.*;
-import wootrevived.woot.mixins.accessors.LevelMixinAccessor;
 
 import java.util.*;
 
@@ -63,7 +64,7 @@ public class DropSimulator {
         return INSTANCE.dimensionLevel.getRandom();
     }
 
-    public static @NotNull HolderLookup.Provider getLookupProvider() {
+    public static @NotNull RegistryAccess getRegistryAccess() {
         return INSTANCE.dimensionLevel.registryAccess();
     }
 
@@ -106,7 +107,7 @@ public class DropSimulator {
         fakeEntityManager.clearEntityList();
 
         livingEntity.tickCount = 100;
-        livingEntity.setLastHurtByPlayer(fakePlayer);
+        livingEntity.setLastHurtByPlayer(fakePlayer, 100);
         Holder<Attribute> luckAttributeHolder = Attributes.LUCK;
         RangedAttribute luckAttribute = (RangedAttribute)luckAttributeHolder.value();
         fakePlayer.getAttribute(luckAttributeHolder).setBaseValue(Mth.clamp(properties.getLuck(), luckAttribute.getMinValue(), luckAttribute.getMaxValue()));
@@ -119,10 +120,10 @@ public class DropSimulator {
         livingEntity.captureDrops(new java.util.ArrayList<>());
 
         LivingEntityMixin mixin = (LivingEntityMixin)livingEntity;
-        mixin.woot$dropFromLootTable(playerSource, true);
+        mixin.woot$dropFromLootTable(dimensionLevel, playerSource, true);
         mixin.woot$dropCustomDeathLoot(dimensionLevel, playerSource, true);
-        mixin.woot$dropEquipment();
-        mixin.woot$dropExperience(fakePlayer);
+        mixin.woot$dropEquipment(dimensionLevel);
+        mixin.woot$dropExperience(dimensionLevel, fakePlayer);
 
         Collection<ItemEntity> eventDrops = livingEntity.captureDrops(null);
         CommonHooks.onLivingDrops(livingEntity, playerSource, eventDrops, true);
@@ -151,7 +152,7 @@ public class DropSimulator {
         fakeEntityManager.clearEntityList();
 
         livingEntity.tickCount = 0;
-        livingEntity.setLastHurtByPlayer(null);
+        livingEntity.setLastHurtByPlayer((Player) null, 100);
 
         ((CreeperMixin) chargedCreeper).woot$setDroppedSkulls(0);
 
@@ -182,7 +183,7 @@ public class DropSimulator {
         enderDragon.setSilent(true);
 
         EnderDragonMixin dragonMixin = (EnderDragonMixin)enderDragon;
-        dragonMixin.woot$setUnlimitedLastHurtByPlayer(fakePlayer);
+        dragonMixin.woot$setUnlimitedLastHurtByPlayer(new EntityReference<>(fakePlayer));
 
         for(enderDragon.dragonDeathTime = 0; !((EndDragonFightMixin) enderDragon.getDragonFight()).woot$getDragonKilled();){
             dragonMixin.woot$tickDeath();
@@ -191,10 +192,10 @@ public class DropSimulator {
         enderDragon.captureDrops(new java.util.ArrayList<>());
 
         LivingEntityMixin mixin = (LivingEntityMixin)enderDragon;
-        mixin.woot$dropFromLootTable(playerSource, true);
+        mixin.woot$dropFromLootTable(dimensionLevel, playerSource, true);
         mixin.woot$dropCustomDeathLoot(dimensionLevel, playerSource, true);
-        mixin.woot$dropEquipment();
-        mixin.woot$dropExperience(fakePlayer);
+        mixin.woot$dropEquipment(dimensionLevel);
+        mixin.woot$dropExperience(dimensionLevel, fakePlayer);
 
         Collection<ItemEntity> eventDrops = enderDragon.captureDrops(null);
         CommonHooks.onLivingDrops(enderDragon, playerSource, eventDrops, true);
@@ -243,7 +244,7 @@ public class DropSimulator {
         CompoundTag creeper = new CompoundTag();
         creeper.putString("id", "minecraft:creeper");
         creeper.putBoolean("powered", true);
-        chargedCreeper = (Creeper)EntityType.loadEntityRecursive(creeper, dimensionLevel, e -> e);
+        chargedCreeper = (Creeper)EntityType.loadEntityRecursive(creeper, dimensionLevel, EntitySpawnReason.SPAWNER, e -> e);
 
         playerSource = sources.playerAttack(fakePlayer);
         chargedCreeperSource = sources.explosion(chargedCreeper, chargedCreeper);

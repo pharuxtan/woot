@@ -1,15 +1,15 @@
 package wootrevived.woot.drops.mobs;
 
 import com.google.common.base.CaseFormat;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.FrogVariant;
 import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.variant.VariantUtils;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
 
@@ -19,24 +19,23 @@ public class FrogMob extends WootFactoryMob<Frog> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        FrogVariant variant = BuiltInRegistries.FROG_VARIANT.get(ResourceLocation.tryParse(mobTag.getString("variant")));
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
         MutableComponent tip = Component.empty();
-        if(variant != null){
-            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, ResourceLocation.tryParse(mobTag.getString("variant")).getPath()).replaceAll("([a-z])([A-Z])", "$1 $2") + " "));
-        }
-        return tip.append(super.getDisplayName(mobTag, lookupProvider));
+        VariantUtils.readVariant(mobTag, registryAccess, Registries.FROG_VARIANT).flatMap(Holder::unwrapKey).ifPresent(key -> {
+            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.location().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
+        });
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        return super.getDisplayName(mobTag, lookupProvider);
+    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        return super.getDisplayName(mobTag, registryAccess);
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        tag.putString("variant", mobTag.getString("variant"));
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        VariantUtils.readVariant(mobTag, registryAccess, Registries.FROG_VARIANT).ifPresent(variant -> VariantUtils.writeVariant(tag, variant));
         return tag;
     }
 

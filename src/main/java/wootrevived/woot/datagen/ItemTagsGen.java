@@ -13,7 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 
@@ -24,8 +23,8 @@ import java.util.function.Consumer;
 public class ItemTagsGen extends ItemTagsProvider {
     public static final TagKey<Item> FACTORY_BLOCK = TagKey.create(Registries.ITEM, Woot.location("factory_block"));
 
-    public ItemTagsGen(PackOutput generator, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> parentProvider, ExistingFileHelper existingFileHelper) {
-        super(generator, lookupProvider, parentProvider, Woot.MOD_ID, existingFileHelper);
+    public ItemTagsGen(PackOutput generator, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> parentProvider) {
+        super(generator, lookupProvider, parentProvider, Woot.MOD_ID);
     }
 
     @Override
@@ -41,9 +40,9 @@ public class ItemTagsGen extends ItemTagsProvider {
         for (DyeColor dyeColor : DyeColor.values()) {
             ResourceLocation key = Woot.location("{color}_dye_plate".replace("{color}", dyeColor.getName()));
             TagKey<Item> iTag = getNeoForgeItemTag(prefix + dyeColor.getName());
-            Item item = BuiltInRegistries.ITEM.get(key);
-            if (item == null || item == Items.AIR)
-                throw new IllegalStateException("Unknown woot item: " + key.toString());
+            Item item = BuiltInRegistries.ITEM.get(key).orElseThrow().value();
+            if (item == Items.AIR)
+                throw new IllegalStateException("Unknown woot item: " + key);
             tag(iTag).add(item);
             consumer.accept(iTag);
         }

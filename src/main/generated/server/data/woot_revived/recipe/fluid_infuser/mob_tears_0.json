@@ -1,0 +1,22 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:chicken",
+    "minecraft:cod",
+    "minecraft:mutton",
+    "minecraft:porkchop",
+    "minecraft:salmon",
+    "minecraft:pufferfish",
+    "minecraft:rabbit",
+    "minecraft:rabbit_hide"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 100,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

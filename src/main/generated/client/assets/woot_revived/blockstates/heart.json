@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "woot_revived:block/heart",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "woot_revived:block/heart"
+    },
+    "facing=south": {
+      "model": "woot_revived:block/heart",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "woot_revived:block/heart",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "woot_revived:block/factory_base",
+    "side": "woot_revived:block/factory_upgrade"
+  }
+}

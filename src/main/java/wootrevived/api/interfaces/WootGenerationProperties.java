@@ -1,7 +1,7 @@
 package wootrevived.api.interfaces;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -40,7 +40,7 @@ public interface WootGenerationProperties {
 
     @NotNull ServerLevel getLevel();
     @NotNull RandomSource getRandom();
-    @NotNull HolderLookup.Provider getLookupProvider();
+    @NotNull RegistryAccess getRegistryAccess();
     @NotNull Tier getFactoryTier();
     @NotNull WootFactoryMob<?> getFactoryMob();
     @NotNull CompoundTag getFactoryMobTag();

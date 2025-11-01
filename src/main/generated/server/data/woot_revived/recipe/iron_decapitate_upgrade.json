@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:skeleton_skull",
+    "b": "woot_revived:copper_decapitate_upgrade",
+    "c": "#c:ingots/iron"
+  },
+  "pattern": [
+    "cac",
+    "aba",
+    "cac"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:iron_decapitate_upgrade"
+  }
+}

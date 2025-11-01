@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -20,7 +21,7 @@ import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 @OnlyIn(Dist.CLIENT)
 public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<StygianAnvilBlockEntity> {
     @Override
-    public void render(StygianAnvilBlockEntity stygianAnvilBlockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight, int packedOverlay){
+    public void render(StygianAnvilBlockEntity stygianAnvilBlockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight, int packedOverlay, Vec3 vec3){
         Direction facing = stygianAnvilBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         IItemHandler itemHandler = stygianAnvilBlockEntity.getInventory();

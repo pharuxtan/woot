@@ -9,7 +9,6 @@ import wootrevived.api.IWootPlugin;
 import wootrevived.api.WootPlugin;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
-import wootrevived.woot.compat.kubejs.WootStartupEvents;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -37,8 +36,6 @@ public class WootPlugins {
         for(IWootPlugin plugin : plugins){
             plugin.registerFactoryMobs(registration);
         }
-        if(ModList.get().isLoaded("kubejs"))
-            WootStartupEvents.postFactoryMobs(registration);
     }
 
     private static <T> List<T> getInstances(Class<?> annotationClass, Class<T> instanceClass){

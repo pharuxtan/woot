@@ -3,6 +3,7 @@ package wootrevived.woot.blocks.cell;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -67,8 +68,8 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        CellData.Component component = input.get(ComponentsRegistry.CELL_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        CellData.Component component = getter.get(ComponentsRegistry.CELL_DATA);
         if(component == null)
             return;
 

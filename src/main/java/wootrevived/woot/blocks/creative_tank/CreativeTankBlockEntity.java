@@ -3,6 +3,7 @@ package wootrevived.woot.blocks.creative_tank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -81,8 +82,8 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        CreativeTankData.Component component = input.get(ComponentsRegistry.CREATIVE_TANK_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        CreativeTankData.Component component = getter.get(ComponentsRegistry.CREATIVE_TANK_DATA);
         if(component == null)
             return;
 

@@ -7,8 +7,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -76,7 +76,7 @@ public class FluidInfuserRecipeCategory implements IRecipeCategory<FluidInfuserR
     }
 
     @Override
-    public @NotNull RecipeType<FluidInfuserRecipe> getRecipeType() {
+    public @NotNull IRecipeType<FluidInfuserRecipe> getRecipeType() {
         return WootJeiPluginTypes.FLUID_INFUSER_TYPE;
     }
 
@@ -95,22 +95,22 @@ public class FluidInfuserRecipeCategory implements IRecipeCategory<FluidInfuserR
         FluidStack inputFluid = recipe.getInputFluid();
 
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_FLUID_X + 3, INPUT_FLUID_Y + 3)
-                .addFluidStack(inputFluid.getFluid(), inputFluid.getAmount())
+                .add(inputFluid.getFluid(), inputFluid.getAmount())
                 .setCustomRenderer(NeoForgeTypes.FLUID_STACK, new WootJeiCustomFluidRenderer(FluidInfuserConfig.INPUT_TANK_CAPACITY.get()));
 
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
-                .addItemStack(inputFluid.getFluid().getBucket().getDefaultInstance());
+                .add(inputFluid.getFluid().getBucket().getDefaultInstance());
 
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X + 1, INPUT_SLOT_Y + 1)
-                .addIngredients(recipe.getIngredient());
+                .add(recipe.getIngredient());
 
         FluidStack outputFluid = recipe.getOutputFluid();
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_FLUID_X + 3, OUTPUT_FLUID_Y + 3)
-                .addFluidStack(outputFluid.getFluid(), outputFluid.getAmount())
+                .add(outputFluid.getFluid(), outputFluid.getAmount())
                 .setCustomRenderer(NeoForgeTypes.FLUID_STACK, new WootJeiCustomFluidRenderer(FluidInfuserConfig.OUTPUT_TANK_CAPACITY.get()));
 
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addItemStack(outputFluid.getFluid().getBucket().getDefaultInstance());
+                .add(outputFluid.getFluid().getBucket().getDefaultInstance());
     }
 }

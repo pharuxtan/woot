@@ -1,6 +1,6 @@
 package wootrevived.woot.drops.mobs;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,29 +16,28 @@ public class CreeperMob extends WootFactoryMob<Creeper> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
         MutableComponent tip = Component.empty();
-        if(mobTag.contains("powered") && mobTag.getBoolean("powered")){
+        mobTag.getBoolean("powered").ifPresent(powered -> {
             tip.append("Charged ");
-        }
-        return tip.append(super.getDisplayName(mobTag, lookupProvider));
+        });
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        if(mobTag.contains("powered"))
-            tag.putBoolean("powered", mobTag.getBoolean("powered"));
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        mobTag.getBoolean("powered").ifPresent(powered -> tag.putBoolean("powered", powered));
         return tag;
     }
 
     @Override
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        if(!super.isSame(shardTag, mobTag, lookupProvider))
+    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
+        if(!super.isSame(shardTag, mobTag, registryAccess))
             return false;
 
-        boolean isShardPowered = shardTag.contains("powered") && shardTag.getBoolean("powered");
-        boolean isMobPowered = mobTag.contains("powered") && mobTag.getBoolean("powered");
+        boolean isShardPowered = shardTag.getBoolean("powered").orElse(false);
+        boolean isMobPowered = mobTag.getBoolean("powered").orElse(false);
         return isShardPowered == isMobPowered;
     }
 

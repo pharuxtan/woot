@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:zombie_head",
+    "b": "woot_revived:upgrade_base",
+    "c": "#c:ingots/copper"
+  },
+  "pattern": [
+    "cac",
+    "aba",
+    "cac"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:copper_decapitate_upgrade"
+  }
+}

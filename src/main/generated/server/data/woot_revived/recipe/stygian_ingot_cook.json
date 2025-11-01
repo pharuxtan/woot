@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "group": "woot_revived",
+  "ingredient": "woot_revived:stygian_dust",
+  "result": {
+    "count": 1,
+    "id": "woot_revived:stygian_ingot"
+  }
+}

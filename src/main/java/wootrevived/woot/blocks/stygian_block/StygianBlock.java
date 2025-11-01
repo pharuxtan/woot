@@ -2,6 +2,8 @@ package wootrevived.woot.blocks.stygian_block;
 
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,10 +11,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
+import wootrevived.woot.Woot;
 
 public class StygianBlock extends Block {
-    public StygianBlock() {
+    public StygianBlock(String tag) {
         super(Properties.of()
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));

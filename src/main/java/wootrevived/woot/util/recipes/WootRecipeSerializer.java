@@ -22,6 +22,7 @@ public class WootRecipeSerializer<T extends Recipe<?>> implements RecipeSerializ
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
         return streamCodec;
     }

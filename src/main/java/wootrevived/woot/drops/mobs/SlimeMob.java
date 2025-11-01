@@ -1,6 +1,6 @@
 package wootrevived.woot.drops.mobs;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,29 +16,29 @@ public class SlimeMob extends WootFactoryMob<Slime> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
         MutableComponent tip = Component.literal(
-                mobTag.getInt("Size") > 0 ?
+                mobTag.getInt("Size").orElse(0) > 0 ?
                         "Large " :
                         "Small "
         );
-        return tip.append(super.getDisplayName(mobTag, lookupProvider));
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        tag.putInt("Size", mobTag.getInt("Size"));
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        mobTag.getInt("Size").ifPresent(size -> tag.putInt("Size", size));
         return tag;
     }
 
     @Override
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        if(!super.isSame(shardTag, mobTag, lookupProvider))
+    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
+        if(!super.isSame(shardTag, mobTag, registryAccess))
             return false;
 
-        boolean isShardLarge = shardTag.getInt("Size") > 0;
-        boolean isMobLarge = mobTag.getInt("Size") > 0;
+        boolean isShardLarge = shardTag.getInt("Size").orElse(0) > 0;
+        boolean isMobLarge = mobTag.getInt("Size").orElse(0) > 0;
         return isShardLarge == isMobLarge;
     }
 

@@ -1,6 +1,7 @@
 package wootrevived.woot.datagen.languages;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -19,58 +20,58 @@ public class SimplifiedChinese extends LanguageProvider {
         add("itemGroup.woot_revived", "Woot：重生");
         add("config.jade.plugin_woot_revived.machines", "Woot机械插件");
 
-        add(BlocksRegistry.STYGIAN_ANVIL_BLOCK.get(), "幽冥砧");
+        addBlock(BlocksRegistry.STYGIAN_ANVIL_BLOCK.get(), "幽冥砧");
         add(ItemsRegistry.STYGIAN_HAMMER_ITEM.get(), "幽冥锤");
         add(ItemsRegistry.PLATE_MOLD_ITEM.get(), "板模具");
         add(ItemsRegistry.SHARD_MOLD_ITEM.get(), "碎片模具");
         add(ItemsRegistry.DYE_CASING_MOLD_ITEM.get(), "染料框架模具");
 
-        add(BlocksRegistry.CREATIVE_POWER_BLOCK.get(), "创造能源");
-        add(BlocksRegistry.CREATIVE_TANK_BLOCK.get(), "创造储罐");
+        addBlock(BlocksRegistry.CREATIVE_POWER_BLOCK.get(), "创造能源");
+        addBlock(BlocksRegistry.CREATIVE_TANK_BLOCK.get(), "创造储罐");
 
-        add(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "工厂基座");
+        addBlock(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "工厂基座");
 
-        add(BlocksRegistry.HEART_BLOCK.get(), "工厂核心");
-        add(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "伪刷怪笼");
+        addBlock(BlocksRegistry.HEART_BLOCK.get(), "工厂核心");
+        addBlock(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "伪刷怪笼");
 
-        add(BlocksRegistry.COPPER_CELL_BLOCK.get(), "铜生命单元");
-        add(BlocksRegistry.COPPER_PYLON_BLOCK.get(), "铜塔柱");
-        add(BlocksRegistry.COPPER_PLINTH_BLOCK.get(), "铜柱基");
+        addBlock(BlocksRegistry.COPPER_CELL_BLOCK.get(), "铜生命单元");
+        addBlock(BlocksRegistry.COPPER_PYLON_BLOCK.get(), "铜塔柱");
+        addBlock(BlocksRegistry.COPPER_PLINTH_BLOCK.get(), "铜柱基");
         add(ItemsRegistry.COPPER_ENCHANTED_PLATE_ITEM.get(), "附魔铜板");
         add(ItemsRegistry.COPPER_SHARD_ITEM.get(), "铜碎片");
 
-        add(BlocksRegistry.IRON_CELL_BLOCK.get(), "铁生命单元");
-        add(BlocksRegistry.IRON_PYLON_BLOCK.get(), "铁塔柱");
-        add(BlocksRegistry.IRON_PLINTH_BLOCK.get(), "铁柱基");
+        addBlock(BlocksRegistry.IRON_CELL_BLOCK.get(), "铁生命单元");
+        addBlock(BlocksRegistry.IRON_PYLON_BLOCK.get(), "铁塔柱");
+        addBlock(BlocksRegistry.IRON_PLINTH_BLOCK.get(), "铁柱基");
         add(ItemsRegistry.IRON_ENCHANTED_PLATE_ITEM.get(), "附魔铁板");
         add(ItemsRegistry.IRON_SHARD_ITEM.get(), "铁碎片");
 
-        add(BlocksRegistry.GOLD_CELL_BLOCK.get(), "金生命单元");
-        add(BlocksRegistry.GOLD_PYLON_BLOCK.get(), "金塔柱");
-        add(BlocksRegistry.GOLD_PLINTH_BLOCK.get(), "金柱基");
+        addBlock(BlocksRegistry.GOLD_CELL_BLOCK.get(), "金生命单元");
+        addBlock(BlocksRegistry.GOLD_PYLON_BLOCK.get(), "金塔柱");
+        addBlock(BlocksRegistry.GOLD_PLINTH_BLOCK.get(), "金柱基");
         add(ItemsRegistry.GOLD_ENCHANTED_PLATE_ITEM.get(), "附魔金板");
         add(ItemsRegistry.GOLD_SHARD_ITEM.get(), "金碎片");
 
-        add(BlocksRegistry.DIAMOND_CELL_BLOCK.get(), "钻石生命单元");
-        add(BlocksRegistry.DIAMOND_PYLON_BLOCK.get(), "钻石塔柱");
-        add(BlocksRegistry.DIAMOND_PLINTH_BLOCK.get(), "钻石柱基");
+        addBlock(BlocksRegistry.DIAMOND_CELL_BLOCK.get(), "钻石生命单元");
+        addBlock(BlocksRegistry.DIAMOND_PYLON_BLOCK.get(), "钻石塔柱");
+        addBlock(BlocksRegistry.DIAMOND_PLINTH_BLOCK.get(), "钻石柱基");
         add(ItemsRegistry.DIAMOND_ENCHANTED_PLATE_ITEM.get(), "附魔钻石板");
         add(ItemsRegistry.DIAMOND_SHARD_ITEM.get(), "钻石碎片");
 
-        add(BlocksRegistry.NETHERITE_CELL_BLOCK.get(), "下界合金生命单元");
-        add(BlocksRegistry.NETHERITE_PYLON_BLOCK.get(), "下界合金塔柱");
-        add(BlocksRegistry.NETHERITE_PLINTH_BLOCK.get(), "下界合金柱基");
+        addBlock(BlocksRegistry.NETHERITE_CELL_BLOCK.get(), "下界合金生命单元");
+        addBlock(BlocksRegistry.NETHERITE_PYLON_BLOCK.get(), "下界合金塔柱");
+        addBlock(BlocksRegistry.NETHERITE_PLINTH_BLOCK.get(), "下界合金柱基");
         add(ItemsRegistry.NETHERITE_ENCHANTED_PLATE_ITEM.get(), "附魔下界合金板");
         add(ItemsRegistry.NETHERITE_SHARD_ITEM.get(), "下界合金碎片");
 
-        add(BlocksRegistry.FACTORY_CONNECT_BLOCK.get(), "工厂连接器");
-        add(BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get(), "主基座");
-        add(BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get(), "副基座");
+        addBlock(BlocksRegistry.FACTORY_CONNECT_BLOCK.get(), "工厂连接器");
+        addBlock(BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get(), "主基座");
+        addBlock(BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get(), "副基座");
 
-        add(BlocksRegistry.IMPORT_BLOCK.get(), "原料输入口");
-        add(BlocksRegistry.EXPORT_BLOCK.get(), "战利品输出口");
+        addBlock(BlocksRegistry.IMPORT_BLOCK.get(), "原料输入口");
+        addBlock(BlocksRegistry.EXPORT_BLOCK.get(), "战利品输出口");
 
-        add(BlocksRegistry.FACTORY_UPGRADE_BLOCK.get(), "升级插槽");
+        addBlock(BlocksRegistry.FACTORY_UPGRADE_BLOCK.get(), "升级插槽");
 
         add(Efficiency.COPPER_EFFICIENCY_ITEM.get(), "效率升级 I");
         add(Efficiency.IRON_EFFICIENCY_ITEM.get(), "效率升级 II");
@@ -136,16 +137,16 @@ public class SimplifiedChinese extends LanguageProvider {
         add(ItemsRegistry.XP_SHARD_ITEM.get(), "经验碎片");
         add(ItemsRegistry.XP_SPLINTER_ITEM.get(), "经验尖片");
 
-        add(BlocksRegistry.FLUID_INFUSER_BLOCK.get(), "流体灌注器");
+        addBlock(BlocksRegistry.FLUID_INFUSER_BLOCK.get(), "流体灌注器");
 
         add(ItemsRegistry.STYGIAN_INGOT_ITEM.get(), "幽冥锭");
         add(ItemsRegistry.STYGIAN_DUST_ITEM.get(), "幽冥粉");
         add(ItemsRegistry.STYGIAN_PLATE_ITEM.get(), "幽冥板");
-        add(BlocksRegistry.STYGIAN_BLOCK.get(), "幽冥块");
+        addBlock(BlocksRegistry.STYGIAN_BLOCK.get(), "幽冥块");
         add(ItemsRegistry.PRISM_ITEM.get(), "棱镜");
         add(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get(), "升级基板");
 
-        add(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), "物品灌注器");
+        addBlock(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), "物品灌注器");
         add(ItemsRegistry.WHITE_DYE_CASING_ITEM.get(), "白色染料框架");
         add(ItemsRegistry.WHITE_DYE_PLATE_ITEM.get(), "白色染料板");
         add(ItemsRegistry.ORANGE_DYE_CASING_ITEM.get(), "橙色染料框架");
@@ -181,10 +182,10 @@ public class SimplifiedChinese extends LanguageProvider {
 
         add(ItemsRegistry.GUIDE_BOOK_ITEM.get(), "Woot指导书");
 
-        add(BlocksRegistry.LAYOUT_BLOCK.get(), "工厂结构展示器");
+        addBlock(BlocksRegistry.LAYOUT_BLOCK.get(), "工厂结构展示器");
 
-        add(BlocksRegistry.DYE_LIQUIFIER_BLOCK.get(), "染料液化器");
-        add(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get(), "附魔液化器");
+        addBlock(BlocksRegistry.DYE_LIQUIFIER_BLOCK.get(), "染料液化器");
+        addBlock(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get(), "附魔液化器");
 
         add(FluidsRegistry.VITALITY_FUEL_FLUID_BLOCK.get(), "生命燃料流体");
         add(FluidsRegistry.VITALITY_FUEL_FLUID_BUCKET.get(), "生命燃料桶");
@@ -386,5 +387,10 @@ public class SimplifiedChinese extends LanguageProvider {
         add("advancements.woot_revived.netherite_pylon.description", "合成一个下界合金塔柱");
         add("advancements.woot_revived.netherite_plinth.title", "你的第五个也是最后一个柱基！");
         add("advancements.woot_revived.netherite_plinth.description", "合成一个下界合金柱基");
+    }
+
+    protected void addBlock(Block block, String translation){
+        add(block, translation);
+        add(block.asItem(), translation);
     }
 }

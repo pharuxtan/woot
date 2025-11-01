@@ -58,13 +58,23 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<WootRecipeInput>> getSerializer() {
         return RecipesRegistry.DYE_LIQUIFIER_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<WootRecipeInput>> getType() {
         return RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.create(ingredient);
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipesRegistry.DYE_LIQUIFIER_RECIPE_BOOK_CATEGORY.get();
     }
 
     public Ingredient getIngredient() {
@@ -108,12 +118,7 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     public int ingredientCount(Item item){
-        for(ItemStack stack : ingredient.getItems()){
-            if(stack.is(item))
-                return stack.getCount();
-        }
-
-        return 0;
+        return ingredient.test(item.getDefaultInstance()) ? 1 : 0;
     }
 
     @Override
@@ -123,10 +128,10 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
 
     public static float maxMultiplier = 0;
 
-    public static void loadRecipes(@NotNull RecipeManager manager){
+    public static void loadRecipes(@NotNull RecipeMap map){
         Validator.clear();
         maxMultiplier = 0;
-        for(RecipeHolder<DyeLiquifierRecipe> recipeHolder : manager.getAllRecipesFor(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get())) {
+        for(RecipeHolder<DyeLiquifierRecipe> recipeHolder : map.byType(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get())) {
             DyeLiquifierRecipe dyeLiquifierRecipe = recipeHolder.value();
             Validator.add(dyeLiquifierRecipe.getIngredient(), dyeLiquifierRecipe);
             if(maxMultiplier < dyeLiquifierRecipe.getInternalRed()) maxMultiplier = dyeLiquifierRecipe.getInternalRed();
@@ -173,16 +178,6 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int i, int i1) {
-        return true;
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 

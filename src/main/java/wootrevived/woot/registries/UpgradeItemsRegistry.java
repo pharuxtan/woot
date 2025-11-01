@@ -73,5 +73,5 @@ public class UpgradeItemsRegistry extends WootUpgradeItemRegistration {
     /* Upgrade Base */
 
     public static final String UPGRADE_BASE_TAG = "upgrade_base";
-    public static final DeferredHolder<Item, BasicItem> UPGRADE_BASE_ITEM = ITEMS.register(UPGRADE_BASE_TAG, () -> new BasicItem(BasicItem.Type.UPGRADE_BASE));
+    public static final DeferredHolder<Item, BasicItem> UPGRADE_BASE_ITEM = ITEMS.register(UPGRADE_BASE_TAG, () -> new BasicItem(BasicItem.Type.UPGRADE_BASE, UPGRADE_BASE_TAG));
 }

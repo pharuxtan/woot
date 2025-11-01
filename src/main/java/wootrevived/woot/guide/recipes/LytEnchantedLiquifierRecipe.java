@@ -8,7 +8,6 @@ import guideme.render.RenderContext;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.fluids.FluidStack;
 import wootrevived.woot.config.EnchantedLiquifierConfig;
@@ -56,7 +55,7 @@ public class LytEnchantedLiquifierRecipe extends LytBox {
         int fluidAmount = enchantLevel * EnchantedLiquifierConfig.PER_ENCHANT_FLUID.get();
 
         append(energy = new LytEnergy(energyAmount, EnchantedLiquifierConfig.ENERGY_CAPACITY.get()));
-        append(inputSlot = new LytSlot(Ingredient.of(items.stream())));
+        append(inputSlot = new LytSlot(new WootSlotDisplay(items)));
         append(outputFluid = new LytFluid(new FluidStack(FluidsRegistry.SOURCE_ENCHANTED_FLUID.get(), fluidAmount), EnchantedLiquifierConfig.OUTPUT_TANK_CAPACITY.get()));
     }
 

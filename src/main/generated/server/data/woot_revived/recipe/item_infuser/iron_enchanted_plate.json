@@ -1,0 +1,14 @@
+{
+  "type": "woot_revived:item_infuser",
+  "augment": "woot_revived:iron_shard",
+  "energy": 10000,
+  "fluid": {
+    "amount": 2000,
+    "id": "woot_revived:enchanted_fluid"
+  },
+  "ingredient": "woot_revived:copper_enchanted_plate",
+  "output": {
+    "count": 1,
+    "id": "woot_revived:iron_enchanted_plate"
+  }
+}

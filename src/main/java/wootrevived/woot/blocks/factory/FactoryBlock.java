@@ -17,8 +17,8 @@ import wootrevived.woot.util.block.FactoryBlockBase;
 import java.util.function.Supplier;
 
 public class FactoryBlock extends FactoryBlockBase {
-    public FactoryBlock(Supplier<BlockEntityType<?>> entity) {
-        super(entity, BlockBehaviour.Properties.of()
+    public FactoryBlock(Supplier<BlockEntityType<?>> entity, String tag) {
+        super(entity, tag, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.STONE)
                 .strength(3.5F));

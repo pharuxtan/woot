@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "woot_revived:item/light_gray_dye_plate",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -6710887
+      }
+    ]
+  }
+}

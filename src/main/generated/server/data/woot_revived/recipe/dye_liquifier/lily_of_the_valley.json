@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:dye_liquifier",
+  "blue_multiplier": 0.0,
+  "energy": 500,
+  "ingredients": "minecraft:lily_of_the_valley",
+  "red_multiplier": 0.0,
+  "white_multiplier": 1.0,
+  "yellow_multiplier": 0.0
+}

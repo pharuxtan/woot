@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "loader": "woot_revived:factory_upgrade",
-  "textures": {
-    "end": "woot_revived:block/factory_base",
-    "side": "woot_revived:block/factory_upgrade"
-  }
-}

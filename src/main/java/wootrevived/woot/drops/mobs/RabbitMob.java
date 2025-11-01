@@ -1,7 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import com.google.common.base.CaseFormat;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,21 +16,23 @@ public class RabbitMob extends WootFactoryMob<Rabbit> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        Rabbit.Variant variant = Rabbit.Variant.byId(mobTag.getInt("RabbitType"));
+    @SuppressWarnings("deprecation")
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        Rabbit.Variant variant = mobTag.read("RabbitType", Rabbit.Variant.LEGACY_CODEC).orElse(Rabbit.Variant.DEFAULT);
         MutableComponent tip = Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, variant.getSerializedName()).replaceAll("([a-z])([A-Z])", "$1 $2") + " ");
-        return tip.append(super.getDisplayName(mobTag, lookupProvider));
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        return super.getDisplayName(mobTag, lookupProvider);
+    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        return super.getDisplayName(mobTag, registryAccess);
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        tag.putInt("RabbitType", mobTag.getInt("RabbitType"));
+    @SuppressWarnings("deprecation")
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        tag.store("RabbitType", Rabbit.Variant.LEGACY_CODEC, mobTag.read("RabbitType", Rabbit.Variant.LEGACY_CODEC).orElse(Rabbit.Variant.DEFAULT));
         return tag;
     }
 

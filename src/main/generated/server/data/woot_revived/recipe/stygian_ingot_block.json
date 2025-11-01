@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "woot_revived",
+  "ingredients": [
+    "woot_revived:stygian_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "woot_revived:stygian_ingot"
+  }
+}

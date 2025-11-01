@@ -1,30 +1,34 @@
 package wootrevived.woot.guide;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import wootrevived.woot.Woot;
-import wootrevived.woot.util.entity.WootTags;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GuideBookPersistentState extends SavedData {
-    private static final Factory<GuideBookPersistentState> FACTORY = new Factory<>(GuideBookPersistentState::new, GuideBookPersistentState::fromTag);
-    private static final String NAME = Woot.MOD_ID + "_guidebook";
     private final Set<String> receivedPlayers;
+
+    public static final SavedDataType<GuideBookPersistentState> TYPE = new SavedDataType<>(
+            Woot.MOD_ID + "_guidebook",
+            GuideBookPersistentState::new,
+            ctx -> RecordCodecBuilder.create(inst -> inst.group(
+                    Codec.STRING.listOf().xmap(Set::copyOf, List::copyOf).fieldOf("receivedPlayers").forGetter(state -> state.receivedPlayers)
+            ).apply(inst, GuideBookPersistentState::new))
+    );
 
     private GuideBookPersistentState(Set<String> receivedPlayers) {
         this.receivedPlayers = receivedPlayers;
     }
 
-    private GuideBookPersistentState() {
+    public GuideBookPersistentState(Context context) {
         this(new HashSet<>());
     }
 
@@ -37,27 +41,8 @@ public class GuideBookPersistentState extends SavedData {
         setDirty();
     }
 
-    public static GuideBookPersistentState fromTag(CompoundTag tag, HolderLookup.Provider provider){
-        Set<String> receivedPlayers = new HashSet<>();
-        ListTag list = tag.getList(WootTags.GUIDE_PLAYER_TAG, Tag.TAG_STRING);
-        for(int i = 0; i < list.size(); i++){
-            receivedPlayers.add(list.getString(i));
-        }
-        return new GuideBookPersistentState(receivedPlayers);
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-        ListTag list = new ListTag();
-        for(String receivedPlayer : receivedPlayers) {
-            list.add(StringTag.valueOf(receivedPlayer));
-        }
-        tag.put(WootTags.GUIDE_PLAYER_TAG, list);
-        return tag;
-    }
-
     public static GuideBookPersistentState get(MinecraftServer server){
         ServerLevel level = server.getLevel(ServerLevel.OVERWORLD);
-        return level.getDataStorage().computeIfAbsent(FACTORY, NAME);
+        return level.getDataStorage().computeIfAbsent(TYPE);
     }
 }

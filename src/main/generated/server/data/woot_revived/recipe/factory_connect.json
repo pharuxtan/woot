@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/gold",
+    "b": "#c:dusts/redstone",
+    "c": "woot_revived:factory_base"
+  },
+  "pattern": [
+    "bab",
+    "bcb",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:factory_connect"
+  }
+}

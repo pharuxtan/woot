@@ -62,13 +62,29 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<WootRecipeInput>> getSerializer() {
         return RecipesRegistry.ANVIL_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<WootRecipeInput>> getType() {
         return RecipesRegistry.ANVIL_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        List<Ingredient> ingredients = new ArrayList<>(1);
+        ingredients.add(base);
+        this.getFirstComplementary().ifPresent(ingredients::add);
+        this.getSecondComplementary().ifPresent(ingredients::add);
+        this.getThirdComplementary().ifPresent(ingredients::add);
+        this.getFourthComplementary().ifPresent(ingredients::add);
+        return ingredients.size() == 1 ? PlacementInfo.create(base) : PlacementInfo.create(ingredients);
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipesRegistry.ANVIL_RECIPE_BOOK_CATEGORY.get();
     }
 
     public @NotNull Ingredient getBase(){
@@ -134,9 +150,9 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
         return hasFound;
     }
 
-    public static void loadRecipes(@NotNull RecipeManager manager){
+    public static void loadRecipes(@NotNull RecipeMap map){
         Validator.clear();
-        for(RecipeHolder<StygianAnvilRecipe> recipeHolder : manager.getAllRecipesFor(RecipesRegistry.ANVIL_RECIPE_TYPE.get())) {
+        for(RecipeHolder<StygianAnvilRecipe> recipeHolder : map.byType(RecipesRegistry.ANVIL_RECIPE_TYPE.get())) {
             Validator.add(recipeHolder.value().base, recipeHolder.value().firstComplementary, recipeHolder.value().secondComplementary, recipeHolder.value().thirdComplementary, recipeHolder.value().fourthComplementary);
         }
     }
@@ -177,16 +193,6 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int i, int i1) {
-        return true;
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 

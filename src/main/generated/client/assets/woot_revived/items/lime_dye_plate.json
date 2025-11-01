@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "woot_revived:item/lime_dye_plate",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -8401895
+      }
+    ]
+  }
+}

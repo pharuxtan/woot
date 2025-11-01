@@ -1,6 +1,7 @@
 package wootrevived.woot.client.render.dye_liquifier;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -67,10 +68,10 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
         renderSlot(gui, YELLOW_INPUT_SLOT_X, YELLOW_INPUT_SLOT_Y, YELLOW_INPUT_SLOT_COLOR);
         renderSlot(gui, BLUE_INPUT_SLOT_X, BLUE_INPUT_SLOT_Y, BLUE_INPUT_SLOT_COLOR);
         renderSlot(gui, WHITE_INPUT_SLOT_X, WHITE_INPUT_SLOT_Y, WHITE_INPUT_SLOT_COLOR);
-        renderColorBarBg(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, DyeColor.RED.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBarBg(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, DyeColor.YELLOW.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBarBg(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, DyeColor.BLUE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBarBg(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, DyeColor.WHITE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
+        renderColorBarBg(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBarBg(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBarBg(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, DyeColor.BLUE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBarBg(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, DyeColor.WHITE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
         renderEnergyBg(gui, ENERGY_X, ENERGY_Y);
         renderFluidBg(gui, OUTPUT_FLUID_X, OUTPUT_FLUID_Y);
         renderProgressBg(gui, PROGRESS_X, PROGRESS_Y);
@@ -79,10 +80,10 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     @Override
     protected void renderState(@NotNull GuiGraphics gui) {
         renderEnergy(gui, ENERGY_X, ENERGY_Y, menu.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get());
-        renderColorBar(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, menu.getRedDyeAmount(), DyeLiquifierConfig.RED_TANK_CAPACITY.get(), DyeColor.RED.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBar(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, menu.getYellowDyeAmount(), DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get(), DyeColor.YELLOW.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBar(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, menu.getBlueDyeAmount(), DyeLiquifierConfig.BLUE_TANK_CAPACITY.get(), DyeColor.BLUE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
-        renderColorBar(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, menu.getWhiteDyeAmount(), DyeLiquifierConfig.WHITE_TANK_CAPACITY.get(), DyeColor.WHITE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
+        renderColorBar(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, menu.getRedDyeAmount(), DyeLiquifierConfig.RED_TANK_CAPACITY.get(), DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBar(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, menu.getYellowDyeAmount(), DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get(), DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBar(gui, COLOR_BAR_X, BLUE_COLOR_BAR_Y, menu.getBlueDyeAmount(), DyeLiquifierConfig.BLUE_TANK_CAPACITY.get(), DyeColor.BLUE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
+        renderColorBar(gui, COLOR_BAR_X, WHITE_COLOR_BAR_Y, menu.getWhiteDyeAmount(), DyeLiquifierConfig.WHITE_TANK_CAPACITY.get(), DyeColor.WHITE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
         renderFluid(gui, OUTPUT_FLUID_X, OUTPUT_FLUID_Y, menu.getOutputFluid(), DyeLiquifierConfig.OUTPUT_TANK_CAPACITY.get());
         renderProgress(gui, PROGRESS_X, PROGRESS_Y, menu.getProgress());
     }
@@ -99,12 +100,12 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     }
 
     public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 177, 132, 18, 43);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 132, 18, 43, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 18 / 100, 0, 18);
-        gui.blit(GUI, x, y, 196, 132, fillWidth, 44);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 196, 132, fillWidth, 44, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){

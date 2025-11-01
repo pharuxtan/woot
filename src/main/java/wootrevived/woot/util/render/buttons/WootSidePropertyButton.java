@@ -1,6 +1,7 @@
 package wootrevived.woot.util.render.buttons;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
@@ -34,7 +35,7 @@ public class WootSidePropertyButton extends WootButton {
     protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         int uOffset = property == MachineSideProperty.ENABLED ? 215 : property == MachineSideProperty.DISABLED ? 230 : property == MachineSideProperty.PULL ? 215 : 230;
         int vOffset = property == MachineSideProperty.ENABLED ? 162 : property == MachineSideProperty.DISABLED ? 162 : property == MachineSideProperty.PULL ? 177 : 177;
-        gui.blit(WootContainerScreen.GUI, getX(), getY(), uOffset, vOffset, getWidth(), getHeight());
+        gui.blit(RenderType::guiTextured, WootContainerScreen.GUI, getX(), getY(), uOffset, vOffset, getWidth(), getHeight(), WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
         if(isHovered()) {
             gui.fill(getX() + 1, getY() + 1, getX() + getWidth() - 1, getY() + getHeight() - 1, 0x80FFFFFF);
             List<Component> tooltip = List.of(
@@ -47,7 +48,7 @@ public class WootSidePropertyButton extends WootButton {
                             .append(Component.translatable("info.woot_revived.action").append(Component.literal(": ")).setStyle(MACHINE_STYLE))
                             .append(property.getComponent())
             );
-            gui.renderTooltip(WootContainerScreen.getFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.renderTooltip(WootContainerScreen.getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 

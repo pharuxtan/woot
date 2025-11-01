@@ -1,6 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
@@ -33,7 +34,7 @@ public class WitherMob extends WootFactoryMob<WitherBoss> {
         AtomicInteger looting = new AtomicInteger();
         ItemStack handStack = properties.getMainHandItem();
         if(EnchantmentHelper.hasAnyEnchantments(handStack)){
-            HolderLookup.Provider accessor = properties.getLookupProvider();
+            HolderLookup.Provider accessor = properties.getRegistryAccess();
             HolderLookup.RegistryLookup<Enchantment> lookup = accessor.lookupOrThrow(Registries.ENCHANTMENT);
 
             lookup.get(Enchantments.LOOTING).ifPresent(enchantment -> {
@@ -56,7 +57,7 @@ public class WitherMob extends WootFactoryMob<WitherBoss> {
     }
 
     @Override
-    public List<ItemStack> getImportItems(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
+    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
         ItemStack witherSkeletonSkull = Items.WITHER_SKELETON_SKULL.getDefaultInstance();
         witherSkeletonSkull.setCount(3);
 

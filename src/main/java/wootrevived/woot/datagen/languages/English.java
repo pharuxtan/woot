@@ -1,6 +1,7 @@
 package wootrevived.woot.datagen.languages;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -19,58 +20,58 @@ public class English extends LanguageProvider {
         add("itemGroup.woot_revived", "Woot Revived");
         add("config.jade.plugin_woot_revived.machines", "Woot Machines Plugin");
 
-        add(BlocksRegistry.STYGIAN_ANVIL_BLOCK.get(), "Stygian Anvil");
+        addBlock(BlocksRegistry.STYGIAN_ANVIL_BLOCK.get(), "Stygian Anvil");
         add(ItemsRegistry.STYGIAN_HAMMER_ITEM.get(), "Stygian Hammer");
         add(ItemsRegistry.PLATE_MOLD_ITEM.get(), "Plate Mold");
         add(ItemsRegistry.SHARD_MOLD_ITEM.get(), "Shard Mold");
         add(ItemsRegistry.DYE_CASING_MOLD_ITEM.get(), "Dye Casing Mold");
 
-        add(BlocksRegistry.CREATIVE_POWER_BLOCK.get(), "Creative Power");
-        add(BlocksRegistry.CREATIVE_TANK_BLOCK.get(), "Creative Tank");
+        addBlock(BlocksRegistry.CREATIVE_POWER_BLOCK.get(), "Creative Power");
+        addBlock(BlocksRegistry.CREATIVE_TANK_BLOCK.get(), "Creative Tank");
 
-        add(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "Factory Base");
+        addBlock(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "Factory Base");
 
-        add(BlocksRegistry.HEART_BLOCK.get(), "Factory Heart");
-        add(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "Fake Spawner");
+        addBlock(BlocksRegistry.HEART_BLOCK.get(), "Factory Heart");
+        addBlock(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "Fake Spawner");
 
-        add(BlocksRegistry.COPPER_CELL_BLOCK.get(), "Copper Vitality Cell");
-        add(BlocksRegistry.COPPER_PYLON_BLOCK.get(), "Copper Pylon");
-        add(BlocksRegistry.COPPER_PLINTH_BLOCK.get(), "Copper Plinth");
+        addBlock(BlocksRegistry.COPPER_CELL_BLOCK.get(), "Copper Vitality Cell");
+        addBlock(BlocksRegistry.COPPER_PYLON_BLOCK.get(), "Copper Pylon");
+        addBlock(BlocksRegistry.COPPER_PLINTH_BLOCK.get(), "Copper Plinth");
         add(ItemsRegistry.COPPER_ENCHANTED_PLATE_ITEM.get(), "Enchanted Copper Plate");
         add(ItemsRegistry.COPPER_SHARD_ITEM.get(), "Copper Shard");
 
-        add(BlocksRegistry.IRON_CELL_BLOCK.get(), "Iron Vitality Cell");
-        add(BlocksRegistry.IRON_PYLON_BLOCK.get(), "Iron Pylon");
-        add(BlocksRegistry.IRON_PLINTH_BLOCK.get(), "Iron Plinth");
+        addBlock(BlocksRegistry.IRON_CELL_BLOCK.get(), "Iron Vitality Cell");
+        addBlock(BlocksRegistry.IRON_PYLON_BLOCK.get(), "Iron Pylon");
+        addBlock(BlocksRegistry.IRON_PLINTH_BLOCK.get(), "Iron Plinth");
         add(ItemsRegistry.IRON_ENCHANTED_PLATE_ITEM.get(), "Enchanted Iron Plate");
         add(ItemsRegistry.IRON_SHARD_ITEM.get(), "Iron Shard");
 
-        add(BlocksRegistry.GOLD_CELL_BLOCK.get(), "Gold Vitality Cell");
-        add(BlocksRegistry.GOLD_PYLON_BLOCK.get(), "Gold Pylon");
-        add(BlocksRegistry.GOLD_PLINTH_BLOCK.get(), "Gold Plinth");
+        addBlock(BlocksRegistry.GOLD_CELL_BLOCK.get(), "Gold Vitality Cell");
+        addBlock(BlocksRegistry.GOLD_PYLON_BLOCK.get(), "Gold Pylon");
+        addBlock(BlocksRegistry.GOLD_PLINTH_BLOCK.get(), "Gold Plinth");
         add(ItemsRegistry.GOLD_ENCHANTED_PLATE_ITEM.get(), "Enchanted Gold Plate");
         add(ItemsRegistry.GOLD_SHARD_ITEM.get(), "Gold Shard");
 
-        add(BlocksRegistry.DIAMOND_CELL_BLOCK.get(), "Diamond Vitality Cell");
-        add(BlocksRegistry.DIAMOND_PYLON_BLOCK.get(), "Diamond Pylon");
-        add(BlocksRegistry.DIAMOND_PLINTH_BLOCK.get(), "Diamond Plinth");
+        addBlock(BlocksRegistry.DIAMOND_CELL_BLOCK.get(), "Diamond Vitality Cell");
+        addBlock(BlocksRegistry.DIAMOND_PYLON_BLOCK.get(), "Diamond Pylon");
+        addBlock(BlocksRegistry.DIAMOND_PLINTH_BLOCK.get(), "Diamond Plinth");
         add(ItemsRegistry.DIAMOND_ENCHANTED_PLATE_ITEM.get(), "Enchanted Diamond Plate");
         add(ItemsRegistry.DIAMOND_SHARD_ITEM.get(), "Diamond Shard");
 
-        add(BlocksRegistry.NETHERITE_CELL_BLOCK.get(), "Netherite Vitality Cell");
-        add(BlocksRegistry.NETHERITE_PYLON_BLOCK.get(), "Netherite Pylon");
-        add(BlocksRegistry.NETHERITE_PLINTH_BLOCK.get(), "Netherite Plinth");
+        addBlock(BlocksRegistry.NETHERITE_CELL_BLOCK.get(), "Netherite Vitality Cell");
+        addBlock(BlocksRegistry.NETHERITE_PYLON_BLOCK.get(), "Netherite Pylon");
+        addBlock(BlocksRegistry.NETHERITE_PLINTH_BLOCK.get(), "Netherite Plinth");
         add(ItemsRegistry.NETHERITE_ENCHANTED_PLATE_ITEM.get(), "Enchanted Netherite Plate");
         add(ItemsRegistry.NETHERITE_SHARD_ITEM.get(), "Netherite Shard");
 
-        add(BlocksRegistry.FACTORY_CONNECT_BLOCK.get(), "Factory Connector");
-        add(BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get(), "Primary Base");
-        add(BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get(), "Secondary Base");
+        addBlock(BlocksRegistry.FACTORY_CONNECT_BLOCK.get(), "Factory Connector");
+        addBlock(BlocksRegistry.FACTORY_CTR_BASE_PRI_BLOCK.get(), "Primary Base");
+        addBlock(BlocksRegistry.FACTORY_CTR_BASE_SEC_BLOCK.get(), "Secondary Base");
 
-        add(BlocksRegistry.IMPORT_BLOCK.get(), "Ingredient Importer");
-        add(BlocksRegistry.EXPORT_BLOCK.get(), "Loot Exporter");
+        addBlock(BlocksRegistry.IMPORT_BLOCK.get(), "Ingredient Importer");
+        addBlock(BlocksRegistry.EXPORT_BLOCK.get(), "Loot Exporter");
 
-        add(BlocksRegistry.FACTORY_UPGRADE_BLOCK.get(), "Upgrade Slot");
+        addBlock(BlocksRegistry.FACTORY_UPGRADE_BLOCK.get(), "Upgrade Slot");
 
         add(Efficiency.COPPER_EFFICIENCY_ITEM.get(), "Efficiency I Upgrade");
         add(Efficiency.IRON_EFFICIENCY_ITEM.get(), "Efficiency II Upgrade");
@@ -136,16 +137,16 @@ public class English extends LanguageProvider {
         add(ItemsRegistry.XP_SHARD_ITEM.get(), "Experience Shard");
         add(ItemsRegistry.XP_SPLINTER_ITEM.get(), "Experience Splinter");
 
-        add(BlocksRegistry.FLUID_INFUSER_BLOCK.get(), "Fluid Infuser");
+        addBlock(BlocksRegistry.FLUID_INFUSER_BLOCK.get(), "Fluid Infuser");
 
         add(ItemsRegistry.STYGIAN_INGOT_ITEM.get(), "Stygian Ingot");
         add(ItemsRegistry.STYGIAN_DUST_ITEM.get(), "Stygian Dust");
         add(ItemsRegistry.STYGIAN_PLATE_ITEM.get(), "Stygian Plate");
-        add(BlocksRegistry.STYGIAN_BLOCK.get(), "Stygian Block");
+        addBlock(BlocksRegistry.STYGIAN_BLOCK.get(), "Stygian Block");
         add(ItemsRegistry.PRISM_ITEM.get(), "Prism");
         add(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get(), "Upgrade Base");
 
-        add(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), "Item Infuser");
+        addBlock(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), "Item Infuser");
         add(ItemsRegistry.WHITE_DYE_CASING_ITEM.get(), "White Dye Casing");
         add(ItemsRegistry.WHITE_DYE_PLATE_ITEM.get(), "White Dye Plate");
         add(ItemsRegistry.ORANGE_DYE_CASING_ITEM.get(), "Orange Dye Casing");
@@ -181,10 +182,10 @@ public class English extends LanguageProvider {
 
         add(ItemsRegistry.GUIDE_BOOK_ITEM.get(), "Woot Guide Book");
 
-        add(BlocksRegistry.LAYOUT_BLOCK.get(), "Factory Layout");
+        addBlock(BlocksRegistry.LAYOUT_BLOCK.get(), "Factory Layout");
 
-        add(BlocksRegistry.DYE_LIQUIFIER_BLOCK.get(), "Dye Liquifier");
-        add(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get(), "Enchanted Liquifier");
+        addBlock(BlocksRegistry.DYE_LIQUIFIER_BLOCK.get(), "Dye Liquifier");
+        addBlock(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get(), "Enchanted Liquifier");
 
         add(FluidsRegistry.VITALITY_FUEL_FLUID_BLOCK.get(), "Vitality Fuel Fluid");
         add(FluidsRegistry.VITALITY_FUEL_FLUID_BUCKET.get(), "Vitality Fuel Bucket");
@@ -386,5 +387,10 @@ public class English extends LanguageProvider {
         add("advancements.woot_revived.netherite_pylon.description", "Craft a Netherite Pylon");
         add("advancements.woot_revived.netherite_plinth.title", "Your fifth and last plinth!");
         add("advancements.woot_revived.netherite_plinth.description", "Craft a Netherite Plinth");
+    }
+
+    protected void addBlock(Block block, String translation){
+        add(block, translation);
+        add(block.asItem(), translation);
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:experience_bottle",
+    "b": "#c:ingots/gold",
+    "c": "woot_revived:iron_xp_upgrade"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:gold_xp_upgrade"
+  }
+}

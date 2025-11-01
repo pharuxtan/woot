@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "b": "minecraft:bucket",
+    "c": "woot_revived:factory_base",
+    "p": "minecraft:piston",
+    "t": "minecraft:book"
+  },
+  "pattern": [
+    "tpt",
+    "tct",
+    "tbt"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:enchanted_liquifier"
+  }
+}

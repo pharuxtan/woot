@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:stygian_anvil",
+  "base": "woot_revived:dye_casing_mold",
+  "first_complementary": "#c:dyes/lime",
+  "output": {
+    "count": 1,
+    "id": "woot_revived:lime_dye_casing"
+  }
+}

@@ -4,9 +4,11 @@ import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -28,13 +30,15 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.multiblock.patterns.Pattern;
 import wootrevived.woot.multiblock.patterns.Patterns;
 import wootrevived.woot.registries.BlocksRegistry;
 
 public class LayoutBlock extends Block implements EntityBlock {
-    public LayoutBlock() {
+    public LayoutBlock(String tag) {
         super(BlockBehaviour.Properties.of()
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -81,28 +85,28 @@ public class LayoutBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
             if(level.isClientSide || hand == InteractionHand.OFF_HAND)
                 return super.useItemOn(stack, level, player, hand, hit);
 
             if(!player.getMainHandItem().isEmpty())
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
 
             BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
             if (blockEntity instanceof LayoutBlockEntity layoutBlockEntity) {
                 layoutBlockEntity.setNextTier();
             }
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS_SERVER;
         }
 
         @Override
         public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
-            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit).result();
+            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
         @Override
-        public void onRemove(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston){
+        public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
             if(!level.isClientSide) {
                 Direction facing = getValue(BlockStateProperties.HORIZONTAL_FACING);
 
@@ -130,7 +134,7 @@ public class LayoutBlock extends Block implements EntityBlock {
                     LayoutBlockEntity.removePatternBlock(level, layoutPos, patternBlock);
             }
 
-            super.onRemove(level, pos, newState, movedByPiston);
+            super.affectNeighborsAfterRemoval(level, pos, movedByPiston);
         }
     }
 }

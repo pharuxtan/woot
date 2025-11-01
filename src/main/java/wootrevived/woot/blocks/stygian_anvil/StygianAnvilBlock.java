@@ -3,14 +3,15 @@ package wootrevived.woot.blocks.stygian_anvil;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.ParticleStatus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -33,6 +34,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
@@ -47,8 +49,9 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
     private static final VoxelShape X_AXIS_AABB = Shapes.or(PART_BASE, PART_LOWER_X, PART_MID_X, PART_UPPER_X);
     private static final VoxelShape Z_AXIS_AABB = Shapes.or(PART_BASE, PART_LOWER_Z, PART_MID_Z, PART_UPPER_Z);
 
-    public StygianAnvilBlock() {
+    public StygianAnvilBlock(String tag) {
         super(Properties.of()
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -98,7 +101,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
             if (level.isClientSide)
                 super.useItemOn(heldItem, level, player, hand, hit);
 
@@ -120,9 +123,9 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
                                 break;
                             heldItem.shrink(1);
                             if (heldItem.isEmpty())
-                                player.getInventory().setItem(player.getInventory().selected, ItemStack.EMPTY);
+                                player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                             else
-                                player.getInventory().setItem(player.getInventory().selected, heldItem);
+                                player.getInventory().setItem(player.getInventory().getSelectedSlot(), heldItem);
                             player.containerMenu.broadcastChanges();
                             break;
                         }
@@ -130,28 +133,18 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
                 }
             }
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS_SERVER;
         }
 
         @Override
         public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
-            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit).result();
+            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
         @Override
         public @NotNull VoxelShape getShape(@NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
             Direction direction = getValue(BlockStateProperties.HORIZONTAL_FACING);
             return direction.getAxis() == Direction.Axis.X ? X_AXIS_AABB : Z_AXIS_AABB;
-        }
-
-        @Override
-        public void onRemove(@NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean isMoving) {
-            if (getBlock() != newState.getBlock()) {
-                BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof StygianAnvilBlockEntity stygianAnvilBlockEntity)
-                    stygianAnvilBlockEntity.dropContents(level, pos);
-                super.onRemove(level, pos, newState, isMoving);
-            }
         }
 
         public BlockState rotate(LevelAccessor level, BlockPos pos, Rotation rotation) {

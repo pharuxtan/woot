@@ -1,0 +1,16 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:ender_pearl",
+    "minecraft:ghast_tear"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 2500,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

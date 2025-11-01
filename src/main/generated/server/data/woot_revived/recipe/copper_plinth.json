@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/copper",
+    "b": "woot_revived:copper_shard",
+    "c": "woot_revived:factory_base"
+  },
+  "pattern": [
+    "aaa",
+    "bcb",
+    "aaa"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:copper_plinth"
+  }
+}

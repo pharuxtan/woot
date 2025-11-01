@@ -50,10 +50,3 @@ type = "optional"
 versionRange = "[${jade_version},)"
 ordering="NONE"
 side="CLIENT"
-
-[[dependencies.${mod_id}]]
-modId="kubejs"
-type = "optional"
-versionRange = "[${kubejs_version},)"
-ordering="NONE"
-side="BOTH"

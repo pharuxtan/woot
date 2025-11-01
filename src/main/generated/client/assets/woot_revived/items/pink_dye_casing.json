@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "woot_revived:item/pink_dye_casing",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -884827
+      }
+    ]
+  }
+}

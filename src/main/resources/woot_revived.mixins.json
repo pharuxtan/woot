@@ -8,11 +8,16 @@
     "EndDragonFightMixin",
     "EnderDragonMixin",
     "GuiGraphicsMixin",
+    "InventoryMixin",
+    "ItemEntityMixin",
     "LevelMixin",
     "LivingEntityMixin",
     "PersistentEntitySectionManagerMixin",
     "ServerLevelMixin",
     "TesselatorMixin"
+  ],
+  "client": [
+    "BufferSourceMixin"
   ],
   "injectors": {
     "defaultRequire": 1

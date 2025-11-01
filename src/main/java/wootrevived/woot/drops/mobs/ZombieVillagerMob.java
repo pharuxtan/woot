@@ -1,14 +1,12 @@
 package wootrevived.woot.drops.mobs;
 
-import com.mojang.serialization.DataResult;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import wootrevived.api.WootFactoryMob;
@@ -21,30 +19,25 @@ public class ZombieVillagerMob extends WootFactoryMob<ZombieVillager> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        MutableComponent component = Component.empty();
-        Tag villagerData = mobTag.get("VillagerData");
-        DataResult<VillagerData> result = VillagerData.CODEC.parse(NbtOps.INSTANCE, villagerData);
-        result.result().ifPresent(data -> {
-            if(data.getProfession() == VillagerProfession.NONE) return;
-            component.append(Component.translatable("entity.minecraft.villager." + data.getProfession().name().toLowerCase()));
-            component.append(Component.literal(" "));
-        });
-        component.append(super.getDisplayName(mobTag, lookupProvider));
-        return component;
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        MutableComponent tip = Component.empty();
+        VillagerData data = mobTag.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData);
+        if(!data.profession().is(VillagerProfession.NONE)){
+            tip.append(data.profession().value().name());
+            tip.append(" ");
+        }
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        return super.getDisplayName(mobTag, lookupProvider);
+    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        return super.getDisplayName(mobTag, registryAccess);
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        Tag villagerData = mobTag.get("VillagerData");
-        if(villagerData != null)
-            tag.put("VillagerData", villagerData);
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        tag.store("VillagerData", VillagerData.CODEC, mobTag.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData));
         return tag;
     }
 

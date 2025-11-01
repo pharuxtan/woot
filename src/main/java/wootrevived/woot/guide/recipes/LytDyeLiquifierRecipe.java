@@ -5,10 +5,15 @@ import guideme.document.block.LytBox;
 import guideme.document.block.LytSlot;
 import guideme.layout.LayoutContext;
 import guideme.render.RenderContext;
+import guideme.scene.level.GuidebookLevel;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -52,13 +57,15 @@ public class LytDyeLiquifierRecipe extends LytBox {
     private final LytFluid outputFluid;
 
     public LytDyeLiquifierRecipe(RecipeHolder<DyeLiquifierRecipe> recipeHolder){
+        Level level = new GuidebookLevel();
+        HolderSet<Item> dyes = level.registryAccess().lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.DYES);
         DyeLiquifierRecipe recipe = recipeHolder.value();
         append(energy = new LytEnergy(recipe.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get()));
-        append(inputSlot = new LytSlot(Ingredient.of(Tags.Items.DYES)));
-        append(redColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.RED.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.red")));
-        append(yellowColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.YELLOW.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.yellow")));
-        append(blueColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.BLUE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.blue")));
-        append(whiteColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.WHITE.getMapColor().calculateRGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.white")));
+        append(inputSlot = new LytSlot(Ingredient.of(dyes)));
+        append(redColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.red")));
+        append(yellowColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.yellow")));
+        append(blueColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.BLUE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.blue")));
+        append(whiteColorBar = new LytColorBar(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get(), Math.round(DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() * DyeLiquifierRecipe.maxMultiplier), DyeColor.WHITE.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH), Component.translatable("info.woot_revived.dye.white")));
         append(outputFluid = new LytFluid(new FluidStack(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get()), DyeLiquifierConfig.OUTPUT_TANK_CAPACITY.get()));
     }
 

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/netherite",
+    "b": "#c:dusts/redstone",
+    "c": "woot_revived:diamond_rate_upgrade"
+  },
+  "pattern": [
+    "aba",
+    "bcb",
+    "aba"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_rate_upgrade"
+  }
+}

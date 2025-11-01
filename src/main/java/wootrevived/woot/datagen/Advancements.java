@@ -7,11 +7,11 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -25,15 +25,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class Advancements extends AdvancementProvider {
-    public Advancements(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
-        super(output, registries, existingFileHelper, List.of(new Generator()));
+    public Advancements(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, List.of(new Provider()));
     }
 
-    public static final class Generator implements AdvancementGenerator {
+    public static final class Provider implements AdvancementSubProvider {
         private static final ResourceLocation background = ResourceLocation.withDefaultNamespace("textures/block/black_concrete_powder.png");
 
         @Override
-        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> saver, @NotNull ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> saver) {
             AdvancementHolder wootRevived = Advancement.Builder.advancement()
                     .display(BlocksRegistry.HEART_BLOCK.get(),
                             Component.translatable("advancements.woot_revived.root.title"),

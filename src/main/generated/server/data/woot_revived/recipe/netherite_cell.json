@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:gray_dye_plate",
+    "b": "woot_revived:netherite_enchanted_plate",
+    "c": "woot_revived:factory_base"
+  },
+  "pattern": [
+    "aba",
+    "bcb",
+    "aba"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_cell"
+  }
+}

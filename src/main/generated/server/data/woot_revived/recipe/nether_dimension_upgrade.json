@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:ghast_tear",
+    "b": "minecraft:blaze_rod",
+    "c": "woot_revived:upgrade_base"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:nether_dimension_upgrade"
+  }
+}

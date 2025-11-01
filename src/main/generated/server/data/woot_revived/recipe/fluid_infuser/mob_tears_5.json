@@ -1,0 +1,13 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": "minecraft:magma_cream",
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 1500,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

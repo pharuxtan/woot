@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:dye_liquifier",
+  "blue_multiplier": 0.25,
+  "energy": 500,
+  "ingredients": "#c:dyes/magenta",
+  "red_multiplier": 0.5,
+  "white_multiplier": 0.25,
+  "yellow_multiplier": 0.0
+}

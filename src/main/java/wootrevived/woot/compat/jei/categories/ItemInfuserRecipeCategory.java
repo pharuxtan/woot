@@ -7,8 +7,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -79,7 +79,7 @@ public class ItemInfuserRecipeCategory implements IRecipeCategory<ItemInfuserRec
     }
 
     @Override
-    public @NotNull RecipeType<ItemInfuserRecipe> getRecipeType() {
+    public @NotNull IRecipeType<ItemInfuserRecipe> getRecipeType() {
         return WootJeiPluginTypes.ITEM_INFUSER_TYPE;
     }
 
@@ -98,21 +98,21 @@ public class ItemInfuserRecipeCategory implements IRecipeCategory<ItemInfuserRec
         FluidStack inputFluid = recipe.getFluid();
 
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_FLUID_X + 3, INPUT_FLUID_Y + 3)
-                .addFluidStack(inputFluid.getFluid(), inputFluid.getAmount())
+                .add(inputFluid.getFluid(), inputFluid.getAmount())
                 .setCustomRenderer(NeoForgeTypes.FLUID_STACK, new WootJeiCustomFluidRenderer(ItemInfuserConfig.INPUT_TANK_CAPACITY.get()));
 
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
-               .addItemStack(inputFluid.getFluid().getBucket().getDefaultInstance());
+               .add(inputFluid.getFluid().getBucket().getDefaultInstance());
 
         builder.addSlot(RecipeIngredientRole.INPUT, INGREDIENT_SLOT_X + 1, INGREDIENT_SLOT_Y + 1)
-               .addIngredients(recipe.getIngredient());
+               .add(recipe.getIngredient());
 
         if(recipe.getAugment().isPresent()) {
             builder.addSlot(RecipeIngredientRole.INPUT, AUGMENT_SLOT_X + 1, AUGMENT_SLOT_Y + 1)
-                   .addIngredients(recipe.getAugment().get());
+                   .add(recipe.getAugment().get());
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_SLOT_X + 1, OUTPUT_SLOT_Y + 1)
-               .addItemStack(recipe.getOutput());
+               .add(recipe.getOutput());
     }
 }

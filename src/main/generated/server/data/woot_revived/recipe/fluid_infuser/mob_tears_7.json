@@ -1,0 +1,19 @@
+{
+  "type": "woot_revived:fluid_infuser",
+  "energy": 1000,
+  "ingredient": [
+    "minecraft:zombie_head",
+    "minecraft:piglin_head",
+    "minecraft:skeleton_skull",
+    "minecraft:dragon_head",
+    "minecraft:wither_skeleton_skull"
+  ],
+  "input_fluid": {
+    "amount": 1000,
+    "id": "minecraft:water"
+  },
+  "output_fluid": {
+    "amount": 5000,
+    "id": "woot_revived:mob_tears_fluid"
+  }
+}

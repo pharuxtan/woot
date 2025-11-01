@@ -61,7 +61,7 @@ public class MultiBlockUpdate {
                     .toList();
 
             if(!validBlocks.isEmpty()){
-                level.getServer().tell(new TickTask(level.getServer().getTickCount() + 1, () -> updateMultiblocksPattern(level, validBlocks)));
+                level.getServer().schedule(new TickTask(level.getServer().getTickCount() + 1, () -> updateMultiblocksPattern(level, validBlocks)));
             }
         }
     }

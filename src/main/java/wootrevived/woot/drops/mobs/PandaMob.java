@@ -1,7 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import com.google.common.base.CaseFormat;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,26 +16,28 @@ public class PandaMob extends WootFactoryMob<Panda> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
+    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
         MutableComponent tip = Component.empty();
-        if(mobTag.getString("MainGene").equals(mobTag.getString("HiddenGene"))){
-            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mobTag.getString("MainGene")).replaceAll("([a-z])([A-Z])", "$1 $2") + " "));
+        Panda.Gene mainGene = mobTag.read("MainGene", Panda.Gene.CODEC).orElse(Panda.Gene.NORMAL);
+        Panda.Gene hiddenGene = mobTag.read("MainGene", Panda.Gene.CODEC).orElse(Panda.Gene.NORMAL);
+        if(mainGene.equals(hiddenGene)){
+            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mainGene.getSerializedName()).replaceAll("([a-z])([A-Z])", "$1 $2") + " "));
         } else {
             tip.append(Component.literal("Normal "));
         }
-        return tip.append(super.getDisplayName(mobTag, lookupProvider));
+        return tip.append(super.getDisplayName(mobTag, registryAccess));
     }
 
     @Override
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, HolderLookup.Provider lookupProvider) {
-        return super.getDisplayName(mobTag, lookupProvider);
+    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
+        return super.getDisplayName(mobTag, registryAccess);
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, HolderLookup.Provider lookupProvider){
-        CompoundTag tag = super.saveTag(mobTag, lookupProvider);
-        tag.putString("MainGene", mobTag.getString("MainGene"));
-        tag.putString("HiddenGene", mobTag.getString("HiddenGene"));
+    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
+        CompoundTag tag = super.saveTag(mobTag, registryAccess);
+        tag.store("MainGene", Panda.Gene.CODEC, mobTag.read("MainGene", Panda.Gene.CODEC).orElse(Panda.Gene.NORMAL));
+        tag.store("HiddenGene", Panda.Gene.CODEC, mobTag.read("HiddenGene", Panda.Gene.CODEC).orElse(Panda.Gene.NORMAL));
         return tag;
     }
 

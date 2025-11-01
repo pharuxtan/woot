@@ -10,8 +10,6 @@ import wootrevived.woot.init.CommonConfig;
 import wootrevived.woot.init.Registry;
 import wootrevived.woot.init.WootPlugins;
 
-import java.util.Objects;
-
 @Mod(Woot.MOD_ID)
 public class Woot
 {

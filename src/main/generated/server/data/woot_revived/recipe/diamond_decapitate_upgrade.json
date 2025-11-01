@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:wither_skeleton_skull",
+    "b": "woot_revived:gold_decapitate_upgrade",
+    "c": "#c:gems/diamond"
+  },
+  "pattern": [
+    "cac",
+    "aba",
+    "cac"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:diamond_decapitate_upgrade"
+  }
+}

@@ -376,15 +376,17 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        long progress = tag.getLong(WootTags.PROGRESS_TAG);
-        processMax = (int)(progress >> 32);
-        processRemaining = (int)progress;
+        tag.getLong(WootTags.PROGRESS_TAG).ifPresent(progress -> {
+            processMax = (int)(progress >> 32);
+            processRemaining = progress.intValue();
+        });
+
 
         if(processRemaining > 0){
             isProcessActive = true;
         }
 
-        redstoneMode = RedstoneMode.byIndex(tag.getInt(WootTags.REDSTONE_MODE_TAG));
+        tag.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
     }
 
     @NotNull

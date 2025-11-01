@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:vitality_fuel_fluid_bucket",
+    "b": "#c:ingots/iron",
+    "c": "woot_revived:copper_efficiency_upgrade"
+  },
+  "pattern": [
+    "bab",
+    "aca",
+    "bab"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:iron_efficiency_upgrade"
+  }
+}

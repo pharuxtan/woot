@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -141,8 +142,8 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput input){
-        EnchantedLiquifierData.Component component = input.get(ComponentsRegistry.ENCHANTED_LIQUIFIER_DATA);
+    protected void applyImplicitComponents(DataComponentGetter getter){
+        EnchantedLiquifierData.Component component = getter.get(ComponentsRegistry.ENCHANTED_LIQUIFIER_DATA);
         if(component == null)
             return;
 
@@ -170,10 +171,14 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
 
-        if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            inventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
+        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inventoryHandler.deserializeNBT(provider, handler));
 
         EnchantedLiquifierData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropContents(level, pos);
     }
 
     public void dropContents(Level level, BlockPos pos) {

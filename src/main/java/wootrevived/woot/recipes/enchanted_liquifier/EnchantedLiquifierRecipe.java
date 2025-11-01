@@ -4,10 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -21,17 +18,17 @@ import java.util.List;
 // Recipe class for JEI
 public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
     private final int energy;
-    private final Ingredient ingredient;
+    private final List<ItemStack> ingredients;
     private final FluidStack output;
 
-    public EnchantedLiquifierRecipe(int energy, Ingredient ingredient, FluidStack output) {
+    public EnchantedLiquifierRecipe(int energy, List<ItemStack> ingredients, FluidStack output) {
         this.energy = energy;
-        this.ingredient = ingredient;
+        this.ingredients = ingredients;
         this.output = output;
     }
 
-    public Ingredient getIngredient(){
-        return ingredient;
+    public List<ItemStack> getIngredients(){
+        return ingredients;
     }
 
     public FluidStack getOutput(){
@@ -43,13 +40,23 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<WootRecipeInput>> getSerializer() {
         throw new IllegalStateException("Enchanted Serializer shouldn't exist");
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<WootRecipeInput>> getType() {
         return RecipesRegistry.ENCHANTED_LIQUIFIER_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.create(Ingredient.of(ingredients.stream().map(ItemStack::getItem)));
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipesRegistry.ENCHANTED_LIQUIFIER_RECIPE_BOOK_CATEGORY.get();
     }
 
     @Override
@@ -72,16 +79,6 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int i, int i1) {
-        return true;
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 

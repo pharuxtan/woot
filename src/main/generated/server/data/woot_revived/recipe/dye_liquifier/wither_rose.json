@@ -1,0 +1,9 @@
+{
+  "type": "woot_revived:dye_liquifier",
+  "blue_multiplier": 0.33333334,
+  "energy": 500,
+  "ingredients": "minecraft:wither_rose",
+  "red_multiplier": 0.33333334,
+  "white_multiplier": 0.0,
+  "yellow_multiplier": 0.33333334
+}

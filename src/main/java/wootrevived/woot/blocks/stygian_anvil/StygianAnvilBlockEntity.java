@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -79,6 +80,11 @@ public class StygianAnvilBlockEntity extends BlockEntity {
         };
     }
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state){
+        dropContents(level, pos);
+    }
+
     public void dropContents(Level level, BlockPos pos) {
         for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
             ItemStack stack = inventoryHandler.getStackInSlot(slot);
@@ -109,12 +115,15 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     }
 
     public void tryCraft(Player playerEntity) {
+        if(!(level instanceof ServerLevel serverLevel))
+            return;
+
         if (!BlocksRegistry.STYGIAN_ANVIL_BLOCK.get().isAnvilHot(level, getBlockPos())) {
             playerEntity.displayClientMessage(Component.translatable("chat.woot_revived.anvil.cold"), true);
             return;
         }
 
-        RecipeHolder<StygianAnvilRecipe> recipeHolder = level.getRecipeManager().getRecipeFor(RecipesRegistry.ANVIL_RECIPE_TYPE.get(),
+        RecipeHolder<StygianAnvilRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.ANVIL_RECIPE_TYPE.get(),
                 new WootRecipeInput(
                         Either.left(inventoryHandler.getStackInSlot(BASE_SLOT)),
                         Either.left(inventoryHandler.getStackInSlot(INGREDIENT_1_SLOT)),
@@ -142,12 +151,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
         }
 
         for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
-            ItemStack item =  inventoryHandler.getStackInSlot(slot);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                inventoryHandler.setStackInSlot(slot, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                inventoryHandler.setStackInSlot(slot, ItemStack.EMPTY);
-            }
+            inventoryHandler.setStackInSlot(slot, inventoryHandler.getStackInSlot(slot).getCraftingRemainder());
         }
 
         setChanged();
@@ -167,8 +171,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     @Override
     public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
         super.loadAdditional(tag, provider);
-        if(tag.contains(WootTags.INPUT_INVENTORY_TAG))
-            inventoryHandler.deserializeNBT(provider, tag.getCompound(WootTags.INPUT_INVENTORY_TAG));
+        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inventoryHandler.deserializeNBT(provider, handler));
     }
 
     @NotNull

@@ -1,7 +1,7 @@
 package wootrevived.api;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -51,9 +51,9 @@ public abstract class WootUpgradeItem extends Item {
      * for runtime or per-installation state, not for long-term persistence.
      *
      * @param upgradeTag persistent data for this upgrade instance
-     * @param lookupProvider access to the current registry view
+     * @param registryAccess access to the current registry view
      */
-    public void initUpgradeTag(CompoundTag upgradeTag, HolderLookup.Provider lookupProvider) {
+    public void initUpgradeTag(CompoundTag upgradeTag, RegistryAccess registryAccess) {
     }
 
     /**
@@ -151,10 +151,10 @@ public abstract class WootUpgradeItem extends Item {
     public void applyUpgradeTexture(NativeImage upgradeSide, NativeImage upgradeItem){
         for(int y = 2; y < 14; y++){
             for(int x = 2; x < 14; x++){
-                int color = upgradeItem.getPixelRGBA(x, y);
+                int color = upgradeItem.getPixel(x, y);
                 int alpha = color >> 24;
                 if(alpha != 0)
-                    upgradeSide.setPixelRGBA(x, y, color);
+                    upgradeSide.setPixel(x, y, color);
             }
         }
     }

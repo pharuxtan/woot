@@ -1,5 +1,7 @@
 package wootrevived.woot.datagen.recipes;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -11,10 +13,12 @@ import wootrevived.woot.util.common.DyeMakeup;
 import java.util.Locale;
 
 public class DyeLiquifier {
-    public static void registerRecipes(Recipes recipes, RecipeOutput output){
+    public static void registerRecipes(Recipes recipes, HolderLookup.Provider registries, RecipeOutput output){
+        HolderLookup.RegistryLookup<Item> itemRegistry = registries.lookupOrThrow(Registries.ITEM);
+
         for (DyeMakeup d : DyeMakeup.values()) {
             DyeLiquifierRecipeBuilder.dyeLiquifierRecipe()
-                    .ingredient(Ingredient.of(d.getTag()))
+                    .ingredient(Ingredient.of(itemRegistry.getOrThrow(d.getTag())))
                     .energy(500)
                     .red(d.getRed())
                     .yellow(d.getYellow())

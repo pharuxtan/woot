@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "#c:ingots/netherite",
+    "b": "woot_revived:netherite_shard",
+    "c": "woot_revived:factory_base"
+  },
+  "pattern": [
+    "aba",
+    "aca",
+    "aba"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_pylon"
+  }
+}

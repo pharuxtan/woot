@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(LivingEntity.class)
 public interface LivingEntityMixin {
     @Invoker("dropFromLootTable")
-    void woot$dropFromLootTable(DamageSource damageSource, boolean hitByPlayer);
+    void woot$dropFromLootTable(ServerLevel source, DamageSource damageSource, boolean hitByPlayer);
 
     @Invoker("dropCustomDeathLoot")
     void woot$dropCustomDeathLoot(ServerLevel source, DamageSource damageSource, boolean recentlyHit);
 
     @Invoker("dropEquipment")
-    void woot$dropEquipment();
+    void woot$dropEquipment(ServerLevel source);
 
     @Invoker("dropExperience")
-    void woot$dropExperience(Entity entity);
+    void woot$dropExperience(ServerLevel source, Entity entity);
 }

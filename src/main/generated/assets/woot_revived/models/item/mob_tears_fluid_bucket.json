@@ -1,5 +1,0 @@
-{
-  "parent": "neoforge:item/bucket",
-  "fluid": "woot_revived:mob_tears_fluid",
-  "loader": "neoforge:fluid_container"
-}

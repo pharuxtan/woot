@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "woot_revived:red_dye_plate",
+    "b": "woot_revived:factory_base",
+    "c": "woot_revived:vitality_fuel_fluid_bucket",
+    "d": "woot_revived:prism"
+  },
+  "pattern": [
+    "cdc",
+    "aba",
+    "cdc"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:factory_ctr_base_pri"
+  }
+}

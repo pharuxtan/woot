@@ -1,7 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,7 +36,7 @@ public class SheepMob extends WootFactoryMob<Sheep> {
             Items.BLACK_WOOL
     );
 
-    Ingredient woolIngredient = Ingredient.of(wools.stream().map(Item::getDefaultInstance));
+    Ingredient woolIngredient = Ingredient.of(wools.stream());
 
     @Override
     public void modifyDrops(Phase phase, WootDropsProperties properties){

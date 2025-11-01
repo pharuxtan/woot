@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "woot_revived",
+  "ingredients": [
+    "minecraft:book",
+    "woot_revived:stygian_ingot"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:guide"
+  }
+}

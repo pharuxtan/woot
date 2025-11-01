@@ -1,13 +1,13 @@
 package wootrevived.woot.util.render;
 
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -15,12 +15,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 import wootrevived.woot.Woot;
 import wootrevived.woot.mixins.impl.GuiGraphicsMixin;
 import wootrevived.woot.util.common.MachineSide;
@@ -43,6 +41,9 @@ import static wootrevived.woot.util.render.WootStyles.UNIT_STYLE;
 
 public abstract class WootContainerScreen<T extends WootContainerMenu> extends AbstractContainerScreen<T> {
     public static final ResourceLocation GUI = Woot.location("textures/gui/atlas.png");
+
+    public static final int ATLAS_WIDTH = 256;
+    public static final int ATLAS_HEIGHT = 256;
 
     protected static final int GUI_XSIZE = 176;
     protected static final int GUI_YSIZE = 184;
@@ -189,7 +190,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         PoseStack pose = gui.pose();
         pose.pushPose();
         pose.translate(x, y, 0);
-        gui.blit(GUI, 0, 0, 0, 0, imageWidth, imageHeight);
+        gui.blit(RenderType::guiTextured, GUI, 0, 0, 0, 0, imageWidth, imageHeight, ATLAS_WIDTH, ATLAS_HEIGHT);
 
         renderMenuBackground(gui);
         renderState(gui);
@@ -202,12 +203,12 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
 
     public static void renderSlot(@NotNull GuiGraphics gui, int x, int y, int color){
         stroke(gui, x - 1, y - 1, x + 18, y + 18, color & 0x2F_FFFFFF);
-        gui.blit(GUI, x, y, 228, 0, 18, 18);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 228, 0, 18, 18, ATLAS_WIDTH, ATLAS_HEIGHT);
         gui.fill(x + 1, y + 1, x + 17, y + 17, color & 0x4F_FFFFFF);
     }
 
     public static void renderVanillaSlot(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 7, 101, 18, 18);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 7, 101, 18, 18, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public void createSlotSideButton(int x, int y, int color, int propertiesIndex, Component name){
@@ -218,13 +219,13 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
     }
 
     public static void renderEnergyBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 177, 0, 18, 56);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 0, 18, 56, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public static void renderEnergy(@NotNull GuiGraphics gui, int x, int y, int fill, int capacity){
         int fillHeight = Mth.clamp(fill * 50 / capacity, 0, 50);
         int fillY = 50 - fillHeight;
-        gui.blit(GUI, x + 3, y + fillY + 3, 196, 3 + fillY, 12, fillHeight);
+        gui.blit(RenderType::guiTextured, GUI, x + 3, y + fillY + 3, 196, 3 + fillY, 12, fillHeight, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public void renderEnergyTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity) {
@@ -251,12 +252,12 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
                                 .append(Component.literal(" FE").setStyle(UNIT_STYLE))
                 );
             }
-            gui.renderTooltip(getFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.renderTooltip(getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
     public static void renderFluidBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 209, 0, 18, 56);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 209, 0, 18, 56, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public static void renderFluid(@NotNull GuiGraphics gui, int x, int y, FluidStack fluid, int capacity){
@@ -267,9 +268,9 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         int fillY = 50 - fillHeight;
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidTypeExtensions.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
         renderTiledFluidTextureAtlas(gui, texture, x + 3, y + fillY + 3, 12, fillHeight, fluidTypeExtensions.getTintColor(), false);
-        gui.blit(GUI, x + 3, y + 3, 212, 3, 12, 50);
+        gui.blit(RenderType::guiTextured, GUI, x + 3, y + 3, 212, 3, 12, 50, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public void createFluidSideButton(int x, int y, int color, int propertiesIndex, Component name){
@@ -311,62 +312,33 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
                                 .append(Component.literal("mB").setStyle(UNIT_STYLE))
                 );
             }
-            gui.renderTooltip(getFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.renderTooltip(getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
-    public static void renderTiledFluidTextureAtlas(@NotNull GuiGraphics guiGraphics, TextureAtlasSprite sprite, int x, int y, int width, int height, int color, boolean enableBlend) {
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, sprite.atlasLocation());
-
-        if(enableBlend) RenderSystem.enableBlend();
-        else RenderSystem.disableBlend();
-
+    public static void renderTiledFluidTextureAtlas(@NotNull GuiGraphics gui, TextureAtlasSprite sprite, int x, int y, int width, int height, int color, boolean enableBlend) {
         int spriteWidth = sprite.contents().width();
         int spriteHeight = sprite.contents().height();
 
-        for(int i = 0; i < width; i += spriteWidth){
-            for(int j = 0; j < height; j += spriteHeight){
-                int drawWidth = Math.min(width - i, spriteWidth);
-                int drawHeight = Math.min(height - j, spriteHeight);
-                renderScaledTexturedModelRectFromIcon(guiGraphics, sprite, x + i, y + j, drawWidth, drawHeight, color);
-            }
-        }
-
-        if(enableBlend) RenderSystem.disableBlend();
-    }
-
-    public static void renderScaledTexturedModelRectFromIcon(@NotNull GuiGraphics guiGraphics, TextureAtlasSprite icon, int x, int y, int width, int height, int color) {
-        if (icon == null)
-            return;
-
-        float minU = icon.getU0();
-        float maxU = icon.getU1();
-        float minV = icon.getV0();
-        float maxV = icon.getV1();
-
-        float red   = (color >> 16 & 0xFF) / 255.0f;
-        float green = (color >>  8 & 0xFF) / 255.0f;
-        float blue  = (color       & 0xFF) / 255.0f;
-
-        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-
-        Matrix4f matrix = guiGraphics.pose().last().pose();
-        builder.addVertex(matrix, x, y + height, 0).setUv(minU, minV + (maxV - minV) * height / 16F).setColor(red, green, blue, 1);
-        builder.addVertex(matrix, x + width, y + height, 0).setUv(minU + (maxU - minU) * width / 16F, minV + (maxV - minV) * height / 16F).setColor(red, green, blue, 1);
-        builder.addVertex(matrix, x + width, y, 0).setUv(minU + (maxU - minU) * width / 16F, minV).setColor(red, green, blue, 1);
-        builder.addVertex(matrix, x, y, 0).setUv(minU, minV).setColor(red, green, blue, 1);
-
-        BufferUploader.drawWithShader(builder.buildOrThrow());
+        ((GuiGraphicsMixin) gui).woot$blitTiledSprite(
+                enableBlend ? RenderType::guiTexturedOverlay : RenderType::guiOpaqueTexturedBackground,
+                sprite,
+                x, y,
+                width, height,
+                0, 0,
+                spriteWidth, spriteHeight,
+                spriteWidth, spriteHeight,
+                color
+        );
     }
 
     public static void renderProgressArrowBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 228, 19, 22, 15);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 228, 19, 22, 15, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public static void renderProgressArrow(@NotNull GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 22 / 100, 0, 22);
-        gui.blit(GUI, x, y, 228, 35, fillWidth, 16);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 228, 35, fillWidth, 16, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
     public void renderProgressArrowTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
@@ -402,18 +374,18 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
                             .append(Component.literal("/").setStyle(MACHINE_STYLE))
                             .append(Component.literal("t").setStyle(UNIT_STYLE))
             );
-            gui.renderTooltip(getFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.renderTooltip(getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
     public static void renderColorBarBg(@NotNull GuiGraphics gui, int x, int y, int color){
-        gui.blit(GUI, x, y, 177, 57, 56, 11);
-        ((GuiGraphicsMixin) gui).woot$innerBlit(GUI, x + 3, x + 53, y + 3, y + 8, 0, 180F / 256F, 230F / 256F, 69F / 256F, 74F / 256F,(color & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, ((color >> 16) & 0xFF) / 255F, 1F);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 57, 56, 11, ATLAS_WIDTH, ATLAS_HEIGHT);
+        ((GuiGraphicsMixin) gui).woot$innerBlit(RenderType::guiTextured, GUI, x + 3, x + 53, y + 3, y + 8, 180F / 256F, 230F / 256F, 69F / 256F, 74F / 256F, color);
     }
 
     public static void renderColorBar(@NotNull GuiGraphics gui, int x, int y, int fill, int capacity, int color){
         int fillWidth = Mth.clamp(fill * 50 / capacity, 0, 50);
-        ((GuiGraphicsMixin) gui).woot$innerBlit(GUI, x + 3, x + 3 + fillWidth, y + 3, y + 8, 0, 180F / 256F, (180F + (float)fillWidth) / 256F, 75F / 256F, 80F / 256F, (color & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, ((color >> 16) & 0xFF) / 255F, 1F);
+        ((GuiGraphicsMixin) gui).woot$innerBlit(RenderType::guiTextured, GUI, x + 3, x + 3 + fillWidth, y + 3, y + 8, 180F / 256F, (180F + (float)fillWidth) / 256F, 75F / 256F, 80F / 256F, color);
     }
 
     public void renderColorBarTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName) {
@@ -440,7 +412,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
                                 .append(Component.literal("mB").setStyle(UNIT_STYLE))
                 );
             }
-            gui.renderTooltip(getFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.renderTooltip(getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -459,7 +431,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         return String.format(Locale.US, "%,.1f", val).replace(",", " ");
     }
 
-    public static Font getFont(){
+    public static Font getMCFont(){
         return Minecraft.getInstance().font;
     }
     
@@ -470,7 +442,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
     }
 
     public static void renderPlus(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(GUI, x, y, 234, 57, 13, 14);
+        gui.blit(RenderType::guiTextured, GUI, x, y, 234, 57, 13, 14, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 }
 

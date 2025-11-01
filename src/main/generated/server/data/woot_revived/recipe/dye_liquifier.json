@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "b": "#c:dyes/blue",
+    "f": "woot_revived:factory_base",
+    "g": "#c:dyes/green",
+    "l": "#c:dyes/black",
+    "m": "#c:dyes/magenta",
+    "n": "#c:dyes/brown",
+    "r": "#c:dyes/red",
+    "w": "#c:dyes/white",
+    "y": "#c:dyes/yellow"
+  },
+  "pattern": [
+    "rgy",
+    "lfm",
+    "bnw"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:dye_liquifier"
+  }
+}

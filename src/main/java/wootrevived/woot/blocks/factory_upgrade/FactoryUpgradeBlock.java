@@ -2,10 +2,8 @@ package wootrevived.woot.blocks.factory_upgrade;
 
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,8 +25,9 @@ import wootrevived.woot.util.block.FactoryBlockBase;
 import java.util.function.Supplier;
 
 public class FactoryUpgradeBlock extends FactoryBlockBase {
-    public FactoryUpgradeBlock(Supplier<BlockEntityType<?>> entity) {
-        super(entity, BlockBehaviour.Properties.of()
+    public FactoryUpgradeBlock(Supplier<BlockEntityType<?>> entity, String tag) {
+        super(entity, tag, BlockBehaviour.Properties.of()
+                .dynamicShape()
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.STONE)
                 .strength(3.5F));
@@ -59,7 +58,7 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
         }
 
         @Override
-        public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.useItemOn(stack, level, player, hand, hit);
 
@@ -68,13 +67,13 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
                     BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
                     if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
                         factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
-                        return ItemInteractionResult.SUCCESS;
+                        return InteractionResult.SUCCESS_SERVER;
                     }
                 } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem upgradeItem) {
                     BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
                     if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
                         factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
-                        return ItemInteractionResult.SUCCESS;
+                        return InteractionResult.SUCCESS_SERVER;
                     }
                 }
             }
@@ -84,18 +83,7 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
 
         @Override
         public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
-            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit).result();
-        }
-
-        @Override
-        public void onRemove(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-            if(getValue(BlockStateProperties.ENABLED) && getBlock() != newState.getBlock()) {
-                BlockEntity blockEntity = level.getBlockEntity(pos);
-                if(blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
-                    factoryUpgradeBlockEntity.dropItem(level, pos);
-                }
-            }
-            super.onRemove(level, pos, newState, isMoving);
+            return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
     }
 }
