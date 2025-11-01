@@ -59,35 +59,11 @@ public abstract class WootUpgradeItem extends Item {
     /**
      * Allows upgrades to adjust factory generation properties
      * before any ingredients or vitality fuel are consumed.
-     *
-     * @param properties mutable generation properties
-     * @deprecated since 1.1.4; use {@link #applyGenerationProperties(WootGenerationProperties, CompoundTag)}
-     */
-    @Deprecated(since = "1.1.4", forRemoval = true)
-    public void applyGenerationProperties(WootGenerationProperties properties) {
-    }
-
-    /**
-     * Allows upgrades to adjust factory generation properties
-     * before any ingredients or vitality fuel are consumed.
      * <p>
      * @param properties mutable generation properties
      * @param upgradeTag persistent data for this upgrade across lifecycle stages
      */
-    @ApiStatus.AvailableSince("1.1.4")
     public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
-        applyGenerationProperties(properties);
-    }
-
-    /**
-     * Allows upgrades to adjust the mob's spawn properties
-     * before the simulation begins.
-     *
-     * @param properties mutable spawn properties
-     * @deprecated since 1.1.4; use {@link #applySpawnProperties(WootSpawnProperties, CompoundTag)}
-     */
-    @Deprecated(since = "1.1.4", forRemoval = true)
-    public void applySpawnProperties(WootSpawnProperties properties){
     }
 
     /**
@@ -97,19 +73,7 @@ public abstract class WootUpgradeItem extends Item {
      * @param properties mutable spawn properties
      * @param upgradeTag persistent data for this upgrade across lifecycle stages
      */
-    @ApiStatus.AvailableSince("1.1.4")
     public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag){
-        applySpawnProperties(properties);
-    }
-
-    /**
-     * Allows upgrades to inspect and modify drops produced by the simulation.
-     *
-     * @param properties mutable access to item/fluids/XP drops and context
-     * @deprecated since 1.1.4; use {@link #modifyDrops(WootDropsProperties, CompoundTag)}
-     */
-    @Deprecated(since = "1.1.4", forRemoval = true)
-    public void modifyDrops(WootDropsProperties properties) {
     }
 
     /**
@@ -118,7 +82,6 @@ public abstract class WootUpgradeItem extends Item {
      * @param properties mutable access to item/fluids/XP drops and context
      * @param upgradeTag persistent data for this upgrade across lifecycle stages
      */
-    @ApiStatus.AvailableSince("1.1.4")
     public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
     }
 
