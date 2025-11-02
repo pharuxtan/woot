@@ -143,8 +143,17 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
-        if(side == null)
+        if(side == null) {
+            if(ForgeCapabilities.ITEM_HANDLER.equals(cap)){
+                return LazyOptional.of(() -> allSlotsHandler).cast();
+            }
+
+            if(ForgeCapabilities.FLUID_HANDLER.equals(cap)){
+                return LazyOptional.of(() -> inputTankHandler).cast();
+            }
+
             return super.getCapability(cap, side);
+        }
 
         Properties properties = getProperties(side);
 

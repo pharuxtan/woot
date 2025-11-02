@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.client.render.fluid_infuser.FluidInfuserContainerMenu;
@@ -116,8 +117,21 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @org.jetbrains.annotations.Nullable Direction side){
-        if(side == null)
+        if(side == null) {
+            if(ForgeCapabilities.ITEM_HANDLER.equals(cap)){
+                return LazyOptional.of(() -> inventoryHandler).cast();
+            }
+
+            if(ForgeCapabilities.FLUID_HANDLER.equals(cap)){
+                WootFluidHandlerWrapper wrapper = new WootFluidHandlerWrapper()
+                        .addHandler(inputTankHandler, () -> MachineSideProperty.ENABLED)
+                        .addHandler(outputTankHandler, () -> MachineSideProperty.ENABLED);
+
+                return LazyOptional.of(() -> wrapper).cast();
+            }
+
             return super.getCapability(cap, side);
+        }
 
         Properties properties = getProperties(side);
 

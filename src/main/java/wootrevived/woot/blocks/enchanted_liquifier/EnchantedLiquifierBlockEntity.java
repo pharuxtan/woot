@@ -115,8 +115,17 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @org.jetbrains.annotations.Nullable Direction side){
-        if(side == null)
+        if(side == null) {
+            if(ForgeCapabilities.ITEM_HANDLER.equals(cap)){
+                return LazyOptional.of(() -> inventoryHandler).cast();
+            }
+
+            if(ForgeCapabilities.FLUID_HANDLER.equals(cap)){
+                return LazyOptional.of(() -> outputTankHandler).cast();
+            }
+
             return super.getCapability(cap, side);
+        }
 
         Properties properties = getProperties(side);
 
