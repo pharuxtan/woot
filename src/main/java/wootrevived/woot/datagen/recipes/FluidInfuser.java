@@ -101,7 +101,8 @@ public class FluidInfuser {
                         Items.SLIME_BALL
                 ), 1000),
                 new IngredientRecipe(Ingredient.of(
-                        Items.MAGMA_CREAM
+                        Items.MAGMA_CREAM,
+                        Items.BLAZE_ROD
                 ), 1500),
                 new IngredientRecipe(Ingredient.of(
                         Items.ENDER_PEARL,
