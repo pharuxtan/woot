@@ -177,7 +177,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(DyeLiquifierBlockEntity blockEntity, Direction side){
+    public static IItemHandler getItemHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return blockEntity.allSlotsHandler;
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootItemHandlerWrapper()
@@ -187,7 +190,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
                 .addHandler(blockEntity.whiteInventoryHandler, properties::getWhiteIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(DyeLiquifierBlockEntity blockEntity, Direction side){
+    public static IFluidHandler getFluidHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return blockEntity.outputTankHandler;
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootFluidHandlerWrapper()

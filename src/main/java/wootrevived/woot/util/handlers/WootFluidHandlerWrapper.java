@@ -24,16 +24,22 @@ public class WootFluidHandlerWrapper implements IFluidHandler {
 
     @Override
     public @NotNull FluidStack getFluidInTank(int tank) {
+        if(tank < 0 || tank >= fluidWrappers.size())
+            return FluidStack.EMPTY;
         return fluidWrappers.get(tank).tank.getFluid();
     }
 
     @Override
     public int getTankCapacity(int tank) {
+        if(tank < 0 || tank >= fluidWrappers.size())
+            return 0;
         return fluidWrappers.get(tank).tank.getCapacity();
     }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        if(tank < 0 || tank >= fluidWrappers.size())
+            return false;
         return fluidWrappers.get(tank).tank.isFluidValid(stack);
     }
 
