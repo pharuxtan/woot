@@ -87,6 +87,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
             return;
 
         generatePureFluid();
+        tickItem(redInventoryHandler, pos, side -> getProperties(side).getRedIngredientProperty());
+        tickItem(yellowInventoryHandler, pos, side -> getProperties(side).getYellowIngredientProperty());
+        tickItem(blueInventoryHandler, pos, side -> getProperties(side).getBlueIngredientProperty());
+        tickItem(whiteInventoryHandler, pos, side -> getProperties(side).getWhiteIngredientProperty());
         tickFluid(outputTankHandler, pos, DyeLiquifierConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getOutputFluidProperty());
     }
 

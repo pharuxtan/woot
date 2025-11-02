@@ -78,6 +78,7 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
         if(level.isClientSide)
             return;
 
+        tickItem(inventoryHandler, pos, side -> getProperties(side).getIngredientProperty());
         tickFluid(inputTankHandler, pos, FluidInfuserConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getInputFluidProperty());
         tickFluid(outputTankHandler, pos, FluidInfuserConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getOutputFluidProperty());
     }

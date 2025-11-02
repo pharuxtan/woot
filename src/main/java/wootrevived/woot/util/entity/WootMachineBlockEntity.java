@@ -23,6 +23,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,7 @@ import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.common.RedstoneMode;
 import wootrevived.woot.util.handlers.WootEnergyStorage;
 import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.handlers.WootItemStackHandler;
 import wootrevived.woot.util.render.WootContainerData;
 
 import java.util.EnumMap;
@@ -313,6 +315,44 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     public abstract Predicate<FluidStack> getInputFluidValidator();
     public abstract int getInputTankCapacity();
     public abstract boolean hasInputFluidCapability();
+
+    protected void tickItem(WootItemStackHandler itemHandler, BlockPos pos, Function<Direction, MachineSideProperty> getProperty) {
+        for(Direction side : Direction.values()){
+            if(getProperty.apply(side) == MachineSideProperty.PUSH){
+                IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(side), side.getOpposite());
+
+                if(handler == null)
+                    continue;
+
+                ItemStack stack = itemHandler.getStackInSlot(0);
+                if(stack.isEmpty())
+                    return;
+                ItemStack result = ItemHandlerHelper.insertItem(handler, stack, true);
+                if(result.getCount() < stack.getCount()){
+                    ItemStack extracted = itemHandler.extractItem(0, stack.getCount() - result.getCount(), false);
+                    if(!extracted.isEmpty())
+                        ItemHandlerHelper.insertItem(handler, extracted, false);
+                }
+            } else if(getProperty.apply(side) == MachineSideProperty.PULL && !itemHandler.isOutput()){
+                IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(side), side.getOpposite());
+
+                if(handler == null)
+                    continue;
+
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack stack = handler.getStackInSlot(i);
+                    ItemStack result = itemHandler.insertItem(0, stack, true);
+                    if(result.getCount() < stack.getCount()){
+                        ItemStack extracted = handler.extractItem(i, stack.getCount() - result.getCount(), false);
+                        if(!extracted.isEmpty()) {
+                            itemHandler.insertItem(0, extracted, false);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     protected void tickFluid(WootFluidTankHandler fluidTank, BlockPos pos, int tickRate, Function<Direction, MachineSideProperty> getProperty) {
         for(Direction side : Direction.values()){
