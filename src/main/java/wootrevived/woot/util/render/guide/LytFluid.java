@@ -7,7 +7,6 @@ import guideme.document.interaction.InteractiveElement;
 import guideme.layout.LayoutContext;
 import guideme.render.RenderContext;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.neoforge.fluids.FluidStack;
 import wootrevived.woot.util.render.WootContainerScreen;
 
@@ -29,10 +28,6 @@ public class LytFluid extends LytBlock implements InteractiveElement {
 
     @Override
     protected void onLayoutMoved(int deltaX, int deltaY) {
-    }
-
-    @Override
-    public void renderBatch(RenderContext context, MultiBufferSource buffers) {
     }
 
     @Override

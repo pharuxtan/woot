@@ -1,9 +1,9 @@
 package wootrevived.woot.client.model.factory_upgrade;
 
 import com.mojang.math.Quadrant;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
@@ -12,8 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@OnlyIn(Dist.CLIENT)
 public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> variants, TextureAtlasSprite defaultParticle) implements DynamicBlockStateModel {
     public static @NotNull FactoryUpgradeDynamicModel bake(ResolvedModel model, ModelBaker baker) {
         Map<String, List<BlockModelPart>> variants = new HashMap<>();
@@ -82,7 +79,7 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
             ));
         }
 
-        return List.of(new SimpleModelWrapper(builder.build(), model.getTopAmbientOcclusion(), texture, RenderType.solid()));
+        return List.of(new SimpleModelWrapper(builder.build(), model.getTopAmbientOcclusion(), texture, ChunkSectionLayer.SOLID));
     }
 
     @Override

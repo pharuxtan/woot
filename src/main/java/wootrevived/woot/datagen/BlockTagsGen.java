@@ -2,6 +2,7 @@ package wootrevived.woot.datagen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
@@ -19,7 +20,7 @@ public class BlockTagsGen extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        IntrinsicTagAppender<Block> tagAppender = tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        TagAppender<Block, Block> tagAppender = tag(BlockTags.MINEABLE_WITH_PICKAXE);
 
         for(DeferredHolder<Block, ? extends Block> block : BlocksRegistry.BLOCKS.getEntries())
             tagAppender.add(block.get());

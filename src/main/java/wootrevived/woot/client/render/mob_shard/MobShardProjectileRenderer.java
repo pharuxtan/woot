@@ -8,11 +8,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import wootrevived.woot.items.mob_shard.MobShardProjectile;
 
-@OnlyIn(Dist.CLIENT)
 public class MobShardProjectileRenderer extends EntityRenderer<MobShardProjectile, MobShardProjectileRenderState> {
     private final ItemModelResolver itemModelResolver;
     private final float scale;

@@ -1,20 +1,17 @@
 package wootrevived.woot.client.render.dye_liquifier;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
 import wootrevived.woot.config.DyeLiquifierConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
 
-@OnlyIn(Dist.CLIENT)
 public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifierContainerMenu> {
     private static final int ENERGY_X = 8;
     private static final int ENERGY_Y = 20;
@@ -100,12 +97,12 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     }
 
     public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 132, 18, 43, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 132, 18, 43, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 18 / 100, 0, 18);
-        gui.blit(RenderType::guiTextured, GUI, x, y, 196, 132, fillWidth, 44, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 196, 132, fillWidth, 44, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){

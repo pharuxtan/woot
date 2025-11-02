@@ -2,9 +2,9 @@ package wootrevived.api.interfaces;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
@@ -43,7 +43,7 @@ public interface WootGenerationProperties {
     @NotNull RegistryAccess getRegistryAccess();
     @NotNull Tier getFactoryTier();
     @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull CompoundTag getFactoryMobTag();
+    @NotNull ValueInput getFactoryMobValue();
 
     @ApiStatus.AvailableSince("1.1.4")
     @NotNull ServerLevel getHeartLevel();

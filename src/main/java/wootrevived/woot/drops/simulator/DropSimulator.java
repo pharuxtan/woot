@@ -26,6 +26,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.entity.EntityPersistentStorage;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -68,8 +69,8 @@ public class DropSimulator {
         return INSTANCE.dimensionLevel.registryAccess();
     }
 
-    public static @Nullable LivingEntity loadEntity(WootFactoryMob<?> entity, CompoundTag mobTag) {
-        return entity.loadEntity(mobTag, INSTANCE.dimensionLevel);
+    public static @Nullable LivingEntity loadEntity(WootFactoryMob<?> entity, ValueInput input) {
+        return entity.loadEntity(input, INSTANCE.dimensionLevel);
     }
 
     public static void patchDimension(WootDropsProperties properties, boolean restore){

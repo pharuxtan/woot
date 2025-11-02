@@ -19,8 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +30,7 @@ import wootrevived.woot.registries.ComponentsRegistry;
 import wootrevived.woot.registries.WootFactoryMobsRegistry;
 import wootrevived.woot.util.common.WootTier;
 import wootrevived.woot.util.helper.ModNameHelper;
+import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 
 import java.util.function.Consumer;
 
@@ -68,7 +68,7 @@ public class FakeSpawnerBlockItem extends FactoryBlockItem {
                 WootFactoryMob<?> mob = WootFactoryMobsRegistry.getFactoryMob(mobTag);
 
                 if (mob != null) {
-                    consumer.accept(mob.getDisplayName(mobTag, gatherRegistry(ctx)).setStyle(CAPTURED_STYLE));
+                    consumer.accept(mob.getDisplayName(TagValueInput.create(SerializeEntityValueHelper.REPORTER, gatherRegistry(ctx), mobTag)).setStyle(CAPTURED_STYLE));
                     String modId = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getEntityType()).getNamespace();
                     consumer.accept(ModNameHelper.getModName(modId).setStyle(MOD_NAME_STYLE));
                 }
@@ -77,8 +77,7 @@ public class FakeSpawnerBlockItem extends FactoryBlockItem {
             });
         }
 
-        @OnlyIn(Dist.CLIENT)
-        public RegistryAccess gatherRegistry(TooltipContext ctx) {
+                public RegistryAccess gatherRegistry(TooltipContext ctx) {
             return ctx.level() == null ? Minecraft.getInstance().level.registryAccess() : ctx.level().registryAccess();
         }
     }

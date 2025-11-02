@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,10 +21,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.items.mob_shard.MobShardItem;
 import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
@@ -143,7 +148,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
             if(!MobShardItem.isFullyProgrammed(baseStack))
                 return;
 
-            CompoundTag mobTag = MobShardItem.getProgrammedMob(baseStack);
+            CompoundTag mobTag = MobShardItem.getProgrammedMobTag(baseStack);
             if(mobTag == null)
                 return;
 
@@ -163,29 +168,33 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
-        tag.put(WootTags.INPUT_INVENTORY_TAG, inventoryHandler.serializeNBT(provider));
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
+        inventoryHandler.serialize(output.child(WootTags.INPUT_INVENTORY_TAG));
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
-        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inventoryHandler.deserializeNBT(provider, handler));
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
+        input.child(WootTags.INPUT_INVENTORY_TAG).ifPresent(inventoryHandler::deserialize);
     }
+
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("StygianAnvilBlockEntity");
 
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
-        saveAdditional(tag, provider);
+        TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
+        saveAdditional(output);
+        tag.merge(output.buildResult());
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider){
-        super.handleUpdateTag(tag, lookupProvider);
-        loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(@NotNull ValueInput input){
+        super.handleUpdateTag(input);
+        loadAdditional(input);
     }
 
     @Override

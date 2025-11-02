@@ -5,8 +5,8 @@ import guideme.scene.level.GuidebookLevel;
 import guideme.siteexport.ResourceExporter;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.util.common.WootTier;
 import wootrevived.woot.util.helper.ModNameHelper;
@@ -18,13 +18,11 @@ import static wootrevived.woot.util.render.WootStyles.*;
 
 public class EntityTooltip implements GuideTooltip {
     private final WootFactoryMob<?> mob;
-    private final CompoundTag tag;
-    private final GuidebookLevel level;
+    private final ValueInput input;
 
-    public EntityTooltip(WootFactoryMob<?> mob, CompoundTag tag, GuidebookLevel level){
+    public EntityTooltip(WootFactoryMob<?> mob, ValueInput input){
         this.mob = mob;
-        this.tag = tag;
-        this.level = level;
+        this.input = input;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class EntityTooltip implements GuideTooltip {
         String modId = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getEntityType()).getNamespace();
 
         List<Component> lines = List.of(
-                mob.getDisplayName(tag, level.registryAccess()).append(Component.literal(": ")).setStyle(MACHINE_STYLE),
+                mob.getDisplayName(input).append(Component.literal(": ")).setStyle(MACHINE_STYLE),
                 Component.empty()
                         .append(Component.translatable("info.woot_revived.tier").append(Component.literal(": ")).setStyle(MACHINE_STYLE))
                         .append(Component.translatable(WootTier.getTranslationKey(mob.getTier()))),

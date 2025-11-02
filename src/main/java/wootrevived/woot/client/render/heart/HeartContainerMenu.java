@@ -1,7 +1,6 @@
 package wootrevived.woot.client.render.heart;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +9,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -167,13 +167,13 @@ public class HeartContainerMenu extends AbstractContainerMenu {
         return fakeSpawner;
     }
 
-    public @Nullable CompoundTag getFactoryMobTag(int index){
+    public @Nullable ValueInput getFactoryMobValue(int index){
         FakeSpawnerBlockEntity fakeSpawner = getFakeSpawner(index);
 
         if(fakeSpawner == null || fakeSpawner.isRemoved())
             return null;
 
-        return fakeSpawner.getMobTag();
+        return fakeSpawner.getMobValue();
     }
 
     public @Nullable WootFactoryMob<?> getFactoryMob(int index){

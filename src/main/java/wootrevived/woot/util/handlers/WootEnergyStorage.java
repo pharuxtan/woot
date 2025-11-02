@@ -1,10 +1,8 @@
 package wootrevived.woot.util.handlers;
 
-import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
-public class WootEnergyStorage extends EnergyStorage implements INBTSerializable<Tag> {
+public class WootEnergyStorage extends EnergyStorage {
     public WootEnergyStorage(int capacity, int maxTransfer) {
         super(capacity, maxTransfer);
     }

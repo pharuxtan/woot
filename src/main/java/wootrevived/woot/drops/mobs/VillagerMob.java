@@ -1,13 +1,13 @@
 package wootrevived.woot.drops.mobs;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
 
@@ -17,26 +17,25 @@ public class VillagerMob extends WootFactoryMob<Villager> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+    public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.empty();
-        VillagerData data = mobTag.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData);
+        VillagerData data = input.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData);
         if(!data.profession().is(VillagerProfession.NONE)){
             tip.append(data.profession().value().name());
             tip.append(" ");
         }
-        return tip.append(super.getDisplayName(mobTag, registryAccess));
+        return tip.append(super.getDisplayName(input));
     }
 
     @Override
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
-        return super.getDisplayName(mobTag, registryAccess);
+    public MutableComponent getTooltipKillName(ValueInput input) {
+        return super.getDisplayName(input);
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
-        CompoundTag tag = super.saveTag(mobTag, registryAccess);
-        tag.store("VillagerData", VillagerData.CODEC, mobTag.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData));
-        return tag;
+    public void saveTag(ValueInput input, ValueOutput output){
+        super.saveTag(input, output);
+        output.store("VillagerData", VillagerData.CODEC, input.read("VillagerData", VillagerData.CODEC).orElseGet(Villager::createDefaultVillagerData));
     }
 
     public static void register(WootFactoryMobRegistration registration) {

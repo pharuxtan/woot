@@ -6,20 +6,24 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.data.CreativeTankData;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ComponentsRegistry;
@@ -97,31 +101,33 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
-        CreativeTankData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
-            if(t instanceof CompoundTag compound) tag.merge(compound);
-        });
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
+        output.store(CreativeTankData.ID, CreativeTankData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
-        CreativeTankData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
+        input.read(CreativeTankData.ID, CreativeTankData.CODEC).ifPresent(this::setComponent);
     }
+
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("CreativeTankBlockEntity");
 
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
-        saveAdditional(tag, provider);
+        TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
+        saveAdditional(output);
+        tag.merge(output.buildResult());
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider){
-        super.handleUpdateTag(tag, lookupProvider);
-        loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(@NotNull ValueInput input){
+        super.handleUpdateTag(input);
+        loadAdditional(input);
     }
 
     @Override

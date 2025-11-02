@@ -9,11 +9,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.drops.simulator.DropSimulator;
+import wootrevived.woot.util.helper.SerializeEntityValueHelper;
+
+import java.util.function.Consumer;
 
 public class WootFactorySpawnProperties implements WootSpawnProperties {
     private final Tier factoryTier;
@@ -124,12 +131,15 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     }
 
     @Override
-    public @NotNull CompoundTag getFactoryMobTag() {
-        return factoryMobTag.copy();
+    public @NotNull ValueInput getFactoryMobValue() {
+        return TagValueInput.create(SerializeEntityValueHelper.REPORTER, getRegistryAccess(), factoryMobTag);
     }
 
     @Override
-    public void setFactoryMobTag(CompoundTag tag) {
+    public void setFactoryMobValue(Consumer<ValueOutput> consumer) {
+        TagValueOutput output = TagValueOutput.createWithContext(SerializeEntityValueHelper.REPORTER, getRegistryAccess());
+        consumer.accept(output);
+        CompoundTag tag = output.buildResult();
         if(!tag.getString("id").equals(factoryMobTag.getString("id")))
             return;
         factoryMobTag = tag;

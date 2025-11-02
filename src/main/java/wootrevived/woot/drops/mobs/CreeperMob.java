@@ -1,11 +1,11 @@
 package wootrevived.woot.drops.mobs;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
@@ -16,28 +16,27 @@ public class CreeperMob extends WootFactoryMob<Creeper> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+    public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.empty();
-        mobTag.getBoolean("powered").ifPresent(powered -> {
+        if(input.getBooleanOr("powered", false)){
             tip.append("Charged ");
-        });
-        return tip.append(super.getDisplayName(mobTag, registryAccess));
+        }
+        return tip.append(super.getDisplayName(input));
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
-        CompoundTag tag = super.saveTag(mobTag, registryAccess);
-        mobTag.getBoolean("powered").ifPresent(powered -> tag.putBoolean("powered", powered));
-        return tag;
+    public void saveTag(ValueInput input, ValueOutput output){
+        super.saveTag(input, output);
+        output.putBoolean("powered", input.getBooleanOr("powered", false));
     }
 
     @Override
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
-        if(!super.isSame(shardTag, mobTag, registryAccess))
+    public boolean isSame(ValueInput shardInput, ValueInput mobInput){
+        if(!super.isSame(shardInput, mobInput))
             return false;
 
-        boolean isShardPowered = shardTag.getBoolean("powered").orElse(false);
-        boolean isMobPowered = mobTag.getBoolean("powered").orElse(false);
+        boolean isShardPowered = shardInput.getBooleanOr("powered", false);
+        boolean isMobPowered = mobInput.getBooleanOr("powered", false);
         return isShardPowered == isMobPowered;
     }
 

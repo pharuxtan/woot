@@ -1,11 +1,9 @@
 package wootrevived.woot.util.render.buttons;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.render.WootButton;
@@ -35,7 +33,7 @@ public class WootSidePropertyButton extends WootButton {
     protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         int uOffset = property == MachineSideProperty.ENABLED ? 215 : property == MachineSideProperty.DISABLED ? 230 : property == MachineSideProperty.PULL ? 215 : 230;
         int vOffset = property == MachineSideProperty.ENABLED ? 162 : property == MachineSideProperty.DISABLED ? 162 : property == MachineSideProperty.PULL ? 177 : 177;
-        gui.blit(RenderType::guiTextured, WootContainerScreen.GUI, getX(), getY(), uOffset, vOffset, getWidth(), getHeight(), WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, WootContainerScreen.GUI, getX(), getY(), uOffset, vOffset, getWidth(), getHeight(), WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
         if(isHovered()) {
             gui.fill(getX() + 1, getY() + 1, getX() + getWidth() - 1, getY() + getHeight() - 1, 0x80FFFFFF);
             List<Component> tooltip = List.of(
@@ -48,7 +46,7 @@ public class WootSidePropertyButton extends WootButton {
                             .append(Component.translatable("info.woot_revived.action").append(Component.literal(": ")).setStyle(MACHINE_STYLE))
                             .append(property.getComponent())
             );
-            gui.renderTooltip(WootContainerScreen.getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
+            gui.setTooltipForNextFrame(WootContainerScreen.getMCFont(), tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -62,8 +60,7 @@ public class WootSidePropertyButton extends WootButton {
         this.onPress.onPress(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public interface OnPress {
+        public interface OnPress {
         void onPress(WootSidePropertyButton button);
     }
 }

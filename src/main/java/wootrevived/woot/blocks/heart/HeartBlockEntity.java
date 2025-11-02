@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -106,7 +107,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
             return;
         }
 
-        primaryFakeSpawner = getBlockEntity(primaryFakeSpawner, fakeSpawnersPos.get(0), FakeSpawnerBlockEntity.class);
+        primaryFakeSpawner = getBlockEntity(primaryFakeSpawner, fakeSpawnersPos.getFirst(), FakeSpawnerBlockEntity.class);
 
         if(primaryFakeSpawner == null) {
             resetFactory();
@@ -163,18 +164,18 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
                 continue;
 
             WootFactoryMob<?> mob = fakeSpawner.getMob();
-            CompoundTag mobTag = fakeSpawner.getMobTag();
+            ValueInput mobValue = fakeSpawner.getMobValue();
 
-            List<ItemStack> importItemStacks = mob.getImportItems(mobTag, level.registryAccess());
+            List<ItemStack> importItemStacks = mob.getImportItems(mobValue);
             ingredientImport.setImportItem(fakeSpawner.index, importItemStacks.size() > 36 ? importItemStacks.subList(0, 36) : importItemStacks);
 
-            List<FluidStack> importFluidStacks = mob.getImportFluids(mobTag, level.registryAccess());
+            List<FluidStack> importFluidStacks = mob.getImportFluids(mobValue);
             ingredientImport.setImportFluid(fakeSpawner.index, importFluidStacks.size() > 8 ?  importFluidStacks.subList(0, 8) : importFluidStacks);
 
             ingredientImport.extractNeighbors();
 
             if(!fakeSpawner.isActive() && ingredientImport.isImportValid(fakeSpawner.index)){
-                WootGenerationProperties properties = getWootGenerationProperties(mob, mobTag);
+                WootGenerationProperties properties = getWootGenerationProperties(mob, mobValue);
                 if(fakeSpawner.setActive(properties.getSpawnRate(), properties.getVitalityFuelCost(), properties.getNumberOfSimulations())){
                     ingredientImport.consumeImports(fakeSpawner.index);
                 }
@@ -214,8 +215,8 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
         }
     }
 
-    private @NotNull WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, CompoundTag mobTag) {
-        WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos(), mob.getSpawnTickRate(), mob.getVitalityFuelCost());
+    private @NotNull WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, ValueInput mobValue) {
+        WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobValue, (ServerLevel) level, getBlockPos(), mob.getSpawnTickRate(), mob.getVitalityFuelCost());
         for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
             if(upgradeBlockEntity != null)
                 upgradeBlockEntity.applyGenerationProperties(properties);
@@ -249,7 +250,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
                     upgradeBlockEntity.applySpawnProperties(spawnProperties);
             }
 
-            LivingEntity entity = DropSimulator.loadEntity(mob, spawnProperties.getFactoryMobTag());
+            LivingEntity entity = DropSimulator.loadEntity(mob, spawnProperties.getFactoryMobValue());
 
             WootDropsProperties generationProperties = new WootFactoryDropsProperties(spawnProperties, entity);
 

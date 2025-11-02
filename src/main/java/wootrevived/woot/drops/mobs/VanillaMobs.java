@@ -37,6 +37,7 @@ public class VanillaMobs {
         /* Tier 4 */
 
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.GHAST, new WootFactoryMob.Properties().tier(Tier.TIER_4)));
+        registration.registerFactoryMob(new WootFactoryMob<>(EntityType.HAPPY_GHAST, new WootFactoryMob.Properties().tier(Tier.TIER_4)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.SHULKER, new WootFactoryMob.Properties().tier(Tier.TIER_4)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ENDERMAN, new WootFactoryMob.Properties().tier(Tier.TIER_4)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.WITHER_SKELETON, new WootFactoryMob.Properties().tier(Tier.TIER_4)));

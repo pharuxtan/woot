@@ -1,8 +1,6 @@
 package wootrevived.woot.util.render.buttons;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.render.WootButton;
 
@@ -20,7 +18,7 @@ public class WootHeartInputButton extends WootButton {
     @Override
     protected void renderWidget(@NotNull GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         if(isViewActive || (active && isHovered())) {
-            gui.fill(getX() + 3, getY() + 3, getX() + getWidth() - 3, getY() + getHeight() - 3, 100, 0x80FFFFFF);
+            gui.fill(getX() + 3, getY() + 3, getX() + getWidth() - 3, getY() + getHeight() - 3, 0x80FFFFFF);
         }
     }
 
@@ -33,8 +31,7 @@ public class WootHeartInputButton extends WootButton {
         this.onPress.onPress(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public interface OnPress {
+        public interface OnPress {
         void onPress(WootHeartInputButton button);
     }
 }

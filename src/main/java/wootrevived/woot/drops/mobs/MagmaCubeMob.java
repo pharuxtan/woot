@@ -1,11 +1,11 @@
 package wootrevived.woot.drops.mobs;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
@@ -16,29 +16,28 @@ public class MagmaCubeMob extends WootFactoryMob<MagmaCube> {
     }
 
     @Override
-    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+    public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.literal(
-                mobTag.getInt("Size").orElse(0) > 0 ?
+                input.getInt("Size").orElse(0) > 0 ?
                         "Large " :
                         "Small "
         );
-        return tip.append(super.getDisplayName(mobTag, registryAccess));
+        return tip.append(super.getDisplayName(input));
     }
 
     @Override
-    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
-        CompoundTag tag = super.saveTag(mobTag, registryAccess);
-        mobTag.getInt("Size").ifPresent(size -> tag.putInt("Size", size));
-        return tag;
+    public void saveTag(ValueInput input, ValueOutput output){
+        super.saveTag(input, output);
+        input.getInt("Size").ifPresent(size -> output.putInt("Size", size));
     }
 
     @Override
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
-        if(!super.isSame(shardTag, mobTag, registryAccess))
+    public boolean isSame(ValueInput shardInput, ValueInput mobInput){
+        if(!super.isSame(shardInput, mobInput))
             return false;
 
-        boolean isShardLarge = shardTag.getInt("Size").orElse(0) > 0;
-        boolean isMobLarge = mobTag.getInt("Size").orElse(0) > 0;
+        boolean isShardLarge = shardInput.getInt("Size").orElse(0) > 0;
+        boolean isMobLarge = mobInput.getInt("Size").orElse(0) > 0;
         return isShardLarge == isMobLarge;
     }
 

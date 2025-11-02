@@ -2,9 +2,9 @@ package wootrevived.woot.util.factory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
@@ -14,7 +14,7 @@ import wootrevived.woot.drops.simulator.DropSimulator;
 public class WootFactoryGenerationProperties implements WootGenerationProperties {
     private final Tier factoryTier;
     private final WootFactoryMob<?> factoryMob;
-    private final CompoundTag factoryMobTag;
+    private final ValueInput factoryMobValue;
     private final ServerLevel heartLevel;
     private final BlockPos heartPos;
 
@@ -22,10 +22,10 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     private int vitalityFuelCost;
     private int numberOfSimulations = 1;
 
-    public WootFactoryGenerationProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, ServerLevel heartLevel, BlockPos heartPos, int spawnRate, int vitalityFuelCost){
+    public WootFactoryGenerationProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, ValueInput factoryMobValue, ServerLevel heartLevel, BlockPos heartPos, int spawnRate, int vitalityFuelCost){
         this.factoryTier = factoryTier;
         this.factoryMob = factoryMob;
-        this.factoryMobTag = factoryMobTag;
+        this.factoryMobValue = factoryMobValue;
         this.heartLevel = heartLevel;
         this.heartPos = heartPos;
 
@@ -89,8 +89,8 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     }
 
     @Override
-    public @NotNull CompoundTag getFactoryMobTag() {
-        return factoryMobTag.copy();
+    public @NotNull ValueInput getFactoryMobValue() {
+        return factoryMobValue;
     }
 
     @Override

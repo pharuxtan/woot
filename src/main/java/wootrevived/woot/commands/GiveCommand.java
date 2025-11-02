@@ -18,12 +18,13 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.events.InitDropSimulator;
 import wootrevived.woot.registries.WootFactoryMobsRegistry;
-import wootrevived.woot.util.helper.SerializeEntityNBTHelper;
+import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 
 public class GiveCommand {
     private static final SuggestionProvider<CommandSourceStack> suggestionProvider = (commandContext, suggestionsBuilder) -> {
@@ -74,8 +75,9 @@ public class GiveCommand {
 
         Entity entity = entityType.create(source.getLevel(), EntitySpawnReason.SPAWNER);
         if(entity instanceof LivingEntity){
-            CompoundTag mobTag = mob.saveTag(SerializeEntityNBTHelper.serialize(entity), source.getLevel().registryAccess());
-            ItemStack fakeSpawner = FakeSpawnerBlockEntity.getItemStack(mobTag);
+            TagValueOutput output = TagValueOutput.createWithContext(SerializeEntityValueHelper.REPORTER, source.getLevel().registryAccess());
+            mob.saveTag(SerializeEntityValueHelper.serialize(entity, source.getLevel().registryAccess()), output);
+            ItemStack fakeSpawner = FakeSpawnerBlockEntity.getItemStack(output.buildResult());
             ItemHandlerHelper.giveItemToPlayer(target, fakeSpawner);
         }
 

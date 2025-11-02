@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -17,14 +18,17 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
@@ -403,20 +407,20 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
 
         long progress = ((long)processMax << 32) | (long) processRemaining;
-        tag.putLong(WootTags.PROGRESS_TAG, progress);
+        output.putLong(WootTags.PROGRESS_TAG, progress);
 
-        tag.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
+        output.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
 
-        tag.getLong(WootTags.PROGRESS_TAG).ifPresent(progress -> {
+        input.getLong(WootTags.PROGRESS_TAG).ifPresent(progress -> {
             processMax = (int)(progress >> 32);
             processRemaining = progress.intValue();
         });
@@ -426,21 +430,25 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
             isProcessActive = true;
         }
 
-        tag.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
+        input.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
     }
+
+    protected abstract ProblemReporter.ScopedCollector getReporter();
 
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
-        saveAdditional(tag, provider);
+        TagValueOutput output = TagValueOutput.createWithContext(getReporter(), provider);
+        saveAdditional(output);
+        tag.merge(output.buildResult());
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider){
-        super.handleUpdateTag(tag, lookupProvider);
-        loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(@NotNull ValueInput input){
+        super.handleUpdateTag(input);
+        loadAdditional(input);
     }
 
     @Override
@@ -457,7 +465,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     public void sendNewState(){
-        PacketDistributor.sendToServer(new WootMachineUpdate(getBlockPos(), redstoneMode, getAllMachineSidesProperties()));
+        ClientPacketDistributor.sendToServer(new WootMachineUpdate(getBlockPos(), redstoneMode, getAllMachineSidesProperties()));
     }
 
     public void handleNewState(WootMachineUpdate update){

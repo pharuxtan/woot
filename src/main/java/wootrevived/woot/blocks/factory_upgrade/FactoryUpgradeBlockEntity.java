@@ -3,7 +3,7 @@ package wootrevived.woot.blocks.factory_upgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -11,8 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
+import wootrevived.woot.Woot;
 import wootrevived.woot.data.FactoryUpgradeData;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
@@ -129,31 +131,33 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
-        FactoryUpgradeData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
-            if(t instanceof CompoundTag compound) tag.merge(compound);
-        });
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
+        output.store(FactoryUpgradeData.ID, FactoryUpgradeData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
-        FactoryUpgradeData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
+        input.read(FactoryUpgradeData.ID, FactoryUpgradeData.CODEC).ifPresent(this::setComponent);
     }
+
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FactoryUpgradeBlockEntity");
 
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
-        saveAdditional(tag, provider);
+        TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
+        saveAdditional(output);
+        tag.merge(output.buildResult());
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider){
-        super.handleUpdateTag(tag, lookupProvider);
-        loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(@NotNull ValueInput input){
+        super.handleUpdateTag(input);
+        loadAdditional(input);
     }
 
     private static final ModelProperty<String> UPGRADE_MODEL_PROPERTY = new ModelProperty<>();
@@ -162,8 +166,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         return super.getModelData().derive().with(UPGRADE_MODEL_PROPERTY, getUpgradeItemName()).build();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void tryRequestModelDataUpdate(){
+        public void tryRequestModelDataUpdate(){
         if(level == null || level.getModelDataManager() == null)
             return;
 

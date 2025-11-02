@@ -6,17 +6,22 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
+import wootrevived.woot.Woot;
 import wootrevived.woot.data.FakeSpawnerData;
 import wootrevived.woot.network.WootFakeSpawnerUpdate;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -26,6 +31,7 @@ import wootrevived.woot.util.block.FactoryBlockBaseEntity;
 import wootrevived.woot.util.common.RedstoneMode;
 import wootrevived.woot.util.entity.WootTags;
 import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 
 import java.util.Optional;
 
@@ -38,6 +44,10 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
 
     public @Nullable CompoundTag getMobTag() {
         return mobTag;
+    }
+
+    public @Nullable ValueInput getMobValue() {
+        return mobTag == null ? null : TagValueInput.create(SerializeEntityValueHelper.REPORTER, level.registryAccess(), mobTag);
     }
 
     public @Nullable WootFactoryMob<?> getMob() {
@@ -199,45 +209,47 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
 
-        tag.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
-        tag.putInt(WootTags.Factory.NUMBER_OF_SIMULATIONS, numOfSim);
-        tag.putInt(WootTags.Factory.VITALITY_COST, vitalityCost);
-        tag.putInt(WootTags.Factory.TOTAL_DRAINED, totalDrained);
-        tag.putDouble(WootTags.Factory.PER_TICK_RATIO, perTickRatio);
-        tag.putDouble(WootTags.Factory.ACCUMULATOR, accumulator);
+        output.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
+        output.putInt(WootTags.Factory.NUMBER_OF_SIMULATIONS, numOfSim);
+        output.putInt(WootTags.Factory.VITALITY_COST, vitalityCost);
+        output.putInt(WootTags.Factory.TOTAL_DRAINED, totalDrained);
+        output.putDouble(WootTags.Factory.PER_TICK_RATIO, perTickRatio);
+        output.putDouble(WootTags.Factory.ACCUMULATOR, accumulator);
 
-        FakeSpawnerData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
-            if(t instanceof CompoundTag compound) tag.merge(compound);
-        });
+        output.store(FakeSpawnerData.ID, FakeSpawnerData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
 
-        tag.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
-        tag.getInt(WootTags.Factory.NUMBER_OF_SIMULATIONS).ifPresent(num -> numOfSim = num);
-        tag.getInt(WootTags.Factory.VITALITY_COST).ifPresent(cost -> vitalityCost = cost);
-        tag.getInt(WootTags.Factory.TOTAL_DRAINED).ifPresent(drained -> totalDrained = drained);
-        tag.getDouble(WootTags.Factory.PER_TICK_RATIO).ifPresent(ratio -> perTickRatio = ratio);
-        tag.getDouble(WootTags.Factory.ACCUMULATOR).ifPresent(acc -> accumulator = acc);
+        input.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
+        input.getInt(WootTags.Factory.NUMBER_OF_SIMULATIONS).ifPresent(num -> numOfSim = num);
+        input.getInt(WootTags.Factory.VITALITY_COST).ifPresent(cost -> vitalityCost = cost);
+        input.getInt(WootTags.Factory.TOTAL_DRAINED).ifPresent(drained -> totalDrained = drained);
+        perTickRatio = input.getDoubleOr(WootTags.Factory.PER_TICK_RATIO, 0);
+        accumulator = input.getDoubleOr(WootTags.Factory.ACCUMULATOR, 0);
 
-        FakeSpawnerData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+        input.read(FakeSpawnerData.ID, FakeSpawnerData.CODEC).ifPresent(this::setComponent);
     }
+
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FakeSpawnerBlockEntity");
 
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
-        saveAdditional(tag, provider);
+        TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
+        saveAdditional(output);
+        tag.merge(output.buildResult());
         return tag;
     }
 
     public void sendNewState(){
-        PacketDistributor.sendToServer(new WootFakeSpawnerUpdate(getBlockPos(), redstoneMode));
+        ClientPacketDistributor.sendToServer(new WootFakeSpawnerUpdate(getBlockPos(), redstoneMode));
     }
 
     public void handleNewState(WootFakeSpawnerUpdate update){

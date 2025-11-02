@@ -10,23 +10,16 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.StreamServerDataProvider;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.BoxStyle;
-import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.JadeUI;
+import snownee.jade.api.ui.MessageType;
+import snownee.jade.api.view.ProgressView;
 import wootrevived.woot.Woot;
 import wootrevived.woot.util.entity.WootMachineBlockEntity;
 
-public enum WootMachineProvider implements IBlockComponentProvider, StreamServerDataProvider<BlockAccessor, WootMachineProvider.Data> {
-    INSTANCE;
+import java.util.List;
 
-    @Override
-    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-        Data data = this.decodeFromData(accessor).orElse(null);
-        if (data != null) {
-            IElementHelper helper = IElementHelper.get();
-            BoxStyle.GradientBorder box = BoxStyle.getTransparent().clone();
-            box.bgColor = 0x88000000;
-            tooltip.add(helper.progress(data.progress / 100F, null, helper.progressStyle(), box, false));
-        }
-    }
+public enum WootMachineProvider implements StreamServerDataProvider<BlockAccessor, WootMachineProvider.Data> {
+    INSTANCE;
 
     @Override
     public Data streamData(BlockAccessor accessor) {
@@ -49,5 +42,25 @@ public enum WootMachineProvider implements IBlockComponentProvider, StreamServer
                 ByteBufCodecs.VAR_INT, Data::progress,
                 Data::new
         );
+    }
+
+    public enum Client implements IBlockComponentProvider {
+        INSTANCE;
+
+        @Override
+        public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+            var data = WootMachineProvider.INSTANCE.decodeFromData(accessor).orElse(null);
+            if (data != null) {
+                ProgressView view = new ProgressView(JadeUI.progressStyle(), BoxStyle.nestedBox());
+                if (data.progress() > 0)
+                    view.parts = List.of(ProgressView.Part.of((float)data.progress() / 100.0F, MessageType.INFO));
+                tooltip.add(JadeUI.progress(view));
+            }
+        }
+
+        @Override
+        public ResourceLocation getUid() {
+            return Woot.location("machines");
+        }
     }
 }

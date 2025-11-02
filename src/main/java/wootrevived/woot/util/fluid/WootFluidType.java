@@ -2,12 +2,13 @@ package wootrevived.woot.util.fluid;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogParameters;
-import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 
 public class WootFluidType extends FluidType {
@@ -52,8 +53,13 @@ public class WootFluidType extends FluidType {
         }
 
         @Override
-        public FogParameters modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, FogParameters fogParameters){
-            return new FogParameters(1f, 6f, fogParameters.shape(), fogParameters.red(), fogParameters.green(), fogParameters.blue(), fogParameters.alpha());
+        public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData){
+            fogData.environmentalStart = 1F;
+            fogData.renderDistanceStart = 1F;
+            fogData.environmentalEnd = 6F;
+            fogData.renderDistanceEnd = 6F;
+            fogData.skyEnd = 7.5F;
+            fogData.cloudEnd = 5.4F;
         }
     };
 

@@ -13,8 +13,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
@@ -26,7 +24,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
-@OnlyIn(Dist.CLIENT)
 public record FactoryUpgradeDynamicSpriteSource(ResourceLocation id) implements SpriteSource {
     public static final MapCodec<FactoryUpgradeDynamicSpriteSource> CODEC = RecordCodecBuilder.mapCodec(instance ->
                 instance.group(

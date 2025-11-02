@@ -3,14 +3,11 @@ package wootrevived.woot.client.render.item_infuser;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.item_infuser.ItemInfuserBlockEntity;
 import wootrevived.woot.config.ItemInfuserConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
 
-@OnlyIn(Dist.CLIENT)
 public class ItemInfuserContainerScreen extends WootContainerScreen<ItemInfuserContainerMenu> {
     private static final int ENERGY_X = 10;
     private static final int ENERGY_Y = 20;

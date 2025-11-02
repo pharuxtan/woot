@@ -1,18 +1,15 @@
 package wootrevived.woot.client.render.fluid_infuser;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.fluid_infuser.FluidInfuserBlockEntity;
 import wootrevived.woot.config.FluidInfuserConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
 
-@OnlyIn(Dist.CLIENT)
 public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuserContainerMenu> {
     private static final int ENERGY_X = 10;
     private static final int ENERGY_Y = 20;
@@ -69,12 +66,12 @@ public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuse
     }
 
     public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 81, 65, 24, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 81, 65, 24, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 65 / 100, 0, 65);
-        gui.blit(RenderType::guiTextured, GUI, x, y, 177, 106, fillWidth, 25, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 106, fillWidth, 25, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){

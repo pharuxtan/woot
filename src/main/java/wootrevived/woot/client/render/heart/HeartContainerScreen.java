@@ -1,14 +1,12 @@
 package wootrevived.woot.client.render.heart;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -18,12 +16,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.Woot;
@@ -47,7 +45,6 @@ import java.util.Optional;
 
 import static wootrevived.woot.util.render.WootStyles.*;
 
-@OnlyIn(Dist.CLIENT)
 public class HeartContainerScreen extends AbstractContainerScreen<HeartContainerMenu> {
     public static final ResourceLocation GUI = Woot.location("textures/gui/atlas.png");
 
@@ -108,7 +105,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         WootContainerScreen.renderVanillaSlot(gui, UPGRADE_SLOT_1_X, UPGRADE_SLOT_1_Y);
         WootContainerScreen.renderVanillaSlot(gui, UPGRADE_SLOT_2_X, UPGRADE_SLOT_2_Y);
         WootContainerScreen.renderVanillaSlot(gui, UPGRADE_SLOT_3_X, UPGRADE_SLOT_3_Y);
-        gui.drawString(font, "Upgrades:", UPGRADE_SLOT_TEXT_X, UPGRADE_SLOT_TEXT_Y, 0x404040, false);
+        gui.drawString(font, "Upgrades:", UPGRADE_SLOT_TEXT_X, UPGRADE_SLOT_TEXT_Y, 0xFF404040, false);
     }
 
     protected void renderState(GuiGraphics gui) {
@@ -133,7 +130,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         if(activeButton == -1)
             renderFluidTooltip(gui, mouseX, mouseY, CELL_TANK_X, CELL_TANK_Y, menu.getCellFluid(), menu.getCellFluidCapacity());
         else {
-            List<FluidStack> stacks = menu.getFactoryMob(activeButton).getImportFluids(menu.getFactoryMobTag(activeButton), menu.getLevel().registryAccess());
+            List<FluidStack> stacks = menu.getFactoryMob(activeButton).getImportFluids(menu.getFactoryMobValue(activeButton));
             for(int i = 0; i < 8; i++){
                 renderSmallFluidTooltip(gui, mouseX, mouseY, 9 + i * 20, 73, i >= stacks.size() ? FluidStack.EMPTY : stacks.get(i));
             }
@@ -151,19 +148,19 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
     protected void renderFakeSpawner(GuiGraphics gui) {
         /* Background */
         gui.fill(4, 56, 172, 159, 0xFFC6C6C6);
-        gui.blit(RenderType::guiTextured, GUI, 7, 105, 7, 101, 162, 54, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, 7, 105, 7, 101, 162, 54, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
         for(int i = 0; i < 8; i++){
-            gui.blit(RenderType::guiTextured, GUI, 9 + i * 20, 73, 58, 185, 18, 19, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+            gui.blit(RenderPipelines.GUI_TEXTURED, GUI, 9 + i * 20, 73, 58, 185, 18, 19, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
         }
-        gui.drawString(font, "Needed Fluid Imports", 9, 63, 0x404040, false);
-        gui.drawString(font, "Needed Item Imports", 7, 95, 0x404040, false);
+        gui.drawString(font, "Needed Fluid Imports", 9, 63, 0xFF404040, false);
+        gui.drawString(font, "Needed Item Imports", 7, 95, 0xFF404040, false);
 
         /* State */
         WootFactoryMob<?> mob = menu.getFactoryMob(activeButton);
-        CompoundTag tag = menu.getFactoryMobTag(activeButton);
-        menu.updateImports(mob.getImportItems(tag, menu.getLevel().registryAccess()));
+        ValueInput input = menu.getFactoryMobValue(activeButton);
+        menu.updateImports(mob.getImportItems(input));
 
-        List<FluidStack> stacks = mob.getImportFluids(tag, menu.getLevel().registryAccess());
+        List<FluidStack> stacks = mob.getImportFluids(input);
         for(int i = 0; i < 8; i++){
             renderSmallFluid(gui, 9 + i * 20, 73, i >= stacks.size() ? FluidStack.EMPTY : stacks.get(i));
         }
@@ -253,10 +250,10 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
     protected void renderBg(@NotNull GuiGraphics gui, float partialTicks, int mouseX, int mouseY) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        PoseStack pose = gui.pose();
-        pose.pushPose();
-        pose.translate(x, y, 0);
-        gui.blit(RenderType::guiTextured, GUI, 0, 0, 0, 0, imageWidth, imageHeight, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        Matrix3x2fStack pose = gui.pose();
+        pose.pushMatrix();
+        pose.translate(x, y);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, 0, 0, 0, 0, imageWidth, imageHeight, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
 
         renderMenuBackground(gui);
         renderState(gui);
@@ -269,17 +266,17 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         if(activeButton != -1)
             renderFakeSpawner(gui);
 
-        pose.popPose();
+        pose.popMatrix();
     }
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics gui, int mouseX, int mouseY){
         int titleX = 1 + (imageWidth - font.width(title)) / 2;
-        gui.drawString(font, title, titleX, 6, 0x404040, false);
+        gui.drawString(font, title, titleX, 6, 0xFF404040, false);
     }
 
     protected void renderFluidBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(RenderType::guiTextured, GUI, x, y, 39, 185, 18, 41, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 39, 185, 18, 41, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     protected void renderFluid(@NotNull GuiGraphics gui, int x, int y, FluidStack fluid, int capacity){
@@ -292,7 +289,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
         WootContainerScreen.renderTiledFluidTextureAtlas(gui, texture, x + 3, y + fillY + 3, 12, fillHeight, fluidTypeExtensions.getTintColor(), false);
-        gui.blit(RenderType::guiTextured, GUI, x + 3, y + 3, 42, 188, 12, 35, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + 3, 42, 188, 12, 35, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     protected void renderFluidTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid, int capacity){
@@ -314,7 +311,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
                                 .append(Component.literal("mB").setStyle(UNIT_STYLE))
                 );
             }
-            gui.renderTooltip(font, tooltip, Optional.empty(), mouseX, mouseY);
+            gui.setTooltipForNextFrame(font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -325,7 +322,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
         WootContainerScreen.renderTiledFluidTextureAtlas(gui, texture, x + 3, y + 3, 12, 13, fluidTypeExtensions.getTintColor(), false);
-        gui.blit(RenderType::guiTextured, GUI, x + 3, y + 3, 61, 188, 12, 13, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + 3, 61, 188, 12, 13, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     protected void renderSmallFluidTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid){
@@ -345,17 +342,17 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
                 tooltip.add(ModNameHelper.getModName(modId).setStyle(MOD_NAME_STYLE));
             }
 
-            gui.renderTooltip(font, tooltip, Optional.empty(), mouseX, mouseY);
+            gui.setTooltipForNextFrame(font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
     protected @Nullable LivingEntity getLivingEntity(int fakeSpawnerIndex) {
-        CompoundTag tag = menu.getFactoryMobTag(fakeSpawnerIndex);
+        ValueInput input = menu.getFactoryMobValue(fakeSpawnerIndex);
 
-        if(tag == null)
+        if(input == null)
             return null;
 
-        Entity entity = EntityType.loadEntityRecursive(tag, menu.getLevel(), EntitySpawnReason.SPAWNER, e -> e);
+        Entity entity = EntityType.loadEntityRecursive(input, menu.getLevel(), EntitySpawnReason.SPAWNER, e -> e);
 
         if(!(entity instanceof LivingEntity livingEntity))
             return null;
@@ -378,7 +375,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
     }
 
     protected void renderEntityBoxBg(@NotNull GuiGraphics gui, int x, int y){
-        gui.blit(RenderType::guiTextured, GUI, x, y, 0, 185, 38, 38, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
+        gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 0, 185, 38, 38, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
     protected void renderEntityBox(@NotNull GuiGraphics gui, int x, int y, @Nullable LivingEntity entity){
@@ -390,24 +387,24 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
 
             float scale = 0.65F;
 
-            PoseStack pose = gui.pose();
-            pose.pushPose();
-            pose.scale(scale, scale, scale);
+            Matrix3x2fStack pose = gui.pose();
+            pose.pushMatrix();
+            pose.scale(scale, scale);
 
             float drawY = ((int)BOX_SIZE - font.lineHeight * scale) / 2;
             if(tier == Tier.INVALID || tier == Tier.TIER_1 || (entity != null && !isTierEntityValid(entity))){
                 float drawX = ((int)BOX_SIZE - font.width(invalid) * scale) / 2;
-                pose.translate((x + drawX + 3.25F) / scale, (y + drawY + 3.25F) / scale, 0);
+                pose.translate((x + drawX + 3.25F) / scale, (y + drawY + 3.25F) / scale);
 
-                gui.drawString(font, invalid, 0, 0, 0x404040, false);
+                gui.drawString(font, invalid, 0, 0, 0xFF404040, false);
             } else {
                 float drawX = ((int)BOX_SIZE - font.width(empty) * scale) / 2;
-                pose.translate((x + drawX + 3.25F) / scale, (y + drawY + 3.25F) / scale, 0);
+                pose.translate((x + drawX + 3.25F) / scale, (y + drawY + 3.25F) / scale);
 
-                gui.drawString(font, empty, 0, 0, 0x404040, false);
+                gui.drawString(font, empty, 0, 0, 0xFF404040, false);
             }
 
-            pose.popPose();
+            pose.popMatrix();
             return;
         }
 
@@ -421,7 +418,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
     protected void renderEntityTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fakeSpawnerIndex){
         if(isHovering(x + 1, y + 1, 36, 36, mouseX, mouseY)){
             WootFactoryMob<?> mob = menu.getFactoryMob(fakeSpawnerIndex);
-            @Nullable CompoundTag tag = menu.getFactoryMobTag(fakeSpawnerIndex);
+            @Nullable ValueInput input = menu.getFactoryMobValue(fakeSpawnerIndex);
             List<Component> tooltip;
             Tier tier = menu.getFactoryTier();
             if(mob == null || !isTierEntityValid(mob)){
@@ -436,7 +433,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
                 }
             } else {
                 tooltip = new ArrayList<>();
-                tooltip.add(mob.getDisplayName(tag, menu.getLevel().registryAccess()).append(Component.literal(": ")).setStyle(MACHINE_STYLE));
+                tooltip.add(mob.getDisplayName(input).append(Component.literal(": ")).setStyle(MACHINE_STYLE));
                 tooltip.add(
                         Component.empty()
                                 .append(Component.translatable("info.woot_revived.tier").append(Component.literal(": ")).setStyle(MACHINE_STYLE))
@@ -484,7 +481,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
                     );
                 }
             }
-            gui.renderTooltip(font, tooltip, Optional.empty(), mouseX, mouseY);
+            gui.setTooltipForNextFrame(font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 }

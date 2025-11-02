@@ -7,10 +7,9 @@ import guideme.document.interaction.InteractiveElement;
 import guideme.layout.LayoutContext;
 import guideme.render.RenderContext;
 import guideme.scene.level.GuidebookLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import wootrevived.api.WootFactoryMob;
-import wootrevived.woot.util.helper.SerializeEntityNBTHelper;
+import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 import wootrevived.woot.util.render.entity.WootEntityRenderer;
 
 import java.util.Optional;
@@ -41,10 +40,6 @@ public class LytEntity extends LytBlock implements InteractiveElement {
     }
 
     @Override
-    public void renderBatch(RenderContext renderContext, MultiBufferSource multiBufferSource) {
-    }
-
-    @Override
     public void render(RenderContext renderContext) {
         renderContext.renderPanel(bounds);
 
@@ -53,6 +48,6 @@ public class LytEntity extends LytBlock implements InteractiveElement {
 
     @Override
     public Optional<GuideTooltip> getTooltip(float x, float y) {
-        return Optional.of(new EntityTooltip(mob, SerializeEntityNBTHelper.serialize(entity), level));
+        return Optional.of(new EntityTooltip(mob, SerializeEntityValueHelper.serialize(entity, level.registryAccess())));
     }
 }

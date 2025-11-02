@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -17,7 +16,6 @@ import wootrevived.woot.client.render.stygian_anvil.StygianAnvilBlockEntityRende
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
-@OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
 public class RegisterEntityRenderers {
     @SubscribeEvent

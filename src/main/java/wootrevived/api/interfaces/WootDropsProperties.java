@@ -2,13 +2,13 @@ package wootrevived.api.interfaces;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,7 @@ public interface WootDropsProperties {
     @NotNull RegistryAccess getRegistryAccess();
     @NotNull Tier getFactoryTier();
     @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull CompoundTag getFactoryMobTag();
+    @NotNull ValueInput getFactoryMobValue();
 
     @ApiStatus.AvailableSince("1.0.4")
     @Nullable LivingEntity getEntity();

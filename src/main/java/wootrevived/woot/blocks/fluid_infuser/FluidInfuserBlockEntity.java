@@ -4,13 +4,11 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,11 +19,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.client.render.fluid_infuser.FluidInfuserContainerMenu;
 import wootrevived.woot.config.FluidInfuserConfig;
 import wootrevived.woot.data.FluidInfuserData;
@@ -172,24 +173,28 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
         builder.set(ComponentsRegistry.FLUID_INFUSER_DATA, getComponent());
     }
 
-    @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FluidInfuserBlockEntity");
 
-        tag.put(WootTags.INPUT_INVENTORY_TAG, inventoryHandler.serializeNBT(provider));
-
-        FluidInfuserData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
-            if(t instanceof CompoundTag compound) tag.merge(compound);
-        });
+    protected ProblemReporter.ScopedCollector getReporter() {
+        return REPORTER;
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
 
-        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inventoryHandler.deserializeNBT(provider, handler));
+        inventoryHandler.serialize(output.child(WootTags.INPUT_INVENTORY_TAG));
 
-        FluidInfuserData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+        output.store(FluidInfuserData.ID, FluidInfuserData.CODEC, getComponent());
+    }
+
+    @Override
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
+
+        input.child(WootTags.INPUT_INVENTORY_TAG).ifPresent(inventoryHandler::deserialize);
+
+        input.read(FluidInfuserData.ID, FluidInfuserData.CODEC).ifPresent(this::setComponent);
     }
 
     @Override

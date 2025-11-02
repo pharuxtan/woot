@@ -20,6 +20,7 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import wootrevived.woot.Woot;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalLong;
 
 public class DropSimulatorDimension {
@@ -45,6 +46,7 @@ public class DropSimulatorDimension {
                 BlockTags.INFINIBURN_OVERWORLD, // infiniburn
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS, // effectsLocation
                 0.0f, // ambientLight
+                Optional.empty(), // cloudHeight
                 new DimensionType.MonsterSettings(true, false, ConstantInt.of(0), 0)
         ));
     }

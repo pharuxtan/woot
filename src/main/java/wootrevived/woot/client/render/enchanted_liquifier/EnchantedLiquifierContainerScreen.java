@@ -3,14 +3,11 @@ package wootrevived.woot.client.render.enchanted_liquifier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.enchanted_liquifier.EnchantedLiquifierBlockEntity;
 import wootrevived.woot.config.EnchantedLiquifierConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
 
-@OnlyIn(Dist.CLIENT)
 public class EnchantedLiquifierContainerScreen extends WootContainerScreen<EnchantedLiquifierContainerMenu> {
     private static final int ENERGY_X = 10;
     private static final int ENERGY_Y = 20;

@@ -4,13 +4,11 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,12 +19,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wootrevived.woot.Woot;
 import wootrevived.woot.client.render.item_infuser.ItemInfuserContainerMenu;
 import wootrevived.woot.config.ItemInfuserConfig;
 import wootrevived.woot.data.ItemInfuserData;
@@ -197,28 +198,32 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         builder.set(ComponentsRegistry.ITEM_INFUSER_DATA, getComponent());
     }
 
-    @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.saveAdditional(tag, provider);
+    private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("ItemInfuserBlockEntity");
 
-        tag.put(WootTags.INPUT_INVENTORY_TAG, inputSlotHandler.serializeNBT(provider));
-        tag.put(WootTags.AUGMENT_INVENTORY_TAG, augmentSlotHandler.serializeNBT(provider));
-        tag.put(WootTags.OUTPUT_INVENTORY_TAG, outputSlotHandler.serializeNBT(provider));
-
-        ItemInfuserData.CODEC.encodeStart(NbtOps.INSTANCE, getComponent()).result().ifPresent(t -> {
-            if(t instanceof CompoundTag compound) tag.merge(compound);
-        });
+    protected ProblemReporter.ScopedCollector getReporter() {
+        return REPORTER;
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider){
-        super.loadAdditional(tag, provider);
+    protected void saveAdditional(@NotNull ValueOutput output){
+        super.saveAdditional(output);
 
-        tag.getCompound(WootTags.INPUT_INVENTORY_TAG).ifPresent(handler -> inputSlotHandler.deserializeNBT(provider, handler));
-        tag.getCompound(WootTags.AUGMENT_INVENTORY_TAG).ifPresent(handler -> augmentSlotHandler.deserializeNBT(provider, handler));
-        tag.getCompound(WootTags.OUTPUT_INVENTORY_TAG).ifPresent(handler -> outputSlotHandler.deserializeNBT(provider, handler));
+        inputSlotHandler.serialize(output.child(WootTags.INPUT_INVENTORY_TAG));
+        augmentSlotHandler.serialize(output.child(WootTags.AUGMENT_INVENTORY_TAG));
+        outputSlotHandler.serialize(output.child(WootTags.OUTPUT_INVENTORY_TAG));
 
-        ItemInfuserData.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).result().ifPresent(this::setComponent);
+        output.store(ItemInfuserData.ID, ItemInfuserData.CODEC, getComponent());
+    }
+
+    @Override
+    public void loadAdditional(@NotNull ValueInput input){
+        super.loadAdditional(input);
+
+        input.child(WootTags.INPUT_INVENTORY_TAG).ifPresent(inputSlotHandler::deserialize);
+        input.child(WootTags.AUGMENT_INVENTORY_TAG).ifPresent(augmentSlotHandler::deserialize);
+        input.child(WootTags.OUTPUT_INVENTORY_TAG).ifPresent(outputSlotHandler::deserialize);
+
+        input.read(ItemInfuserData.ID, ItemInfuserData.CODEC).ifPresent(this::setComponent);
     }
 
     @Override

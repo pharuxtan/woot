@@ -15,22 +15,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.RenderTypeHelper;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEntity> {
     @Override
-    public void render(BlockEntity blockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffers, int packedLight, int packedOverlay, Vec3 vec3){
+    public void render(BlockEntity blockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffers, int packedLight, int packedOverlay, Vec3 vec3) {
         BlockState state = blockEntity.getBlockState();
 
-        if(state.getRenderShape() == RenderShape.MODEL){
-            if(blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity)
+        if (state.getRenderShape() == RenderShape.MODEL) {
+            if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity)
                 factoryUpgradeBlockEntity.tryRequestModelDataUpdate();
             return;
         }
@@ -61,7 +59,7 @@ public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEnti
         List<BlockModelPart> parts = new ArrayList<>();
 
         model.collectParts(level, pos, state, RandomSource.create(state.getSeed(pos)), parts);
-        blockRenderer.renderBatched(state, pos, level, poseStack, buffers::getBuffer, false, parts);
+        blockRenderer.renderBatched(state, pos, level, poseStack, layer -> buffers.getBuffer(RenderTypeHelper.getMovingBlockRenderType(layer)), false, parts);
 
         poseStack.popPose();
     }

@@ -1,9 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.ValueInput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -54,7 +53,7 @@ public class EnderDragonMob extends WootFactoryMob<EnderDragon> {
     }
 
     @Override
-    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
+    public List<ItemStack> getImportItems(ValueInput input){
         ItemStack endCrystal = Items.END_CRYSTAL.getDefaultInstance();
         endCrystal.setCount(4);
         return List.of(endCrystal);

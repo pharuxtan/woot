@@ -7,7 +7,6 @@ import guideme.document.interaction.InteractiveElement;
 import guideme.layout.LayoutContext;
 import guideme.render.RenderContext;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import wootrevived.woot.util.render.WootContainerScreen;
 
 import java.util.Optional;
@@ -28,10 +27,6 @@ public class LytEnergy extends LytBlock implements InteractiveElement {
 
     @Override
     protected void onLayoutMoved(int deltaX, int deltaY) {
-    }
-
-    @Override
-    public void renderBatch(RenderContext context, MultiBufferSource buffers) {
     }
 
     @Override

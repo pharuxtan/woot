@@ -19,9 +19,9 @@ public class WootJadePlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerBlockComponent(WootMachineProvider.INSTANCE, ItemInfuserBlock.class);
-        registration.registerBlockComponent(WootMachineProvider.INSTANCE, FluidInfuserBlock.class);
-        registration.registerBlockComponent(WootMachineProvider.INSTANCE, DyeLiquifierBlock.class);
-        registration.registerBlockComponent(WootMachineProvider.INSTANCE, EnchantedLiquifierBlock.class);
+        registration.registerBlockComponent(WootMachineProvider.Client.INSTANCE, ItemInfuserBlock.class);
+        registration.registerBlockComponent(WootMachineProvider.Client.INSTANCE, FluidInfuserBlock.class);
+        registration.registerBlockComponent(WootMachineProvider.Client.INSTANCE, DyeLiquifierBlock.class);
+        registration.registerBlockComponent(WootMachineProvider.Client.INSTANCE, EnchantedLiquifierBlock.class);
     }
 }

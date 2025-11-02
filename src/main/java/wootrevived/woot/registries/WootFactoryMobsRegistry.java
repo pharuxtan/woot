@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.ValueInput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
@@ -39,6 +40,10 @@ public class WootFactoryMobsRegistry extends WootFactoryMobRegistration {
         return getFactoryMob(mobTag.getString("id").orElse("minecraft:pig"));
     }
 
+    public static WootFactoryMob<?> getFactoryMob(ValueInput input){
+        return getFactoryMob(input.getString("id").orElse("minecraft:pig"));
+    }
+
     public static WootFactoryMob<?> getFactoryMob(String mobId){
         Holder.Reference<EntityType<?>> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(mobId)).orElse(null);
         if(entityType == null) return null;
@@ -52,6 +57,11 @@ public class WootFactoryMobsRegistry extends WootFactoryMobRegistration {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasFactoryMob(CompoundTag mobTag){
         return hasFactoryMob(mobTag.getString("id").orElse("minecraft:pig"));
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean hasFactoryMob(ValueInput input){
+        return hasFactoryMob(input.getString("id").orElse("minecraft:pig"));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -86,6 +96,10 @@ public class WootFactoryMobsRegistry extends WootFactoryMobRegistration {
         return getDropsModifier(mobTag.getString("id").orElse("minecraft:pig"));
     }
 
+    public static List<Consumer<WootDropsProperties>> getDropsModifier(ValueInput input){
+        return getDropsModifier(input.getString("id").orElse("minecraft:pig"));
+    }
+
     public static List<Consumer<WootDropsProperties>> getDropsModifier(String mobId){
         Holder.Reference<EntityType<?>> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(mobId)).orElse(null);
         if(entityType == null) return List.of();
@@ -100,6 +114,11 @@ public class WootFactoryMobsRegistry extends WootFactoryMobRegistration {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasDropsModifier(CompoundTag mobTag){
         return hasDropsModifier(mobTag.getString("id").orElse("minecraft:pig"));
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean hasDropsModifier(ValueInput input){
+        return hasDropsModifier(input.getString("id").orElse("minecraft:pig"));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

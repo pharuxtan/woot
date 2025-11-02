@@ -29,8 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -82,8 +80,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         return level.getBlockState(pos.below()).getBlock() == Blocks.MAGMA_BLOCK;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random){
+        public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random){
         super.animateTick(state, level, pos, random);
 
         if (Minecraft.getInstance().options.particles().get() != ParticleStatus.MINIMAL && random.nextInt(10) == 0 && isAnvilHot(level, pos))

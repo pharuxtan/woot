@@ -1,9 +1,7 @@
 package wootrevived.woot.drops.mobs;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.ValueInput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -57,7 +56,7 @@ public class WitherMob extends WootFactoryMob<WitherBoss> {
     }
 
     @Override
-    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
+    public List<ItemStack> getImportItems(ValueInput input){
         ItemStack witherSkeletonSkull = Items.WITHER_SKELETON_SKULL.getDefaultInstance();
         witherSkeletonSkull.setCount(3);
 

@@ -2,16 +2,19 @@ package wootrevived.api.interfaces;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
+
+import java.util.function.Consumer;
 
 /**
  * Provides access to the spawn properties of a mob before it is simulated
@@ -55,8 +58,8 @@ public interface WootSpawnProperties {
     @NotNull RegistryAccess getRegistryAccess();
     @NotNull Tier getFactoryTier();
     @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull CompoundTag getFactoryMobTag();
-    void setFactoryMobTag(CompoundTag tag);
+    @NotNull ValueInput getFactoryMobValue();
+    void setFactoryMobValue(Consumer<ValueOutput> consumer);
 
     @ApiStatus.AvailableSince("1.0.6")
     @NotNull ResourceKey<Level> getDimension();

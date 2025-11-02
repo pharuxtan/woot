@@ -1,13 +1,13 @@
 package wootrevived.api;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -43,11 +43,10 @@ public class WootFactoryMob<T extends Entity> {
      * <p>
      * Override to provide a custom display name based on the mob's NBT.
      *
-     * @param mobTag the mob's saved tag
-     * @param registryAccess access to the current registry view
+     * @param input the mob's saved value
      * @return a localized display name
      */
-    public MutableComponent getDisplayName(CompoundTag mobTag, RegistryAccess registryAccess) {
+    public MutableComponent getDisplayName(ValueInput input) {
         return Component.translatable(entityType.getDescriptionId());
     }
 
@@ -55,14 +54,13 @@ public class WootFactoryMob<T extends Entity> {
      * Returns the name shown in the descriptive tooltip that instructs
      * which mob to kill on the Mob Shard.
      * <p>
-     * By default, delegates to {@link #getDisplayName(CompoundTag, RegistryAccess)}.
+     * By default, delegates to {@link #getDisplayName(ValueInput)}.
      *
-     * @param mobTag the mob's saved tag
-     * @param registryAccess access to the current registry view
+     * @param input the mob's saved value
      * @return a localized tooltip name
      */
-    public MutableComponent getTooltipKillName(CompoundTag mobTag, RegistryAccess registryAccess) {
-        return getDisplayName(mobTag, registryAccess);
+    public MutableComponent getTooltipKillName(ValueInput input) {
+        return getDisplayName(input);
     }
 
     /**
@@ -71,14 +69,11 @@ public class WootFactoryMob<T extends Entity> {
      * Override to store additional fields that affect display or drop logic.
      * The default implementation copies the {@code id} from the supplied tag.
      *
-     * @param mobTag the source tag from the captured entity
-     * @param registryAccess access to the current registry view
-     * @return a saved tag used by the factory
+     * @param input the source value from the captured entity
+     * @param output the output value that will be saved for the entity
      */
-    public CompoundTag saveTag(CompoundTag mobTag, RegistryAccess registryAccess){
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", mobTag.getString("id").orElse("minecraft:pig"));
-        return tag;
+    public void saveTag(ValueInput input, ValueOutput output){
+        output.putString("id", input.getString("id").orElse("minecraft:pig"));
     }
 
     /**
@@ -88,13 +83,12 @@ public class WootFactoryMob<T extends Entity> {
      * Override to customize matching rules (e.g., include variant, NBT flags, etc.).
      * The default checks equality of the {@code id} field.
      *
-     * @param shardTag the shard's stored tag
-     * @param mobTag   the candidate mob's tag
-     * @param registryAccess access to the current registry view
+     * @param shardInput the shard's stored value
+     * @param mobInput   the candidate mob's value
      * @return {@code true} if they match; otherwise {@code false}
      */
-    public boolean isSame(CompoundTag shardTag, CompoundTag mobTag, RegistryAccess registryAccess){
-        return shardTag.getString("id").equals(mobTag.getString("id"));
+    public boolean isSame(ValueInput shardInput, ValueInput mobInput){
+        return shardInput.getString("id").equals(mobInput.getString("id"));
     }
 
     /**
@@ -106,18 +100,18 @@ public class WootFactoryMob<T extends Entity> {
      * Note: The returned entity is <em>not</em> added to the world automatically, it exists only for
      * simulated behavior and inspection.
      *
-     * @param mobTag the serialized entity data (must include an {@code id})
+     * @param input the serialized entity data (must include an {@code id})
      * @param level  the server level context to load the entity into
      * @return the reconstructed {@link LivingEntity}, or {@code null} if loading failed
      * @since 1.0.4
      */
     @SuppressWarnings({"deprecation", "OverrideOnly", "UnstableApiUsage"})
     @ApiStatus.AvailableSince("1.0.4")
-    public @Nullable LivingEntity loadEntity(CompoundTag mobTag, ServerLevel level){
-        if(level == null || !mobTag.contains("id"))
+    public @Nullable LivingEntity loadEntity(ValueInput input, ServerLevel level){
+        if(level == null || input.getString("id").isEmpty())
             return null;
 
-        Entity entity = EntityType.loadEntityRecursive(mobTag, level, EntitySpawnReason.SPAWNER, e -> e);
+        Entity entity = EntityType.loadEntityRecursive(input, level, EntitySpawnReason.SPAWNER, e -> e);
 
         if(!(entity instanceof LivingEntity livingEntity))
             return null;
@@ -148,11 +142,10 @@ public class WootFactoryMob<T extends Entity> {
      * <p>
      * Called before simulation. The list size is limited to 36 stacks.
      *
-     * @param mobTag the mob's saved tag
-     * @param registryAccess access to the current registry view
+     * @param input the mob's saved value
      * @return a list of required item stacks (may be empty)
      */
-    public List<ItemStack> getImportItems(CompoundTag mobTag, RegistryAccess registryAccess){
+    public List<ItemStack> getImportItems(ValueInput input){
         return List.of();
     }
 
@@ -161,11 +154,10 @@ public class WootFactoryMob<T extends Entity> {
      * <p>
      * Called before simulation. The list size is limited to 8 stacks.
      *
-     * @param mobTag the mob's saved tag
-     * @param registryAccess access to the current registry view
+     * @param input the mob's saved tag
      * @return a list of required fluid stacks (may be empty)
      */
-    public List<FluidStack> getImportFluids(CompoundTag mobTag, RegistryAccess registryAccess){
+    public List<FluidStack> getImportFluids(ValueInput input){
         return List.of();
     }
 

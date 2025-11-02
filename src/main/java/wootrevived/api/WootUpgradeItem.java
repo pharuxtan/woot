@@ -6,9 +6,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.ApiStatus;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -110,8 +107,7 @@ public abstract class WootUpgradeItem extends Item {
      * @param upgradeSide the target factory side {@link NativeImage}
      * @param upgradeItem the source upgrade item {@link NativeImage}
      */
-    @OnlyIn(Dist.CLIENT)
-    public void applyUpgradeTexture(NativeImage upgradeSide, NativeImage upgradeItem){
+        public void applyUpgradeTexture(NativeImage upgradeSide, NativeImage upgradeItem){
         for(int y = 2; y < 14; y++){
             for(int x = 2; x < 14; x++){
                 int color = upgradeItem.getPixel(x, y);
