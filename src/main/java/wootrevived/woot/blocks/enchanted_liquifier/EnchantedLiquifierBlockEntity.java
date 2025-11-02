@@ -109,14 +109,20 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, Direction side){
+    public static IItemHandler getItemHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return blockEntity.inventoryHandler;
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootItemHandlerWrapper()
                 .addHandler(blockEntity.inventoryHandler, properties::getIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, Direction side){
+    public static IFluidHandler getFluidHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return blockEntity.outputTankHandler;
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootFluidHandlerWrapper()

@@ -111,14 +111,22 @@ public class FluidInfuserBlockEntity extends WootMachineBlockEntity implements M
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(FluidInfuserBlockEntity blockEntity, Direction side){
+    public static IItemHandler getItemHandlerCapability(FluidInfuserBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return blockEntity.inventoryHandler;
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootItemHandlerWrapper()
                 .addHandler(blockEntity.inventoryHandler, properties::getIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(FluidInfuserBlockEntity blockEntity, Direction side){
+    public static IFluidHandler getFluidHandlerCapability(FluidInfuserBlockEntity blockEntity, @Nullable Direction side){
+        if(side == null)
+            return new WootFluidHandlerWrapper()
+                    .addHandler(blockEntity.inputTankHandler, () -> MachineSideProperty.ENABLED)
+                    .addHandler(blockEntity.outputTankHandler, () -> MachineSideProperty.ENABLED);
+
         Properties properties = blockEntity.getProperties(side);
 
         return new WootFluidHandlerWrapper()
