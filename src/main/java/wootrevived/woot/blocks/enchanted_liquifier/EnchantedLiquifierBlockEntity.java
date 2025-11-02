@@ -74,6 +74,7 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         if(level.isClientSide)
             return;
 
+        tickItem(inventoryHandler, pos, side -> getProperties(side).getIngredientProperty());
         tickFluid(outputTankHandler, pos, EnchantedLiquifierConfig.FLUID_TRANSFER.get(),side -> getProperties(side).getOutputFluidProperty());
     }
 

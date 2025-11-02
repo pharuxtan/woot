@@ -73,6 +73,9 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         if(level.isClientSide)
             return;
 
+        tickItem(inputSlotHandler, pos, side -> getProperties(side).getIngredientProperty());
+        tickItem(augmentSlotHandler, pos, side -> getProperties(side).getAugmentProperty());
+        tickItem(outputSlotHandler, pos, side -> getProperties(side).getOutputProperty());
         tickFluid(inputTankHandler, pos, ItemInfuserConfig.FLUID_TRANSFER.get(),side -> getProperties(side).getInputFluidProperty());
     }
 
