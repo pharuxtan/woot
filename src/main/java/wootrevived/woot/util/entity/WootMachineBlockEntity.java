@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
@@ -35,6 +36,7 @@ import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.common.RedstoneMode;
 import wootrevived.woot.util.handlers.WootEnergyStorage;
 import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.handlers.WootItemStackHandler;
 import wootrevived.woot.util.render.WootContainerData;
 
 import java.util.List;
@@ -317,12 +319,50 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     public abstract int getInputTankCapacity();
     public abstract boolean hasInputFluidCapability();
 
+    protected void tickItem(WootItemStackHandler itemHandler, BlockPos pos, Function<Direction, MachineSideProperty> getProperty) {
+        for(Direction side : Direction.values()){
+            if(getProperty.apply(side) == MachineSideProperty.PUSH){
+                BlockEntity be = level.getBlockEntity(pos.relative(side));
+                if(be == null) continue;
+
+                be.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).ifPresent(handler -> {
+                    ItemStack stack = itemHandler.getStackInSlot(0);
+                    if(stack.isEmpty())
+                        return;
+                    ItemStack result = ItemHandlerHelper.insertItem(handler, stack, true);
+                    if(result.getCount() < stack.getCount()){
+                        ItemStack extracted = itemHandler.extractItem(0, stack.getCount() - result.getCount(), false);
+                        if(!extracted.isEmpty())
+                            ItemHandlerHelper.insertItem(handler, extracted, false);
+                    }
+                });
+            } else if(getProperty.apply(side) == MachineSideProperty.PULL && !itemHandler.isOutput()){
+                BlockEntity be = level.getBlockEntity(pos.relative(side));
+                if(be == null) continue;
+
+                be.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).ifPresent(handler -> {
+                    for (int i = 0; i < handler.getSlots(); i++) {
+                        ItemStack stack = handler.getStackInSlot(i);
+                        ItemStack result = itemHandler.insertItem(0, stack, true);
+                        if(result.getCount() < stack.getCount()){
+                            ItemStack extracted = handler.extractItem(i, stack.getCount() - result.getCount(), false);
+                            if(!extracted.isEmpty()) {
+                                itemHandler.insertItem(0, extracted, false);
+                                return;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     protected void tickFluid(WootFluidTankHandler fluidTank, BlockPos pos, int tickRate, Function<Direction, MachineSideProperty> getProperty) {
         for(Direction side : Direction.values()){
             if(getProperty.apply(side) == MachineSideProperty.PUSH){
                 BlockEntity be = level.getBlockEntity(pos.relative(side));
-
                 if(be == null) continue;
+
                 be.getCapability(ForgeCapabilities.FLUID_HANDLER, side.getOpposite()).ifPresent(handler -> {
                     FluidStack simulation = FluidUtil.tryFluidTransfer(handler, fluidTank, tickRate, false);
                     if(!simulation.isEmpty())
@@ -331,6 +371,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
             } else if(getProperty.apply(side) == MachineSideProperty.PULL && !fluidTank.isOutput()){
                 BlockEntity be = level.getBlockEntity(pos.relative(side));
                 if(be == null) continue;
+
                 be.getCapability(ForgeCapabilities.FLUID_HANDLER, side.getOpposite()).ifPresent(handler -> {
                     FluidStack simulation = FluidUtil.tryFluidTransfer(fluidTank, handler, tickRate, false);
                     if(!simulation.isEmpty())
