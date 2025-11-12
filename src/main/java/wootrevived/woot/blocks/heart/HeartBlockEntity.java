@@ -18,9 +18,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
@@ -149,7 +150,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
             }
         }
 
-        if(level.isClientSide)
+        if(level.isClientSide())
             return;
 
         List<FakeSpawnerBlockEntity> fakeSpawners = new ArrayList<>(1);
@@ -187,26 +188,34 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
 
                     BlockPos blockPos = exportPos.relative(direction);
 
-                    IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, blockPos, direction.getOpposite());
+                    ResourceHandler<ItemResource> itemHandler = level.getCapability(Capabilities.Item.BLOCK, blockPos, direction.getOpposite());
                     if(itemHandler != null){
                         for(ItemStack stack : List.copyOf(result.items)){
-                            ItemStack insert = ItemHandlerHelper.insertItem(itemHandler, stack, false);
-                            if(insert.isEmpty()){
-                                result.items.remove(stack);
-                            } else if(insert.getCount() != stack.getCount()) {
-                                stack.setCount(insert.getCount());
+                            try (Transaction tx = Transaction.openRoot()){
+                                int amount = itemHandler.insert(ItemResource.of(stack), stack.getCount(), tx);
+                                tx.commit();
+
+                                if(stack.getCount() == amount){
+                                    result.items.remove(stack);
+                                } else if (amount > 0) {
+                                    stack.shrink(amount);
+                                }
                             }
                         }
                     }
 
-                    IFluidHandler fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos, direction.getOpposite());
+                    ResourceHandler<FluidResource> fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, blockPos, direction.getOpposite());
                     if(fluidHandler != null){
                         for(FluidStack stack : List.copyOf(result.fluids)){
-                            int amount = fluidHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
-                            if(stack.getAmount() == amount){
-                                result.fluids.remove(stack);
-                            } else if(amount > 0){
-                                stack.shrink(amount);
+                            try (Transaction tx = Transaction.openRoot()) {
+                                int amount = fluidHandler.insert(FluidResource.of(stack), stack.getAmount(), tx);
+                                tx.commit();
+
+                                if (stack.getAmount() == amount) {
+                                    result.fluids.remove(stack);
+                                } else if (amount > 0) {
+                                    stack.shrink(amount);
+                                }
                             }
                         }
                     }

@@ -8,9 +8,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -270,7 +270,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         int fillY = 50 - fillHeight;
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(fluidTypeExtensions.getStillTexture());
         renderTiledFluidTextureAtlas(gui, texture, x + 3, y + fillY + 3, 12, fillHeight, fluidTypeExtensions.getTintColor(), false);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + 3, 212, 3, 12, 50, ATLAS_WIDTH, ATLAS_HEIGHT);
     }

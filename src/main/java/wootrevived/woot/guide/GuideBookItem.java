@@ -19,7 +19,7 @@ public class GuideBookItem extends Item {
 
     @Override
     public InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if(level.isClientSide)
+        if(level.isClientSide())
             GuidesCommon.openGuide(player, WootGuide.ID);
 
         return InteractionResult.CONSUME;

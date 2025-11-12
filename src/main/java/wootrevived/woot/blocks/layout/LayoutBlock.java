@@ -86,7 +86,7 @@ public class LayoutBlock extends Block implements EntityBlock {
 
         @Override
         public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-            if(level.isClientSide || hand == InteractionHand.OFF_HAND)
+            if(level.isClientSide() || hand == InteractionHand.OFF_HAND)
                 return super.useItemOn(stack, level, player, hand, hit);
 
             if(!player.getMainHandItem().isEmpty())
@@ -107,7 +107,7 @@ public class LayoutBlock extends Block implements EntityBlock {
 
         @Override
         public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
-            if(!level.isClientSide) {
+            if(!level.isClientSide()) {
                 Direction facing = getValue(BlockStateProperties.HORIZONTAL_FACING);
 
                 BlockPos layoutPos = switch(facing){

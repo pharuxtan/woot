@@ -26,6 +26,7 @@ public class WootRevivedPlugin implements IWootPlugin {
         BlacklistedMobs.register(registration);
         CatMob.register(registration);
         ChickenMob.register(registration);
+        CopperGolemMob.register(registration);
         CowMob.register(registration);
         CreeperMob.register(registration);
         EnderDragonMob.register(registration);

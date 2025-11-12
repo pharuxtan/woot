@@ -62,7 +62,7 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.useItemOn(stack, level, player, hand, hit);
 
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 if(stack.isEmpty() && player.isShiftKeyDown()){
                     BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
                     if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {

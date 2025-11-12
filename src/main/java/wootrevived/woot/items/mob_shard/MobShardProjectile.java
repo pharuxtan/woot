@@ -57,7 +57,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
 
     @Override
     protected void onHitBlock(@NotNull BlockHitResult result){
-        if(!this.level().isClientSide) {
+        if(!this.level().isClientSide()) {
             this.remove(RemovalReason.DISCARDED);
 
             BlockPos pos = result.getBlockPos();
@@ -111,7 +111,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
     private void dropItem(ItemStack itemStack, BlockPos pos){
         Level level = this.level();
 
-        if(level.isClientSide) return;
+        if(level.isClientSide()) return;
 
         if(level.getBlockState(pos.above()).isAir()) {
             pos = pos.above();

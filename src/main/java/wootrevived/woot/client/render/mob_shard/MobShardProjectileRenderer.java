@@ -2,10 +2,11 @@ package wootrevived.woot.client.render.mob_shard;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import wootrevived.woot.items.mob_shard.MobShardProjectile;
@@ -39,7 +40,7 @@ public class MobShardProjectileRenderer extends EntityRenderer<MobShardProjectil
     }
 
     @Override
-    public void render(MobShardProjectileRenderState state, PoseStack pose, MultiBufferSource buffers, int packedLight) {
+    public void submit(MobShardProjectileRenderState state, PoseStack pose, SubmitNodeCollector collector, CameraRenderState camera) {
         pose.pushPose();
         pose.scale(this.scale, this.scale, this.scale);
 
@@ -53,8 +54,8 @@ public class MobShardProjectileRenderer extends EntityRenderer<MobShardProjectil
         pose.translate(0, 0.1, 0);
         pose.mulPose(Axis.ZP.rotationDegrees(225.0f));
 
-        state.item.render(pose, buffers, packedLight, OverlayTexture.NO_OVERLAY);
+        state.item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
         pose.popPose();
-        super.render(state, pose, buffers, packedLight);
+        super.submit(state, pose, collector, camera);
     }
 }

@@ -23,12 +23,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
@@ -37,9 +40,9 @@ import wootrevived.woot.network.WootMachineUpdate;
 import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.common.RedstoneMode;
-import wootrevived.woot.util.handlers.WootEnergyStorage;
-import wootrevived.woot.util.handlers.WootFluidTankHandler;
-import wootrevived.woot.util.handlers.WootItemStackHandler;
+import wootrevived.woot.util.handlers.WootEnergyHandler;
+import wootrevived.woot.util.handlers.WootFluidResourceHandler;
+import wootrevived.woot.util.handlers.WootItemResourceHandler;
 import wootrevived.woot.util.render.WootContainerData;
 
 import java.util.EnumMap;
@@ -59,7 +62,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
         @Override
         public int get(int i) {
             if(i == DATA_ENERGY)
-                return WootMachineBlockEntity.this.energyHandler.getEnergyStored();
+                return WootMachineBlockEntity.this.energyHandler.getAmountAsInt();
             if(i == DATA_PROGRESS)
                 return calculateProgress();
             if(i == DATA_ENERGY_TRANSFER)
@@ -87,9 +90,9 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
         @Override
         public FluidStack getFluid(int i){
             if(i == DATA_FLUID_INPUT)
-                return WootMachineBlockEntity.this.inputTankHandler.getFluid();
+                return WootMachineBlockEntity.this.inputTankHandler.getStack();
             if(i == DATA_FLUID_OUTPUT)
-                return WootMachineBlockEntity.this.outputTankHandler.getFluid();
+                return WootMachineBlockEntity.this.outputTankHandler.getStack();
             return FluidStack.EMPTY;
         }
 
@@ -149,7 +152,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
 
     @Override
     public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
-        if(level.isClientSide)
+        if(level.isClientSide())
             return;
 
         boolean isDisabled = isDisabled();
@@ -269,27 +272,22 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
         setChanged();
     }
 
-    public abstract IItemHandler getInventory();
+    public abstract ItemStacksResourceHandler getInventory();
 
-    public final WootEnergyStorage energyHandler = createEnergy();
-    private WootEnergyStorage createEnergy() {
+    public final WootEnergyHandler energyHandler = createEnergy();
+    private WootEnergyHandler createEnergy() {
         if(!hasEnergyCapability())
             return null;
 
-        return new WootEnergyStorage(getEnergyCapacity(), getEnergyMaxTransfer()) {
+        return new WootEnergyHandler(getEnergyCapacity(), getEnergyMaxTransfer()) {
             @Override
-            protected void onEnergyChanged() {
+            protected void onEnergyChanged(int amount) {
                 setChanged();
             }
 
             @Override
-            public boolean canReceive() {
-                return true;
-            }
-
-            @Override
-            public boolean canExtract() {
-                return false;
+            public int extract(int amount, TransactionContext transaction) {
+                return 0;
             }
         };
     }
@@ -299,58 +297,79 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     public abstract int getEnergyMaxTransfer();
     public abstract boolean hasEnergyCapability();
 
-    public final WootFluidTankHandler inputTankHandler = createInputTank();
-    private WootFluidTankHandler createInputTank() {
+    public final WootFluidResourceHandler inputTankHandler = createInputTank();
+    private WootFluidResourceHandler createInputTank() {
         if(!hasInputFluidCapability())
             return null;
 
-        return new WootFluidTankHandler(getInputTankCapacity(), false, getInputFluidValidator()) {
+        return new WootFluidResourceHandler(getInputTankCapacity(), false, getInputFluidValidator()) {
             @Override
-            protected void onContentsChanged() {
+            protected void onContentsChanged(int i, FluidStack s) {
                 setChanged();
             }
         };
     }
 
-    public WootFluidTankHandler getInputTank() {
+    public WootFluidResourceHandler getInputTank() {
         return inputTankHandler;
     }
 
-    public abstract Predicate<FluidStack> getInputFluidValidator();
+    public abstract Predicate<FluidResource> getInputFluidValidator();
     public abstract int getInputTankCapacity();
     public abstract boolean hasInputFluidCapability();
 
-    protected void tickItem(WootItemStackHandler itemHandler, BlockPos pos, Function<Direction, MachineSideProperty> getProperty) {
+    protected void tickItem(WootItemResourceHandler itemHandler, BlockPos pos, Function<Direction, MachineSideProperty> getProperty) {
         for(Direction side : Direction.values()){
             if(getProperty.apply(side) == MachineSideProperty.PUSH){
-                IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(side), side.getOpposite());
+                ResourceHandler<ItemResource> handler = level.getCapability(Capabilities.Item.BLOCK, pos.relative(side), side.getOpposite());
 
                 if(handler == null)
                     continue;
 
-                ItemStack stack = itemHandler.getStackInSlot(0);
-                if(stack.isEmpty())
+                int amount = itemHandler.getAmountAsInt(0);
+                if(amount == 0)
                     return;
-                ItemStack result = ItemHandlerHelper.insertItem(handler, stack, true);
-                if(result.getCount() < stack.getCount()){
-                    ItemStack extracted = itemHandler.extractItem(0, stack.getCount() - result.getCount(), false);
-                    if(!extracted.isEmpty())
-                        ItemHandlerHelper.insertItem(handler, extracted, false);
+
+                ItemResource resource = itemHandler.getResource(0);
+                if(resource.isEmpty())
+                    return;
+
+                int sim;
+                try (Transaction tx = Transaction.openRoot()){
+                    sim = handler.insert(resource, amount, tx);
+                }
+                if(sim > 0){
+                    try (Transaction tx = Transaction.openRoot()) {
+                        int extracted = itemHandler.extract(0, resource, sim, tx);
+                        if (extracted > 0) {
+                            handler.insert(resource, extracted, tx);
+                            tx.commit();
+                        }
+                    }
                 }
             } else if(getProperty.apply(side) == MachineSideProperty.PULL && !itemHandler.isOutput()){
-                IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(side), side.getOpposite());
+                ResourceHandler<ItemResource> handler = level.getCapability(Capabilities.Item.BLOCK, pos.relative(side), side.getOpposite());
 
                 if(handler == null)
                     continue;
 
-                for (int i = 0; i < handler.getSlots(); i++) {
-                    ItemStack stack = handler.getStackInSlot(i);
-                    ItemStack result = itemHandler.insertItem(0, stack, true);
-                    if(result.getCount() < stack.getCount()){
-                        ItemStack extracted = handler.extractItem(i, stack.getCount() - result.getCount(), false);
-                        if(!extracted.isEmpty()) {
-                            itemHandler.insertItem(0, extracted, false);
-                            return;
+                for (int i = 0; i < handler.size(); i++) {
+                    ItemResource resource = handler.getResource(i);
+                    if(resource.isEmpty())
+                        continue;
+
+                    int sim;
+                    try(Transaction tx = Transaction.openRoot()){
+                        sim = itemHandler.insert(0, resource, handler.getAmountAsInt(i), tx);
+                    }
+                    if(sim > 0){
+                        try(Transaction tx = Transaction.openRoot()){
+                            int extracted = handler.extract(i, resource, sim, tx);
+                            if(extracted > 0){
+                                itemHandler.insert(0, resource, extracted, tx);
+                                tx.commit();
+                                return;
+                            }
                         }
                     }
                 }
@@ -358,51 +377,55 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
         }
     }
 
-    protected void tickFluid(WootFluidTankHandler fluidTank, BlockPos pos, int tickRate, Function<Direction, MachineSideProperty> getProperty) {
+    protected void tickFluid(WootFluidResourceHandler fluidTank, BlockPos pos, int tickRate, Function<Direction, MachineSideProperty> getProperty) {
         for(Direction side : Direction.values()){
             if(getProperty.apply(side) == MachineSideProperty.PUSH){
-                IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos.relative(side), side.getOpposite());
+                ResourceHandler<FluidResource> handler = level.getCapability(Capabilities.Fluid.BLOCK, pos.relative(side), side.getOpposite());
 
                 if(handler == null)
                     continue;
 
-                FluidStack simulation = FluidUtil.tryFluidTransfer(handler, fluidTank, tickRate, false);
-                if(!simulation.isEmpty())
-                    FluidUtil.tryFluidTransfer(handler, fluidTank, simulation.getAmount(), true);
+                try (Transaction tx = Transaction.openRoot()) {
+                    int moved = ResourceHandlerUtil.move(fluidTank, handler, s -> true, tickRate, tx);
+                    if(moved > 0)
+                        tx.commit();
+                }
             } else if(getProperty.apply(side) == MachineSideProperty.PULL && !fluidTank.isOutput()){
-                IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos.relative(side), side.getOpposite());
+                ResourceHandler<FluidResource> handler = level.getCapability(Capabilities.Fluid.BLOCK, pos.relative(side), side.getOpposite());
 
                 if(handler == null)
                     continue;
 
-                FluidStack simulation = FluidUtil.tryFluidTransfer(fluidTank, handler, tickRate, false);
-                if(!simulation.isEmpty())
-                    FluidUtil.tryFluidTransfer(fluidTank, handler, simulation.getAmount(), true);
+                try (Transaction tx = Transaction.openRoot()) {
+                    int moved = ResourceHandlerUtil.move(handler, fluidTank, s -> true, tickRate, tx);
+                    if(moved > 0)
+                        tx.commit();
+                }
             }
         }
     }
 
-    public final WootFluidTankHandler outputTankHandler = createOutputTank();
-    private WootFluidTankHandler createOutputTank() {
+    public final WootFluidResourceHandler outputTankHandler = createOutputTank();
+    private WootFluidResourceHandler createOutputTank() {
         if(!hasOutputFluidCapability())
             return null;
 
-        return new WootFluidTankHandler(getOutputTankCapacity(), true) {
+        return new WootFluidResourceHandler(getOutputTankCapacity(), true) {
             @Override
-            protected void onContentsChanged() {
+            protected void onContentsChanged(int i, FluidStack s) {
                 setChanged();
             }
         };
     }
 
-    public WootFluidTankHandler getOutputTank() {
+    public WootFluidResourceHandler getOutputTank() {
         return outputTankHandler;
     }
 
     public abstract int getOutputTankCapacity();
     public abstract boolean hasOutputFluidCapability();
 
-    public static IEnergyStorage getEnergyStorageCapability(WootMachineBlockEntity blockEntity, Direction side){
+    public static EnergyHandler getEnergyStorageCapability(WootMachineBlockEntity blockEntity, Direction side){
         return blockEntity.energyHandler;
     }
 
@@ -460,7 +483,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     public void setChanged() {
         super.setChanged();
 
-        if(this.level == null || this.level.isClientSide) return;
+        if(this.level == null || this.level.isClientSide()) return;
         this.level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 

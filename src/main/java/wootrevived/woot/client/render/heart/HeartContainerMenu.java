@@ -11,7 +11,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
@@ -21,8 +24,8 @@ import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.blocks.heart.HeartBlockEntity;
 import wootrevived.woot.registries.BlocksRegistry;
+import wootrevived.woot.util.render.WootResourceHandlerSlot;
 import wootrevived.woot.util.render.WootSlot;
-import wootrevived.woot.util.render.WootSlotItemHandler;
 
 import java.util.List;
 
@@ -30,37 +33,37 @@ public class HeartContainerMenu extends AbstractContainerMenu {
     private final Level level;
     private HeartBlockEntity blockEntity;
 
-    private final ItemStackHandler upgrades = new ItemStackHandler(4) {
+    private final ItemStacksResourceHandler upgrades = new ItemStacksResourceHandler(4) {
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate){
-            return stack;
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction){
+            return 0;
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate){
-            return ItemStack.EMPTY;
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction){
+            return 0;
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
+        public boolean isValid(int slot, @NotNull ItemResource stack)
         {
             return false;
         }
     };
 
-    private final ItemStackHandler imports = new ItemStackHandler(36) {
+    private final ItemStacksResourceHandler imports = new ItemStacksResourceHandler(36) {
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate){
-            return stack;
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction){
+            return 0;
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate){
-            return ItemStack.EMPTY;
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction){
+            return 0;
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
+        public boolean isValid(int slot, @NotNull ItemResource stack)
         {
             return false;
         }
@@ -85,16 +88,16 @@ public class HeartContainerMenu extends AbstractContainerMenu {
     private void createImportSlots(){
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 9; j++){
-                this.addSlot(new WootSlotItemHandler(imports, WootSlotItemHandler.Type.HEART_INPUTS, j + i * 9, 8 + j * 18, 106 + i * 18));
+                this.addSlot(new WootResourceHandlerSlot(imports, imports::set, WootResourceHandlerSlot.Type.HEART_INPUTS, j + i * 9, 8 + j * 18, 106 + i * 18));
             }
         }
     }
 
     private void createUpgradeSlots(){
-        this.addSlot(new WootSlotItemHandler(upgrades, WootSlotItemHandler.Type.INVENTORY, 0, 11, 78));
-        this.addSlot(new WootSlotItemHandler(upgrades, WootSlotItemHandler.Type.INVENTORY, 1, 29, 78));
-        this.addSlot(new WootSlotItemHandler(upgrades, WootSlotItemHandler.Type.INVENTORY, 2, 47, 78));
-        this.addSlot(new WootSlotItemHandler(upgrades, WootSlotItemHandler.Type.INVENTORY, 3, 65, 78));
+        this.addSlot(new WootResourceHandlerSlot(upgrades, upgrades::set, WootResourceHandlerSlot.Type.INVENTORY, 0, 11, 78));
+        this.addSlot(new WootResourceHandlerSlot(upgrades, upgrades::set, WootResourceHandlerSlot.Type.INVENTORY, 1, 29, 78));
+        this.addSlot(new WootResourceHandlerSlot(upgrades, upgrades::set, WootResourceHandlerSlot.Type.INVENTORY, 2, 47, 78));
+        this.addSlot(new WootResourceHandlerSlot(upgrades, upgrades::set, WootResourceHandlerSlot.Type.INVENTORY, 3, 65, 78));
     }
 
     private void createPlayerInventory(Inventory playerInventory) {
@@ -110,15 +113,15 @@ public class HeartContainerMenu extends AbstractContainerMenu {
 
     public void updateImports(List<ItemStack> stacks){
         for(int i = 0; i < 36; i++){
-            imports.setStackInSlot(i, i >= stacks.size() ? ItemStack.EMPTY : stacks.get(i));
+            imports.set(i, i >= stacks.size() ? ItemResource.EMPTY : ItemResource.of(stacks.get(i)), i >= stacks.size() ? 0 : stacks.get(i).getCount());
         }
     }
 
     public void updateUpgrades(){
-        upgrades.setStackInSlot(0, getUpgrade(0));
-        upgrades.setStackInSlot(1, getUpgrade(3));
-        upgrades.setStackInSlot(2, getUpgrade(2));
-        upgrades.setStackInSlot(3, getUpgrade(1));
+        upgrades.set(0, ItemResource.of(getUpgrade(0)), getUpgrade(0).getCount());
+        upgrades.set(1, ItemResource.of(getUpgrade(3)), getUpgrade(3).getCount());
+        upgrades.set(2, ItemResource.of(getUpgrade(2)), getUpgrade(2).getCount());
+        upgrades.set(3, ItemResource.of(getUpgrade(1)), getUpgrade(1).getCount());
     }
 
     public ItemStack getUpgrade(int index){
@@ -134,14 +137,14 @@ public class HeartContainerMenu extends AbstractContainerMenu {
         CellBlockEntity cell = blockEntity.getCell();
         if(cell == null)
             return FluidStack.EMPTY;
-        return cell.tankHandler.getFluid();
+        return cell.tankHandler.getStack();
     }
 
     public int getCellFluidCapacity() {
         CellBlockEntity cell = blockEntity.getCell();
         if(cell == null)
             return 0;
-        return cell.tankHandler.getCapacity();
+        return cell.tankHandler.getCapacityAsInt(0, FluidResource.EMPTY);
     }
 
     public Tier getFactoryTier(){

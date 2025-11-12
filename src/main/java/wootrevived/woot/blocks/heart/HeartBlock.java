@@ -78,7 +78,7 @@ public class HeartBlock extends MultiBlockFactory {
 
         @Override
         public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-            if (level.isClientSide)
+            if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 
             if(!getValue(BlockStateProperties.ENABLED))

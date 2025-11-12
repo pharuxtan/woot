@@ -20,27 +20,29 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.CreativeTankData;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ComponentsRegistry;
-import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.handlers.WootFluidResourceHandler;
 
 public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityTicker<BlockEntity> {
     public CreativeTankBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.CREATIVE_TANK_BLOCK_ENTITY.get(), pos, state);
     }
 
-    public WootFluidTankHandler inputTankHandler = createInputTank();
+    public WootFluidResourceHandler inputTankHandler = createInputTank();
 
-    private WootFluidTankHandler createInputTank() {
-        return new WootFluidTankHandler(Integer.MAX_VALUE, false) {
+    private WootFluidResourceHandler createInputTank() {
+        return new WootFluidResourceHandler(Integer.MAX_VALUE, false) {
             @Override
-            protected void onContentsChanged() {
-                if(!this.getFluid().isEmpty()) this.getFluid().setAmount(Integer.MAX_VALUE);
+            protected void onContentsChanged(int i, FluidStack s) {
+                if(!this.getStack().isEmpty()) stacks.set(0, this.getStack().copyWithAmount(Integer.MAX_VALUE));
                 setChanged();
             }
         };
@@ -54,35 +56,41 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
 
     @Override
     public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+        if(inputTankHandler.isEmpty())
+            return;
+
         for (Direction facing : Direction.values()) {
-            IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos().relative(facing), facing.getOpposite());
+            ResourceHandler<FluidResource> handler = level.getCapability(Capabilities.Fluid.BLOCK, getBlockPos().relative(facing), facing.getOpposite());
             if(handler == null)
                 continue;
 
-            handler.fill(new FluidStack(this.inputTankHandler.getFluid().getFluid(), handler.getTankCapacity(0)), IFluidHandler.FluidAction.EXECUTE);
+            try (Transaction tx = Transaction.openRoot()) {
+                handler.insert(FluidResource.of(inputTankHandler.getStack()), inputTankHandler.getCapacityAsInt(0, FluidResource.EMPTY), tx);
+                tx.commit();
+            }
         }
     }
 
-    public void setMaxCapacity(){ inputTankHandler.getFluid().setAmount(Integer.MAX_VALUE); setChanged(); }
+    public void setMaxCapacity(){ inputTankHandler.setStack(inputTankHandler.getStack().copyWithAmount(Integer.MAX_VALUE)); }
 
     public void emptyIfDifferentFluidStack(FluidStack fluidStack){
         if(fluidStack.isEmpty())
             return;
 
-        if(!FluidStack.isSameFluidSameComponents(inputTankHandler.getFluid(), fluidStack))
-            inputTankHandler.setFluid(FluidStack.EMPTY);
+        if(!FluidStack.isSameFluidSameComponents(inputTankHandler.getStack(), fluidStack))
+            inputTankHandler.setStack(FluidStack.EMPTY);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(CreativeTankBlockEntity blockEntity, Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(CreativeTankBlockEntity blockEntity, Direction side){
         return blockEntity.inputTankHandler;
     }
 
     private CreativeTankData.Component getComponent(){
-        return new CreativeTankData.Component(inputTankHandler.getFluid());
+        return new CreativeTankData.Component(inputTankHandler.getStack());
     }
 
     private void setComponent(CreativeTankData.Component component){
-        inputTankHandler.setFluid(component.tankFluid());
+        inputTankHandler.setStack(component.tankFluid());
     }
 
     @Override
@@ -139,7 +147,7 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     public void setChanged() {
         super.setChanged();
 
-        if(this.level == null || this.level.isClientSide) return;
+        if(this.level == null || this.level.isClientSide()) return;
         this.level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 }

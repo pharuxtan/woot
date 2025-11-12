@@ -6,15 +6,20 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WootImportItemHandler implements IItemHandler {
+public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     private final Map<Integer, List<ItemStack>> importItems = new HashMap<>();
     private final Map<Integer, List<Integer>> items = new HashMap<>();
+
+    private final ImportJournal importJournal = new ImportJournal();
 
     private Map<Integer, List<ItemStack>> getImportItems() {
         return importItems;
@@ -27,9 +32,9 @@ public class WootImportItemHandler implements IItemHandler {
     public static final Codec<WootImportItemHandler> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     Codec.unboundedMap(Codec.STRING, ItemStack.OPTIONAL_CODEC.listOf()).xmap(
-                                    m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.parseInt(e.getKey()), e -> (List<ItemStack>)new ArrayList<>(e.getValue()))),
-                                    m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.toString(e.getKey()), Map.Entry::getValue))
-                                    ).fieldOf("ImportItems").forGetter(WootImportItemHandler::getImportItems),
+                            m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.parseInt(e.getKey()), e -> (List<ItemStack>)new ArrayList<>(e.getValue()))),
+                            m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.toString(e.getKey()), Map.Entry::getValue))
+                    ).fieldOf("ImportItems").forGetter(WootImportItemHandler::getImportItems),
                     Codec.unboundedMap(Codec.STRING, Codec.INT.listOf()).xmap(
                             m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.parseInt(e.getKey()), e -> (List<Integer>)new ArrayList<>(e.getValue()))),
                             m -> m.entrySet().stream().collect(Collectors.toMap(e -> Integer.toString(e.getKey()), Map.Entry::getValue))
@@ -148,70 +153,24 @@ public class WootImportItemHandler implements IItemHandler {
 
         Collections.fill(counts, 0);
     }
-
+    
     @Override
-    public int getSlots() {
+    public int size() {
         return 1;
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        for(int i = 0; i < 4; i++){
-            List<ItemStack> list = importItems.get(i);
-            if(list == null)
-                continue;
-
-            for(ItemStack s : list){
-                if(ItemStack.isSameItemSameComponents(s, stack))
-                    return true;
-            }
-        }
-        return false;
+    public @NotNull ItemResource getResource(int index) {
+        return ItemResource.EMPTY;
     }
 
     @Override
-    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if(!isItemValid(0, stack) || stack.isEmpty())
-            return ItemStack.EMPTY;
-
-        stack = stack.copy();
-        for(int i = 0; i < 4; i++){
-            List<ItemStack> list = importItems.get(i);
-            if(list == null)
-                continue;
-
-            List<Integer> item = items.get(i);
-
-            for(int j = 0; j < list.size(); j++){
-                ItemStack s = list.get(j);
-                if(ItemStack.isSameItemSameComponents(s, stack)){
-                    int amount = item.get(j);
-                    int needToBeAdded = s.getCount() - amount;
-                    if(stack.getCount() <= needToBeAdded){
-                        if(!simulate) item.set(j, amount + stack.getCount());
-                        return ItemStack.EMPTY;
-                    } else {
-                        if(!simulate) item.set(j, amount + needToBeAdded);
-                        stack.shrink(needToBeAdded);
-                    }
-                }
-            }
-        }
-        return stack;
+    public long getAmountAsLong(int index) {
+        return 0;
     }
 
     @Override
-    public @NotNull ItemStack getStackInSlot(int slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
+    public long getCapacityAsLong(int index, @NotNull ItemResource resource) {
         int count = 0;
         for(int i = 0; i < 4; i++){
             List<ItemStack> list = importItems.get(i);
@@ -224,5 +183,88 @@ public class WootImportItemHandler implements IItemHandler {
             }
         }
         return count;
+    }
+
+    @Override
+    public boolean isValid(int index, @NotNull ItemResource resource) {
+        for(int i = 0; i < 4; i++){
+            List<ItemStack> list = importItems.get(i);
+            if(list == null)
+                continue;
+
+            for(ItemStack s : list){
+                if(ItemStack.isSameItemSameComponents(s, resource.toStack()))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int insert(@NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+        if(!isValid(0, resource) || resource.isEmpty())
+            return 0;
+
+        boolean didSnapshot = false;
+
+        int filled = 0;
+        for(int i = 0; i < 4; i++){
+            List<ItemStack> list = importItems.get(i);
+            if(list == null)
+                continue;
+
+            List<Integer> item = items.get(i);
+
+            for(int j = 0; j < list.size(); j++){
+                ItemStack s = list.get(j);
+                if(ItemStack.isSameItemSameComponents(s, resource.toStack())){
+                    int itemAmount = item.get(j);
+                    int needToBeAdded = s.getCount() - itemAmount;
+
+                    if(!didSnapshot){
+                        importJournal.updateSnapshots(transaction);
+                        didSnapshot = true;
+                    }
+
+                    if(amount <= needToBeAdded){
+                        item.set(j, itemAmount + amount);
+                        filled += amount;
+                        return filled;
+                    } else {
+                        item.set(j, itemAmount + needToBeAdded);
+                        filled += needToBeAdded;
+                        amount -= needToBeAdded;
+                    }
+                }
+            }
+        }
+        return filled;
+    }
+
+    @Override
+    public int insert(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+        return insert(resource, amount, transaction);
+    }
+
+    @Override
+    public int extract(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+        return 0;
+    }
+
+    private class ImportJournal extends SnapshotJournal<Map<Integer, List<Integer>>> {
+        @Override
+        protected Map<Integer, List<Integer>> createSnapshot() {
+            Map<Integer, List<Integer>> map = new HashMap<>();
+            for(Map.Entry<Integer, List<Integer>> entry : items.entrySet()){
+                map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+            return map;
+        }
+
+        @Override
+        protected void revertToSnapshot(Map<Integer, List<Integer>> snapshot) {
+            items.clear();
+            items.putAll(snapshot);
+        }
     }
 }

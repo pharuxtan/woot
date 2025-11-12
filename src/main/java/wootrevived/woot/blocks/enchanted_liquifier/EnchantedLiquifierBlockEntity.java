@@ -25,9 +25,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -43,7 +45,7 @@ import wootrevived.woot.util.entity.WootMachineBlockEntity;
 import wootrevived.woot.util.entity.WootTags;
 import wootrevived.woot.util.handlers.WootFluidHandlerWrapper;
 import wootrevived.woot.util.handlers.WootItemHandlerWrapper;
-import wootrevived.woot.util.handlers.WootItemStackHandler;
+import wootrevived.woot.util.handlers.WootItemResourceHandler;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -77,28 +79,28 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
     public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
         super.tick(level, pos, state, blockEntity);
 
-        if(level.isClientSide)
+        if(level.isClientSide())
             return;
 
         tickItem(inventoryHandler, pos, side -> getProperties(side).getIngredientProperty());
         tickFluid(outputTankHandler, pos, EnchantedLiquifierConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getOutputFluidProperty());
     }
 
-    public final WootItemStackHandler inventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemResourceHandler inventoryHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack stack) {
             EnchantedLiquifierBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.getItem() == Items.ENCHANTED_BOOK && EnchantmentHelper.hasAnyEnchantments(stack);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return stack.getItem() == Items.ENCHANTED_BOOK && EnchantmentHelper.hasAnyEnchantments(stack.toStack());
         }
     };
 
     public static int INPUT_SLOT = 0;
-    public IItemHandler getInventory() { return inventoryHandler; }
+    public ItemStacksResourceHandler getInventory() { return inventoryHandler; }
 
     public record Properties(EnchantedLiquifierBlockEntity entity, MachineSide machineSide){
         public MachineSideProperty getIngredientProperty(){
@@ -115,7 +117,7 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<ItemResource> getItemHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.inventoryHandler;
 
@@ -125,7 +127,7 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
                 .addHandler(blockEntity.inventoryHandler, properties::getIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(EnchantedLiquifierBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.outputTankHandler;
 
@@ -137,15 +139,15 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
 
     private EnchantedLiquifierData.Component getComponent(){
         return new EnchantedLiquifierData.Component(
-                energyHandler.getEnergyStored(),
-                getOutputTank().getFluid(),
+                energyHandler.getAmountAsInt(),
+                getOutputTank().getStack(),
                 getAllMachineSidesProperties()
         );
     }
 
     private void setComponent(EnchantedLiquifierData.Component component){
         energyHandler.setEnergy(component.energy());
-        getOutputTank().setFluid(component.outputFluid());
+        getOutputTank().setStack(component.outputFluid());
         setAllMachineSidesProperties(component.listMachineProperties());
     }
 
@@ -198,7 +200,7 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         ItemStack itemStack = inventoryHandler.getStackInSlot(INPUT_SLOT);
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            inventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            inventoryHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
         }
         super.dropContents(drops);
     }
@@ -231,11 +233,16 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
     }
 
     @Override
-    protected boolean hasEnergy() { return energyHandler.getEnergyStored() > 0; }
+    protected boolean hasEnergy() { return energyHandler.getAmountAsInt() > 0; }
 
     @Override
     protected int useEnergy(){
-        return energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), false);
+        int used = 0;
+        try (var tx = Transaction.openRoot()){
+            used = energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), tx);
+            tx.commit();
+        }
+        return used;
     }
 
     @Override
@@ -256,17 +263,20 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         if (itemStack.isEmpty())
             return;
 
-        inventoryHandler.extractItem(INPUT_SLOT, 1, false);
+        try(Transaction tx = Transaction.openRoot()) {
+            inventoryHandler.extract(INPUT_SLOT, ItemResource.of(itemStack), 1, tx);
 
-        int amount = getEnchantAmount(itemStack);
-        outputTankHandler.fill(new FluidStack(FluidsRegistry.SOURCE_ENCHANTED_FLUID.get(), amount), IFluidHandler.FluidAction.EXECUTE);
+            int amount = getEnchantAmount(itemStack);
+            outputTankHandler.insert(FluidResource.of(FluidsRegistry.SOURCE_ENCHANTED_FLUID.get()), amount, tx);
+            tx.commit();
+        }
 
         setChanged();
     }
 
     @Override
     protected boolean canProcess(boolean checkEnergy) {
-        if (checkEnergy && energyHandler.getEnergyStored() <= 0)
+        if (checkEnergy && energyHandler.getAmountAsInt() <= 0)
             return false;
 
         ItemStack itemStack = inventoryHandler.getStackInSlot(INPUT_SLOT);
@@ -276,10 +286,12 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         if (!EnchantmentHelper.hasAnyEnchantments(itemStack))
             return false;
 
-        int amount = getEnchantAmount(itemStack);
-        int filled = outputTankHandler.fill(new FluidStack(FluidsRegistry.SOURCE_ENCHANTED_FLUID.get(), amount), IFluidHandler.FluidAction.SIMULATE);
+        try(Transaction tx = Transaction.openRoot()) {
+            int amount = getEnchantAmount(itemStack);
+            int filled = outputTankHandler.insert(FluidResource.of(FluidsRegistry.SOURCE_ENCHANTED_FLUID.get()), amount, tx);
 
-        return amount == filled;
+            return amount == filled;
+        }
     }
 
     private int getEnchantAmount(ItemStack itemStack) {
@@ -328,7 +340,7 @@ public class EnchantedLiquifierBlockEntity extends WootMachineBlockEntity implem
         return false;
     }
 
-    public Predicate<FluidStack> getInputFluidValidator() {
+    public Predicate<FluidResource> getInputFluidValidator() {
         return null;
     }
 

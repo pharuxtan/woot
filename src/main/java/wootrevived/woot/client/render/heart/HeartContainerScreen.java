@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -33,8 +33,8 @@ import wootrevived.woot.util.common.WootTier;
 import wootrevived.woot.util.helper.ModNameHelper;
 import wootrevived.woot.util.render.WootButton;
 import wootrevived.woot.util.render.WootContainerScreen;
+import wootrevived.woot.util.render.WootResourceHandlerSlot;
 import wootrevived.woot.util.render.WootSlot;
-import wootrevived.woot.util.render.WootSlotItemHandler;
 import wootrevived.woot.util.render.buttons.WootHeartInputButton;
 import wootrevived.woot.util.render.buttons.WootRedstoneButton;
 import wootrevived.woot.util.render.entity.WootEntityRenderer;
@@ -228,11 +228,11 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         for(Slot slot : menu.slots){
             if(slot instanceof WootSlot wootSlot){
                 wootSlot.setActive(activeButton == -1);
-            } else if(slot instanceof WootSlotItemHandler wootSlotItemHandler){
-                if(wootSlotItemHandler.getType() == WootSlotItemHandler.Type.INVENTORY){
-                    wootSlotItemHandler.setActive(activeButton == -1);
+            } else if(slot instanceof WootResourceHandlerSlot wootResourceHandlerSlot){
+                if(wootResourceHandlerSlot.getType() == WootResourceHandlerSlot.Type.INVENTORY){
+                    wootResourceHandlerSlot.setActive(activeButton == -1);
                 } else {
-                    wootSlotItemHandler.setActive(activeButton != -1);
+                    wootResourceHandlerSlot.setActive(activeButton != -1);
                 }
             }
         }
@@ -287,7 +287,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         int fillY = 35 - fillHeight;
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(fluidTypeExtensions.getStillTexture());
         WootContainerScreen.renderTiledFluidTextureAtlas(gui, texture, x + 3, y + fillY + 3, 12, fillHeight, fluidTypeExtensions.getTintColor(), false);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + 3, 42, 188, 12, 35, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
@@ -320,7 +320,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
             return;
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluid.getFluid().getFluidType());
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(fluidTypeExtensions.getStillTexture());
         WootContainerScreen.renderTiledFluidTextureAtlas(gui, texture, x + 3, y + 3, 12, 13, fluidTypeExtensions.getTintColor(), false);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + 3, 61, 188, 12, 13, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
@@ -411,7 +411,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
         WootEntityRenderer.render(gui, x, y, entity, BOX_SIZE, BOX_PADDING, MAX_ENTITY_BOX_SIZE);
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(FluidsRegistry.VITALITY_FUEL_FLUID_TYPE.get());
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(fluidTypeExtensions.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(fluidTypeExtensions.getStillTexture());
         WootContainerScreen.renderTiledFluidTextureAtlas(gui, texture, x + (int)BOX_PADDING, y + (int)BOX_PADDING, (int)BOX_SIZE, (int)BOX_SIZE, fluidTypeExtensions.getTintColor(), true);
     }
 

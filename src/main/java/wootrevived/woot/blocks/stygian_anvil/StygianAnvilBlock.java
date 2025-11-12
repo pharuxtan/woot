@@ -29,7 +29,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -99,7 +101,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
 
         @Override
         public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-            if (level.isClientSide)
+            if (level.isClientSide())
                 super.useItemOn(heldItem, level, player, hand, hit);
 
             BlockEntity be = level.getBlockEntity(hit.getBlockPos());
@@ -110,12 +112,12 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
                     // Crafting
                     anvil.tryCraft(player);
                 } else {
-                    IItemHandler itemHandler = anvil.getInventory();
-                    for(int slot = 0; slot < itemHandler.getSlots(); slot++) {
-                        if(itemHandler.getStackInSlot(slot).isEmpty()) {
+                    ResourceHandler<ItemResource> itemHandler = anvil.getInventory();
+                    for(int slot = 0; slot < itemHandler.size(); slot++) {
+                        if(itemHandler.getAmountAsInt(slot) == 0) {
                             ItemStack item = heldItem.copy();
                             item.setCount(1);
-                            ItemStack result = itemHandler.insertItem(slot, item, false);
+                            ItemStack result = ItemUtil.insertItemReturnRemaining(itemHandler, slot, item, false, null);
                             if(result.equals(item))
                                 break;
                             heldItem.shrink(1);

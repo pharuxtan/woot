@@ -180,7 +180,7 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
     public void setChanged() {
         super.setChanged();
 
-        if(this.level == null || this.level.isClientSide) return;
+        if(this.level == null || this.level.isClientSide()) return;
         this.level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 }

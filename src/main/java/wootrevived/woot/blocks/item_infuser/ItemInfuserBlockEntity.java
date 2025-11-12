@@ -21,10 +21,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -39,9 +41,10 @@ import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.entity.WootMachineBlockEntity;
 import wootrevived.woot.util.entity.WootTags;
+import wootrevived.woot.util.handlers.WootCombinedItemHandler;
 import wootrevived.woot.util.handlers.WootFluidHandlerWrapper;
 import wootrevived.woot.util.handlers.WootItemHandlerWrapper;
-import wootrevived.woot.util.handlers.WootItemStackHandler;
+import wootrevived.woot.util.handlers.WootItemResourceHandler;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
 import java.util.ArrayList;
@@ -78,7 +81,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
         super.tick(level, pos, state, blockEntity);
 
-        if(level.isClientSide)
+        if(level.isClientSide())
             return;
 
         tickItem(inputSlotHandler, pos, side -> getProperties(side).getIngredientProperty());
@@ -90,39 +93,39 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     public static final int INPUT_SLOT = 0;
     public static final int AUGMENT_SLOT = 0;
     public static final int OUTPUT_SLOT = 0;
-    private final WootItemStackHandler inputSlotHandler = new WootItemStackHandler(false) {
+    private final WootItemResourceHandler inputSlotHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack stack) {
             ItemInfuserBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return ItemInfuserRecipe.Validator.isIngredientValid(stack);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return ItemInfuserRecipe.Validator.isIngredientValid(stack.toStack());
         }
     };
-    private final WootItemStackHandler augmentSlotHandler = new WootItemStackHandler(false) {
+    private final WootItemResourceHandler augmentSlotHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack stack) {
             ItemInfuserBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return ItemInfuserRecipe.Validator.isAugmentValid(stack);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return ItemInfuserRecipe.Validator.isAugmentValid(stack.toStack());
         }
     };
-    private final WootItemStackHandler outputSlotHandler = new WootItemStackHandler(true) {
+    private final WootItemResourceHandler outputSlotHandler = new WootItemResourceHandler(true) {
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate){
-            return stack;
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction){
+            return 0;
         }
     };
-    private final IItemHandler allSlotsHandler = new CombinedInvWrapper(inputSlotHandler, augmentSlotHandler, outputSlotHandler);
+    private final ItemStacksResourceHandler allSlotsHandler = new WootCombinedItemHandler(inputSlotHandler, augmentSlotHandler, outputSlotHandler);
 
-    public IItemHandler getInventory() { return allSlotsHandler; }
+    public ItemStacksResourceHandler getInventory() { return allSlotsHandler; }
 
     public record Properties(ItemInfuserBlockEntity entity, MachineSide machineSide){
         public MachineSideProperty getInputFluidProperty() {
@@ -147,7 +150,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(ItemInfuserBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<ItemResource> getItemHandlerCapability(ItemInfuserBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.allSlotsHandler;
 
@@ -159,7 +162,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
                 .addHandler(blockEntity.inputSlotHandler, properties::getIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(ItemInfuserBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(ItemInfuserBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.inputTankHandler;
 
@@ -171,15 +174,15 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
 
     private ItemInfuserData.Component getComponent(){
         return new ItemInfuserData.Component(
-                energyHandler.getEnergyStored(),
-                getInputTank().getFluid(),
+                energyHandler.getAmountAsInt(),
+                getInputTank().getStack(),
                 getAllMachineSidesProperties()
         );
     }
 
     private void setComponent(ItemInfuserData.Component component){
         energyHandler.setEnergy(component.energy());
-        getInputTank().setFluid(component.inputFluid());
+        getInputTank().setStack(component.inputFluid());
         setAllMachineSidesProperties(component.listMachineProperties());
     }
 
@@ -283,11 +286,16 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     private ItemInfuserRecipe recipe = null;
 
     @Override
-    protected boolean hasEnergy() { return energyHandler.getEnergyStored() > 0; }
+    protected boolean hasEnergy() { return energyHandler.getAmountAsInt() > 0; }
 
     @Override
     protected int useEnergy(){
-        return energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), false);
+        int used = 0;
+        try (var tx = Transaction.openRoot()){
+            used = energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), tx);
+            tx.commit();
+        }
+        return used;
     }
 
     @Override
@@ -338,19 +346,22 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
 
         ItemStack itemStack = recipe.getOutput();
         ItemStack output = outputSlotHandler.getStackInSlot(OUTPUT_SLOT);
-        if(!output.isEmpty()){
+        if(!output.isEmpty()) {
             output.grow(itemStack.getCount());
-        } else {
-            outputSlotHandler.setStackInSlot(OUTPUT_SLOT, itemStack);
+            itemStack = output;
         }
+        outputSlotHandler.setStackInSlot(OUTPUT_SLOT, itemStack);
 
-        inputTankHandler.drain(recipe.getFluid().getAmount(), IFluidHandler.FluidAction.EXECUTE);
+        try(Transaction tx = Transaction.openRoot()){
+            inputTankHandler.extract(FluidResource.of(recipe.getFluid()), recipe.getFluid().getAmount(), tx);
+            tx.commit();
+        }
         setChanged();
     }
 
     @Override
     protected boolean canProcess(boolean checkEnergy) {
-        if (checkEnergy && energyHandler.getEnergyStored() <= 0)
+        if (checkEnergy && energyHandler.getAmountAsInt() <= 0)
             return false;
 
         getRecipe();
@@ -366,7 +377,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
                 return false;
         }
 
-        return inputTankHandler.getFluid().getAmount() >= recipe.getFluid().getAmount();
+        return inputTankHandler.getAmountAsInt(0) >= recipe.getFluid().getAmount();
     }
     //endregion
 
@@ -374,7 +385,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         if(!(level instanceof ServerLevel serverLevel))
             return;
 
-        if (inputTankHandler.isEmpty() || inputTankHandler.getFluid().getFluid().getBucket() == null) {
+        if (inputTankHandler.isEmpty()) {
             clearRecipe();
             return;
         }
@@ -382,7 +393,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         RecipeHolder<ItemInfuserRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(
                 RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get(),
                 new WootRecipeInput(
-                        Either.right(inputTankHandler.getFluid()),
+                        Either.right(inputTankHandler.getStack()),
                         Either.left(inputSlotHandler.getStackInSlot(INPUT_SLOT)),
                         Either.left(augmentSlotHandler.getStackInSlot(AUGMENT_SLOT))),
                 level).orElse(null);
@@ -414,7 +425,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         return true;
     }
 
-    public Predicate<FluidStack> getInputFluidValidator() {
+    public Predicate<FluidResource> getInputFluidValidator() {
         return ItemInfuserRecipe.Validator::isFluidValid;
     }
 

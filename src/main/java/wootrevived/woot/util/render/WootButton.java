@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -22,10 +23,10 @@ public abstract class WootButton extends AbstractWidget {
     public abstract void onPress();
 
     @Override
-    public void onClick(double mouseX, double mouseY, int button) {
-        if (this.active && this.visible && button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
-                mouseX >= this.getX() && mouseY >= this.getY() &&
-                mouseX < this.getX() + this.width && mouseY < this.getY() + this.height) {
+    public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
+        if (this.active && this.visible && event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
+                event.x() >= this.getX() && event.y() >= this.getY() &&
+                event.x() < this.getX() + this.width && event.y() < this.getY() + this.height) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             this.onPress();
         }

@@ -24,8 +24,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -35,6 +36,7 @@ import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.entity.WootTags;
+import wootrevived.woot.util.handlers.WootItemResourceHandler;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
 public class StygianAnvilBlockEntity extends BlockEntity {
@@ -42,47 +44,38 @@ public class StygianAnvilBlockEntity extends BlockEntity {
         super(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ENTITY.get(), pos, state);
     }
 
-    public final ItemStackHandler inventoryHandler = new ItemStackHandler(5) {
+    public final WootItemResourceHandler inventoryHandler = new WootItemResourceHandler(5, false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack stack) {
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
             if(slot == BASE_SLOT){
                 if(stack.getItem() instanceof MobShardItem)
-                    return MobShardItem.isFullyProgrammed(stack);
+                    return MobShardItem.isFullyProgrammed(stack.toStack());
 
-                return StygianAnvilRecipe.Validator.isBaseValid(stack);
+                return StygianAnvilRecipe.Validator.isBaseValid(stack.toStack());
             }
-            return StygianAnvilRecipe.Validator.isIngredientValid(stack);
+            return StygianAnvilRecipe.Validator.isIngredientValid(stack.toStack());
         }
 
         @Override
-        public int getSlotLimit(int slot){
+        public int getCapacity(int index, ItemResource resource){
             return 1;
         }
     };
 
     public static int BASE_SLOT = 0;
-    public static int INGREDIENT_1_SLOT = 1;
-    public static int INGREDIENT_2_SLOT = 2;
-    public static int INGREDIENT_3_SLOT = 3;
-    public static int INGREDIENT_4_SLOT = 4;
-    public IItemHandler getInventory() { return inventoryHandler; }
+    public static int FIRST_COMPLEMENTARY_SLOT = 1;
+    public static int SECOND_COMPLEMENTARY_SLOT = 2;
+    public static int THIRD_COMPLEMENTARY_SLOT = 3;
+    public static int FOURTH_COMPLEMENTARY_SLOT = 4;
+    public ItemStacksResourceHandler getInventory() { return inventoryHandler; }
 
-    public static IItemHandler getItemHandlerCapability(StygianAnvilBlockEntity blockEntity, Direction side) {
+    public static ResourceHandler<ItemResource> getItemHandlerCapability(StygianAnvilBlockEntity blockEntity, Direction side) {
         return blockEntity.getInventory();
-    }
-
-    public ItemStack[] getIngredients() {
-        return new ItemStack[] {
-                inventoryHandler.getStackInSlot(INGREDIENT_1_SLOT),
-                inventoryHandler.getStackInSlot(INGREDIENT_2_SLOT),
-                inventoryHandler.getStackInSlot(INGREDIENT_3_SLOT),
-                inventoryHandler.getStackInSlot(INGREDIENT_4_SLOT),
-        };
     }
 
     @Override
@@ -91,8 +84,8 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     }
 
     public void dropContents(Level level, BlockPos pos) {
-        for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
-            ItemStack stack = inventoryHandler.getStackInSlot(slot);
+        for(int slot = 0; slot < inventoryHandler.size(); slot++) {
+            ItemStack stack = inventoryHandler.getResource(slot).toStack();
             if(!stack.isEmpty()){
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
             }
@@ -104,11 +97,12 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     public void dropItem(Player player, InteractionHand hand) {
         ItemStack itemStack = ItemStack.EMPTY;
 
-        for(int slot = inventoryHandler.getSlots() - 1; slot >= 0; slot--) {
-            ItemStack stack = inventoryHandler.getStackInSlot(slot);
+        for(int slot = inventoryHandler.size() - 1; slot >= 0; slot--) {
+            ItemResource resource = inventoryHandler.getResource(slot);
+            ItemStack stack = resource.toStack();
             if(!stack.isEmpty()){
                 itemStack = stack;
-                inventoryHandler.setStackInSlot(slot, ItemStack.EMPTY);
+                inventoryHandler.set(slot, ItemResource.EMPTY, 0);
                 break;
             }
         }
@@ -130,11 +124,11 @@ public class StygianAnvilBlockEntity extends BlockEntity {
 
         RecipeHolder<StygianAnvilRecipe> recipeHolder = serverLevel.recipeAccess().getRecipeFor(RecipesRegistry.ANVIL_RECIPE_TYPE.get(),
                 new WootRecipeInput(
-                        Either.left(inventoryHandler.getStackInSlot(BASE_SLOT)),
-                        Either.left(inventoryHandler.getStackInSlot(INGREDIENT_1_SLOT)),
-                        Either.left(inventoryHandler.getStackInSlot(INGREDIENT_2_SLOT)),
-                        Either.left(inventoryHandler.getStackInSlot(INGREDIENT_3_SLOT)),
-                        Either.left(inventoryHandler.getStackInSlot(INGREDIENT_4_SLOT))
+                        Either.left(inventoryHandler.getResource(BASE_SLOT).toStack()),
+                        Either.left(inventoryHandler.getResource(FIRST_COMPLEMENTARY_SLOT).toStack()),
+                        Either.left(inventoryHandler.getResource(SECOND_COMPLEMENTARY_SLOT).toStack()),
+                        Either.left(inventoryHandler.getResource(THIRD_COMPLEMENTARY_SLOT).toStack()),
+                        Either.left(inventoryHandler.getResource(FOURTH_COMPLEMENTARY_SLOT).toStack())
                 ),
                 level).orElse(null);
 
@@ -142,7 +136,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
             return;
 
         ItemStack output = recipeHolder.value().getOutput();
-        ItemStack baseStack = inventoryHandler.getStackInSlot(BASE_SLOT);
+        ItemStack baseStack = inventoryHandler.getResource(BASE_SLOT).toStack();
 
         if (baseStack.getItem() instanceof MobShardItem) {
             if(!MobShardItem.isFullyProgrammed(baseStack))
@@ -155,8 +149,9 @@ public class StygianAnvilBlockEntity extends BlockEntity {
             output = FakeSpawnerBlockEntity.getItemStack(mobTag);
         }
 
-        for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
-            inventoryHandler.setStackInSlot(slot, inventoryHandler.getStackInSlot(slot).getCraftingRemainder());
+        for(int slot = 0; slot < inventoryHandler.size(); slot++) {
+            ItemStack stack = inventoryHandler.getResource(slot).toStack().getCraftingRemainder();
+            inventoryHandler.set(slot, ItemResource.of(stack), stack.getCount());
         }
 
         setChanged();
@@ -206,7 +201,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     public void setChanged() {
         super.setChanged();
 
-        if(this.level == null || this.level.isClientSide) return;
+        if(this.level == null || this.level.isClientSide()) return;
         this.level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 }

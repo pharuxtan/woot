@@ -234,7 +234,7 @@ public class MobShardItem extends Item {
 
         MobShardProjectile proj = new MobShardProjectile(player, level, stack);
         proj.shootFromRotation(player, player.getXRot(), player.getYRot(), 0f, pull * 2f, 1f - pull * 0.5f);
-        if(!level.isClientSide) level.addFreshEntity(proj);
+        if(!level.isClientSide()) level.addFreshEntity(proj);
         stack.shrink(1);
         return true;
     }
@@ -255,7 +255,7 @@ public class MobShardItem extends Item {
 
         @Override
         public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
-            if(FMLEnvironment.dist.isDedicatedServer())
+            if(FMLEnvironment.getDist().isDedicatedServer())
                 return;
 
             if(isJEIShard(dataComponentGetter)) {

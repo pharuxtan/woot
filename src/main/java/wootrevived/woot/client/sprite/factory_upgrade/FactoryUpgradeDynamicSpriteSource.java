@@ -11,7 +11,6 @@ import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
@@ -78,8 +77,7 @@ public record FactoryUpgradeDynamicSpriteSource(ResourceLocation id) implements 
                 return new SpriteContents(
                         location,
                         new FrameSize(imageSide.getWidth(), imageSide.getHeight()),
-                        imageSide,
-                        ResourceMetadata.EMPTY
+                        imageSide
                 );
             } catch (IOException ignored) {
             } finally {

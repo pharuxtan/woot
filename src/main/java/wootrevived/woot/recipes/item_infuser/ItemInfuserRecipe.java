@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.recipes.WootRecipeInput;
@@ -139,9 +140,9 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
             return false;
         }
 
-        public static boolean isFluidValid(FluidStack fluid){
+        public static boolean isFluidValid(FluidResource fluid){
             for(FluidStack fluidStack : validFluids){
-                if(FluidStack.isSameFluidSameComponents(fluidStack, fluid))
+                if(FluidStack.isSameFluidSameComponents(fluidStack, fluid.toStack(1)))
                     return true;
             }
             return false;

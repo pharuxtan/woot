@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.enchanted_liquifier.EnchantedLiquifierBlockEntity;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -38,8 +38,8 @@ public class EnchantedLiquifierContainerMenu extends WootContainerMenu {
         this(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }
 
-    private void createMachineInputSlots(IItemHandler machineInventory){
-        this.addSlot(new SlotItemHandler(machineInventory, 0, 80, 40));
+    private void createMachineInputSlots(ItemStacksResourceHandler machineInventory){
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 0, 80, 40));
     }
 
     private void createPlayerInventory(Inventory playerInventory) {

@@ -15,12 +15,12 @@ public class GuideBook {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if(server == null)
             return;
 
         if(GuideConfig.GIVE_ON_SPAWN.get()){
-            GuideBookPersistentState state = GuideBookPersistentState.get(player.getServer());
+            GuideBookPersistentState state = GuideBookPersistentState.get(player.level().getServer());
             if(!state.hasPlayerReceivedGuideBook(player) && player.getInventory().add(ItemsRegistry.GUIDE_BOOK_ITEM.get().getDefaultInstance())){
                 state.addPlayerReceivedGuideBook(player);
             }

@@ -15,8 +15,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
@@ -30,7 +29,7 @@ import wootrevived.woot.registries.WootFactoryMobsRegistry;
 import wootrevived.woot.util.block.FactoryBlockBaseEntity;
 import wootrevived.woot.util.common.RedstoneMode;
 import wootrevived.woot.util.entity.WootTags;
-import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.handlers.WootFluidResourceHandler;
 import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 
 import java.util.Optional;
@@ -101,7 +100,7 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
         return totalDrained < vitalityCost;
     }
 
-    public boolean tick(WootFluidTankHandler tank){
+    public boolean tick(WootFluidResourceHandler tank){
         if(getMob() == null || getMob().isBlacklisted() || !isActive())
             return false;
 
@@ -115,16 +114,26 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
         if(drainAmount <= 0)
             return false;
 
-        FluidStack simulate = tank.drain(drainAmount, IFluidHandler.FluidAction.SIMULATE);
+        int drained;
+        try (Transaction tx = Transaction.openRoot()){
+            if(tank.getResource(0).isEmpty()){
+                accumulator += (double)drainAmount - perTickRatio;
+                setChanged();
+                return false;
+            }
 
-        if(simulate.getAmount() < drainAmount){
-            accumulator += (double)drainAmount - perTickRatio;
-            setChanged();
-            return false;
+            drained = tank.extract(tank.getResource(0), drainAmount, tx);
+
+            if(drained < drainAmount){
+                accumulator += (double)drainAmount - perTickRatio;
+                setChanged();
+                return false;
+            }
+
+            tx.commit();
         }
 
-        FluidStack consumed = tank.drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
-        totalDrained += consumed.getAmount();
+        totalDrained += drained;
 
         if(totalDrained >= vitalityCost){
             this.vitalityCost = 0;

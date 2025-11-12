@@ -155,7 +155,7 @@ public class DropSimulator {
         livingEntity.tickCount = 0;
         livingEntity.setLastHurtByPlayer((Player) null, 100);
 
-        ((CreeperMixin) chargedCreeper).woot$setDroppedSkulls(0);
+        ((CreeperMixin) chargedCreeper).woot$setDroppedSkulls(false);
 
         livingEntity.captureDrops(null);
 
@@ -184,7 +184,7 @@ public class DropSimulator {
         enderDragon.setSilent(true);
 
         EnderDragonMixin dragonMixin = (EnderDragonMixin)enderDragon;
-        dragonMixin.woot$setUnlimitedLastHurtByPlayer(new EntityReference<>(fakePlayer));
+        dragonMixin.woot$setUnlimitedLastHurtByPlayer(EntityReference.of(fakePlayer));
 
         for(enderDragon.dragonDeathTime = 0; !((EndDragonFightMixin) enderDragon.getDragonFight()).woot$getDragonKilled();){
             dragonMixin.woot$tickDeath();

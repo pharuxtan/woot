@@ -13,7 +13,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.config.CellConfig;
@@ -22,7 +24,7 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ComponentsRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.util.block.FactoryBlockBaseEntity;
-import wootrevived.woot.util.handlers.WootFluidTankHandler;
+import wootrevived.woot.util.handlers.WootFluidResourceHandler;
 
 public class CellBlockEntity extends FactoryBlockBaseEntity {
     public CellBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
@@ -30,12 +32,12 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
         tankHandler.setCapacity(getCapacity());
     }
 
-    public final WootFluidTankHandler tankHandler = createTank();
+    public final WootFluidResourceHandler tankHandler = createTank();
 
-    private WootFluidTankHandler createTank() {
-        return new WootFluidTankHandler(1000, false, (stack) -> stack.is(FluidsRegistry.SOURCE_VITALITY_FUEL_FLUID.get())) {
+    private WootFluidResourceHandler createTank() {
+        return new WootFluidResourceHandler(1000, false, (stack) -> stack.is(FluidsRegistry.SOURCE_VITALITY_FUEL_FLUID.get())) {
             @Override
-            protected void onContentsChanged() {
+            protected void onContentsChanged(int i, @NotNull FluidStack s) {
                 setChanged();
             }
         };
@@ -55,7 +57,7 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
         return 0;
     }
 
-    public static IFluidHandler getFluidHandlerCapability(CellBlockEntity blockEntity, Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(CellBlockEntity blockEntity, Direction side){
         if(blockEntity.getBlockState().getValue(BlockStateProperties.ENABLED))
             return blockEntity.tankHandler;
         return null;
@@ -63,12 +65,12 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
 
     private CellData.Component getComponent(){
         return new CellData.Component(
-                tankHandler.getFluid()
+                tankHandler.getStack()
         );
     }
 
     private void setComponent(CellData.Component component){
-        tankHandler.setFluid(component.tankFluid());
+        tankHandler.setStack(component.tankFluid());
     }
 
     @Override

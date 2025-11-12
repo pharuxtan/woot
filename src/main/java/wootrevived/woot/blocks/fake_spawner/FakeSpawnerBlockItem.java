@@ -57,7 +57,7 @@ public class FakeSpawnerBlockItem extends FactoryBlockItem {
 
         @Override
         public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter getter) {
-            if(FMLEnvironment.dist.isDedicatedServer())
+            if(FMLEnvironment.getDist().isDedicatedServer())
                 return;
 
             FakeSpawnerData.Component component = getter.get(ComponentsRegistry.FAKE_SPAWNER_DATA);

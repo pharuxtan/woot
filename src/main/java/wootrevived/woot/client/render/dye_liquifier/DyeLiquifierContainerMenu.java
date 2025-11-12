@@ -9,8 +9,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
 import wootrevived.woot.recipes.dye_liquifier.DyeLiquifierRecipe;
@@ -43,11 +43,11 @@ public class DyeLiquifierContainerMenu extends WootContainerMenu {
         this(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }
 
-    private void createMachineInputSlots(IItemHandler machineInventory){
-        this.addSlot(new SlotItemHandler(machineInventory, 0, 31, 29));
-        this.addSlot(new SlotItemHandler(machineInventory, 1, 51, 29));
-        this.addSlot(new SlotItemHandler(machineInventory, 2, 31, 49));
-        this.addSlot(new SlotItemHandler(machineInventory, 3, 51, 49));
+    private void createMachineInputSlots(ItemStacksResourceHandler machineInventory){
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 0, 31, 29));
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 1, 51, 29));
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 2, 31, 49));
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 3, 51, 49));
     }
 
     private void createPlayerInventory(Inventory playerInventory) {

@@ -1,7 +1,8 @@
 package wootrevived.woot.util.handlers;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.common.MachineSideProperty;
 
@@ -9,94 +10,115 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class WootFluidHandlerWrapper implements IFluidHandler {
-    private final List<FluidWrapper> fluidWrappers = new ArrayList<>();
+public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
+    private final List<FluidHandlerWrapper> wrappers = new ArrayList<>();
 
-    public WootFluidHandlerWrapper addHandler(WootFluidTankHandler tank, Supplier<MachineSideProperty> property){
-        fluidWrappers.add(new FluidWrapper(tank, property));
+    public WootFluidHandlerWrapper addHandler(WootFluidResourceHandler handler, Supplier<MachineSideProperty> property){
+        this.wrappers.add(new FluidHandlerWrapper(handler, property));
         return this;
     }
 
     @Override
-    public int getTanks() {
-        return fluidWrappers.size();
+    public int size() {
+        return wrappers.size();
     }
 
     @Override
-    public @NotNull FluidStack getFluidInTank(int tank) {
-        if(tank < 0 || tank >= fluidWrappers.size())
-            return FluidStack.EMPTY;
-        return fluidWrappers.get(tank).tank.getFluid();
+    public @NotNull FluidResource getResource(int index) {
+        if(index < 0 || index >= wrappers.size())
+            return FluidResource.EMPTY;
+
+        return wrappers.get(index).handler.getResource(0);
     }
 
     @Override
-    public int getTankCapacity(int tank) {
-        if(tank < 0 || tank >= fluidWrappers.size())
+    public long getAmountAsLong(int index) {
+        if(index < 0 || index >= wrappers.size())
             return 0;
-        return fluidWrappers.get(tank).tank.getCapacity();
+
+        return wrappers.get(index).handler.getAmountAsLong(0);
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        if(tank < 0 || tank >= fluidWrappers.size())
+    public long getCapacityAsLong(int index, @NotNull FluidResource resource) {
+        if(index < 0 || index >= wrappers.size())
+            return 0;
+
+        return wrappers.get(index).handler.getCapacityAsLong(0, resource);
+    }
+
+    @Override
+    public boolean isValid(int index, @NotNull FluidResource resource) {
+        if(index < 0 || index >= wrappers.size())
             return false;
-        return fluidWrappers.get(tank).tank.isFluidValid(stack);
+
+        return wrappers.get(index).handler.isValid(0, resource);
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        resource = resource.copy();
-        int fill = 0;
-        for(int i = 0; i < getTanks(); i++){
-            WootFluidTankHandler tank = fluidWrappers.get(i).tank;
-            MachineSideProperty property = fluidWrappers.get(i).property().get();
+    public int insert(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        if(index < 0 || index >= wrappers.size())
+            return 0;
 
-            if(tank.isOutput || !tank.isFluidValid(resource) || property == MachineSideProperty.DISABLED || property == MachineSideProperty.PUSH)
+        WootFluidResourceHandler handler = wrappers.get(index).handler;
+        MachineSideProperty property = wrappers.get(index).property.get();
+
+        if(handler.isOutput || !handler.isValid(0, resource) || property == MachineSideProperty.DISABLED || property == MachineSideProperty.PUSH)
+            return 0;
+
+        return handler.insert(0, resource, amount, transaction);
+    }
+
+    @Override
+    public int insert(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        int fill = 0;
+        for (FluidHandlerWrapper wrapper : wrappers) {
+            WootFluidResourceHandler handler = wrapper.handler;
+            MachineSideProperty property = wrapper.property.get();
+
+            if (handler.isOutput || !handler.isValid(0, resource) || property == MachineSideProperty.DISABLED || property == MachineSideProperty.PUSH)
                 continue;
 
-            int filled = tank.fill(resource, action);
-            resource.shrink(filled);
+            int filled = handler.insert(0, resource, amount, transaction);
+            amount -= filled;
             fill += filled;
         }
         return fill;
     }
 
     @Override
-    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-        for(int i = 0; i < getTanks(); i++){
-            WootFluidTankHandler tank = fluidWrappers.get(i).tank;
-            if(tank.isEmpty() || !FluidStack.isSameFluidSameComponents(tank.getFluid(), resource))
+    public int extract(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        int extract = 0;
+        for(FluidHandlerWrapper wrapper : wrappers) {
+            WootFluidResourceHandler handler = wrapper.handler;
+            MachineSideProperty property = wrapper.property.get();
+
+            if(handler.getAmountAsLong(0) == 0 || !resource.equals(handler.getResource(0)) || property == MachineSideProperty.DISABLED || property == MachineSideProperty.PULL)
                 continue;
 
-            MachineSideProperty property = fluidWrappers.get(i).property().get();
-            if(property == MachineSideProperty.DISABLED || property == MachineSideProperty.PULL)
-                continue;
-
-            FluidStack drained = tank.drain(resource, action);
-            if(!drained.isEmpty())
-                return drained;
+            int extracted = handler.extract(0, resource, amount, transaction);
+            amount -= extracted;
+            extract += extracted;
         }
-        return FluidStack.EMPTY;
+        return extract;
     }
 
     @Override
-    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-        for(int i = 0; i < getTanks(); i++){
-            WootFluidTankHandler tank = fluidWrappers.get(i).tank;
-            if(tank.isEmpty())
-                continue;
+    public int extract(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        if(index < 0 || index >= wrappers.size())
+            return 0;
 
-            MachineSideProperty property = fluidWrappers.get(i).property().get();
-            if(property == MachineSideProperty.DISABLED || property == MachineSideProperty.PULL)
-                continue;
+        WootFluidResourceHandler handler = wrappers.get(index).handler;
+        MachineSideProperty property = wrappers.get(index).property.get();
 
-            return tank.drain(maxDrain, action);
-        }
-        return FluidStack.EMPTY;
+        if(handler.getAmountAsLong(0) == 0 || !resource.equals(handler.getResource(0)) || property == MachineSideProperty.DISABLED || property == MachineSideProperty.PULL)
+            return 0;
+
+        return handler.extract(0, resource, amount, transaction);
     }
 
-    private record FluidWrapper(
-            WootFluidTankHandler tank,
+    private record FluidHandlerWrapper(
+            WootFluidResourceHandler handler,
             Supplier<MachineSideProperty> property
     ) {}
 }

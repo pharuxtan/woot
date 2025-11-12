@@ -12,8 +12,10 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.IngredientImportData;
@@ -55,39 +57,61 @@ public class IngredientImportBlockEntity extends FactoryBlockBaseEntity {
 
             BlockPos blockPos = getBlockPos().relative(direction);
 
-            IItemHandler neighborItemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, blockPos, direction.getOpposite());
+            ResourceHandler<ItemResource> neighborItemHandler = level.getCapability(Capabilities.Item.BLOCK, blockPos, direction.getOpposite());
             if(neighborItemHandler != null){
-                for (int i = 0; i < neighborItemHandler.getSlots(); i++) {
-                    ItemStack stack = neighborItemHandler.getStackInSlot(i);
-                    ItemStack result = itemHandler.insertItem(i, stack, true);
-                    if(result.getCount() < stack.getCount()){
-                        ItemStack extracted = neighborItemHandler.extractItem(i, stack.getCount() - result.getCount(), false);
-                        if(!extracted.isEmpty())
-                            itemHandler.insertItem(i, extracted, false);
+                for (int i = 0; i < neighborItemHandler.size(); i++) {
+                    ItemResource resource = neighborItemHandler.getResource(i);
+                    if(resource.isEmpty())
+                        return;
+
+                    int sim;
+                    try (Transaction tx = Transaction.openRoot()) {
+                        sim = itemHandler.insert(i, resource, neighborItemHandler.getAmountAsInt(i), tx);
+                    }
+
+                    if(sim > 0){
+                        try (Transaction tx = Transaction.openRoot()) {
+                            int extracted = neighborItemHandler.extract(i, resource, sim, tx);
+                            if (extracted > 0) {
+                                itemHandler.insert(i, resource, extracted, tx);
+                                tx.commit();
+                            }
+                        }
                     }
                 }
             }
 
-            IFluidHandler neighborFluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos, direction.getOpposite());
+            ResourceHandler<FluidResource> neighborFluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, blockPos, direction.getOpposite());
             if(neighborFluidHandler != null){
-                for (int i = 0; i < neighborFluidHandler.getTanks(); i++) {
-                    FluidStack stack = neighborFluidHandler.getFluidInTank(i);
-                    int filled = fluidHandler.fill(stack, IFluidHandler.FluidAction.SIMULATE);
-                    if(filled > 0){
-                        FluidStack drained = neighborFluidHandler.drain(new FluidStack(stack.getFluid(), filled), IFluidHandler.FluidAction.EXECUTE);
-                        if(!drained.isEmpty())
-                            fluidHandler.fill(drained, IFluidHandler.FluidAction.EXECUTE);
+                for (int i = 0; i < neighborFluidHandler.size(); i++) {
+                    FluidResource resource = neighborFluidHandler.getResource(i);
+                    if(resource.isEmpty())
+                        return;
+
+                    int sim;
+                    try (Transaction tx = Transaction.openRoot()) {
+                        sim = fluidHandler.insert(i, resource, neighborFluidHandler.getAmountAsInt(i), tx);
+                    }
+
+                    if(sim > 0){
+                        try (Transaction tx = Transaction.openRoot()) {
+                            int extracted = neighborFluidHandler.extract(i, resource, sim, tx);
+                            if (extracted > 0) {
+                                fluidHandler.insert(i, resource, extracted, tx);
+                                tx.commit();
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    public static IItemHandler getItemHandlerCapability(IngredientImportBlockEntity blockEntity, Direction side){
+    public static ResourceHandler<ItemResource> getItemHandlerCapability(IngredientImportBlockEntity blockEntity, Direction side){
         return blockEntity.itemHandler;
     }
 
-    public static IFluidHandler getFluidHandlerCapability(IngredientImportBlockEntity blockEntity, Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(IngredientImportBlockEntity blockEntity, Direction side){
         return blockEntity.fluidHandler;
     }
 

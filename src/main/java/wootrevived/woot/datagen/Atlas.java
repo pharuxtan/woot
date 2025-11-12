@@ -1,6 +1,7 @@
 package wootrevived.woot.datagen;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.data.SpriteSourceProvider;
 import wootrevived.woot.Woot;
@@ -16,7 +17,7 @@ public class Atlas extends SpriteSourceProvider {
 
     @Override
     protected void gather() {
-        atlas(BLOCKS_ATLAS)
+        atlas(AtlasIds.BLOCKS)
                 .addSource(new FactoryUpgradeDynamicSpriteSource(Woot.location(BlocksRegistry.FACTORY_UPGRADE_TAG)));
     }
 }

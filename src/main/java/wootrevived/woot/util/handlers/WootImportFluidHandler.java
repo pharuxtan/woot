@@ -6,15 +6,21 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WootImportFluidHandler implements IFluidHandler {
+public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     private final Map<Integer, List<FluidStack>> importFluids = new HashMap<>();
     private final Map<Integer, List<Integer>> tanks = new HashMap<>();
+
+    private final ImportJournal importJournal = new ImportJournal();
 
     private Map<Integer, List<FluidStack>> getImportFluids() {
         return importFluids;
@@ -150,17 +156,22 @@ public class WootImportFluidHandler implements IFluidHandler {
     }
 
     @Override
-    public int getTanks() {
+    public int size() {
         return 1;
     }
 
     @Override
-    public @NotNull FluidStack getFluidInTank(int tank) {
-        return FluidStack.EMPTY;
+    public @NotNull FluidResource getResource(int index) {
+        return FluidResource.EMPTY;
     }
 
     @Override
-    public int getTankCapacity(int tank) {
+    public long getAmountAsLong(int index) {
+        return 0;
+    }
+
+    @Override
+    public long getCapacityAsLong(int index, @NotNull FluidResource resource) {
         int capacity = 0;
         for(int i = 0; i < 4; i++){
             List<FluidStack> list = importFluids.get(i);
@@ -176,14 +187,14 @@ public class WootImportFluidHandler implements IFluidHandler {
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+    public boolean isValid(int index, @NotNull FluidResource resource) {
         for(int i = 0; i < 4; i++){
             List<FluidStack> list = importFluids.get(i);
             if(list == null)
                 continue;
 
             for(FluidStack s : list){
-                if(FluidStack.isSameFluidSameComponents(s, stack))
+                if(FluidStack.isSameFluidSameComponents(s, resource.toStack(FluidType.BUCKET_VOLUME)))
                     return true;
             }
         }
@@ -191,11 +202,12 @@ public class WootImportFluidHandler implements IFluidHandler {
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        if(!isFluidValid(0, resource) || resource.isEmpty())
+    public int insert(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        if(!isValid(0, resource) || resource.isEmpty())
             return 0;
 
-        resource = resource.copy();
+        boolean didSnapshot = false;
+
         int filled = 0;
         for(int i = 0; i < 4; i++){
             List<FluidStack> list = importFluids.get(i);
@@ -206,17 +218,23 @@ public class WootImportFluidHandler implements IFluidHandler {
 
             for(int j = 0; j < list.size(); j++){
                 FluidStack stack = list.get(j);
-                if(FluidStack.isSameFluidSameComponents(stack, resource)){
-                    int amount = tank.get(j);
-                    int needToBeFill = stack.getAmount() - amount;
-                    if(resource.getAmount() <= needToBeFill){
-                        filled += resource.getAmount();
-                        if(!action.simulate()) tank.set(j, amount + resource.getAmount());
+                if(FluidStack.isSameFluidSameComponents(stack, resource.toStack(FluidType.BUCKET_VOLUME))){
+                    int tankAmount = tank.get(j);
+                    int needToBeFill = stack.getAmount() - tankAmount;
+
+                    if(!didSnapshot){
+                        importJournal.updateSnapshots(transaction);
+                        didSnapshot = true;
+                    }
+
+                    if(amount <= needToBeFill){
+                        tank.set(j, tankAmount + amount);
+                        filled += amount;
                         return filled;
                     } else {
+                        tank.set(j, tankAmount + needToBeFill);
                         filled += needToBeFill;
-                        if(!action.simulate()) tank.set(j, amount + needToBeFill);
-                        resource.shrink(needToBeFill);
+                        amount -= needToBeFill;
                     }
                 }
             }
@@ -225,12 +243,29 @@ public class WootImportFluidHandler implements IFluidHandler {
     }
 
     @Override
-    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-        return FluidStack.EMPTY;
+    public int insert(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        return insert(resource, amount, transaction);
     }
 
     @Override
-    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-        return FluidStack.EMPTY;
+    public int extract(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+        return 0;
+    }
+
+    private class ImportJournal extends SnapshotJournal<Map<Integer, List<Integer>>> {
+        @Override
+        protected Map<Integer, List<Integer>> createSnapshot() {
+            Map<Integer, List<Integer>> map = new HashMap<>();
+            for(Map.Entry<Integer, List<Integer>> entry : tanks.entrySet()){
+                map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+            return map;
+        }
+
+        @Override
+        protected void revertToSnapshot(Map<Integer, List<Integer>> snapshot) {
+            tanks.clear();
+            tanks.putAll(snapshot);
+        }
     }
 }

@@ -19,7 +19,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.TagValueOutput;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.events.InitDropSimulator;
@@ -78,7 +77,7 @@ public class GiveCommand {
             TagValueOutput output = TagValueOutput.createWithContext(SerializeEntityValueHelper.REPORTER, source.getLevel().registryAccess());
             mob.saveTag(SerializeEntityValueHelper.serialize(entity, source.getLevel().registryAccess()), output);
             ItemStack fakeSpawner = FakeSpawnerBlockEntity.getItemStack(output.buildResult());
-            ItemHandlerHelper.giveItemToPlayer(target, fakeSpawner);
+            target.getInventory().placeItemBackInInventory(fakeSpawner);
         }
 
         return 1;

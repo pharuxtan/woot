@@ -1,7 +1,6 @@
 package wootrevived.woot.util.render.guide;
 
 import guideme.document.interaction.GuideTooltip;
-import guideme.scene.level.GuidebookLevel;
 import guideme.siteexport.ResourceExporter;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.registries.BuiltInRegistries;

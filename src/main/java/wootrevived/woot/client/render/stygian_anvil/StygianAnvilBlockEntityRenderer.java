@@ -2,33 +2,33 @@ package wootrevived.woot.client.render.stygian_anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 
-public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<StygianAnvilBlockEntity> {
+import javax.annotation.Nullable;
+
+public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> {
+    private final ItemModelResolver itemModelResolver;
+
+    public StygianAnvilBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        this.itemModelResolver = context.itemModelResolver();
+    }
+
     @Override
-    public void render(StygianAnvilBlockEntity stygianAnvilBlockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight, int packedOverlay, Vec3 vec3){
-        Direction facing = stygianAnvilBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-
-        IItemHandler itemHandler = stygianAnvilBlockEntity.getInventory();
-
-        ItemStack itemStack = itemHandler.getStackInSlot(StygianAnvilBlockEntity.BASE_SLOT);
-        if (!itemStack.isEmpty()) {
-            renderStack(facing, itemStack, poseStack, buffer, 0.5F, 1F, 0.5F, packedLight, packedOverlay, stygianAnvilBlockEntity.getLevel());
-        }
-
-        float addX = switch(facing){
+    public void submit(StygianAnvilBlockEntityRenderState state, PoseStack pose, SubmitNodeCollector collector, CameraRenderState camera) {
+        float addX = switch(state.facing){
             case NORTH -> 0F;
             case SOUTH -> 0F;
             case WEST  -> -0.2F;
@@ -36,7 +36,7 @@ public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<Styg
             default    -> 0f;
         };
 
-        float addZ = switch(facing){
+        float addZ = switch(state.facing){
             case NORTH -> -0.2F;
             case SOUTH -> 0.2F;
             case WEST  -> 0F;
@@ -44,43 +44,61 @@ public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<Styg
             default    -> 0f;
         };
 
-        ItemStack ingredient_1 = itemHandler.getStackInSlot(StygianAnvilBlockEntity.INGREDIENT_1_SLOT);
-        if (!ingredient_1.isEmpty())
-            renderStack(facing, ingredient_1, poseStack, buffer, 0.5F - addX, 1F, 0.5F - addZ, packedLight, packedOverlay, stygianAnvilBlockEntity.getLevel());
-
-        ItemStack ingredient_2 = itemHandler.getStackInSlot(StygianAnvilBlockEntity.INGREDIENT_2_SLOT);
-        if (!ingredient_2.isEmpty())
-            renderStack(facing, ingredient_2, poseStack, buffer, 0.5F + addX, 1F, 0.5F + addZ, packedLight, packedOverlay, stygianAnvilBlockEntity.getLevel());
-
-        ItemStack ingredient_3 = itemHandler.getStackInSlot(StygianAnvilBlockEntity.INGREDIENT_3_SLOT);
-        if (!ingredient_3.isEmpty())
-            renderStack(facing, ingredient_3, poseStack, buffer, 0.5F - addX * 2F, 1F, 0.5F - addZ * 2F, packedLight, packedOverlay, stygianAnvilBlockEntity.getLevel());
-
-        ItemStack ingredient_4 = itemHandler.getStackInSlot(StygianAnvilBlockEntity.INGREDIENT_4_SLOT);
-        if (!ingredient_4.isEmpty())
-            renderStack(facing, ingredient_4, poseStack, buffer, 0.5F + addX * 2F, 1F, 0.5F + addZ * 2F, packedLight, packedOverlay, stygianAnvilBlockEntity.getLevel());
+        submitStack(state, state.base, state.isBaseABlock, pose, collector, 0.5F, 0.5F);
+        submitStack(state, state.firstComplementary, state.isFirstComplementaryABlock, pose, collector, 0.5F - addX, 0.5F - addZ);
+        submitStack(state, state.secondComplementary, state.isSecondComplementaryABlock, pose, collector, 0.5F + addX, 0.5F + addZ);
+        submitStack(state, state.thirdComplementary, state.isThirdComplementaryABlock, pose, collector, 0.5F - addX * 2F, 0.5F - addZ * 2F);
+        submitStack(state, state.fourthComplementary, state.isFourthComplementaryABlock, pose, collector, 0.5F + addX * 2F, 0.5F + addZ * 2F);
     }
 
-    private void renderStack(Direction facing, ItemStack itemStack, PoseStack poseStack, MultiBufferSource buffer, double x, double y, double z, int combinedLight, int combinedOverlay, Level level) {
+    private void submitStack(StygianAnvilBlockEntityRenderState state, ItemStackRenderState item, boolean isABlock, PoseStack pose, SubmitNodeCollector collector, double x, double z) {
         float scale = 0.20F;
 
-        poseStack.pushPose();
-        if(itemStack.getItem() instanceof BlockItem){
-            poseStack.translate(x, y + 0.05F, z);
-        } else {
-            poseStack.translate(x, y + 0.01F, z);
-        }
-        poseStack.scale(scale, scale, scale);
-        poseStack.mulPose(Axis.YP.rotationDegrees(switch(facing){
+        pose.pushPose();
+        pose.translate(x, isABlock ? 1.05F : 1.01F, z);
+        pose.scale(scale, scale, scale);
+        pose.mulPose(Axis.YP.rotationDegrees(switch(state.facing){
             case NORTH -> -90f;
             case SOUTH -> 90f;
             case WEST  -> 0f;
             case EAST  -> 180f;
             default    -> 0f;
         }));
-        poseStack.mulPose(Axis.XP.rotationDegrees(90));
+        pose.mulPose(Axis.XP.rotationDegrees(90));
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, buffer, level, 0);
-        poseStack.popPose();
+        item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        pose.popPose();
+    }
+
+    @Override
+    public StygianAnvilBlockEntityRenderState createRenderState() {
+        return new StygianAnvilBlockEntityRenderState();
+    }
+
+    @Override
+    public void extractRenderState(StygianAnvilBlockEntity blockEntity, StygianAnvilBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+
+        renderState.facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+
+        ItemStack item = blockEntity.inventoryHandler.getStackInSlot(StygianAnvilBlockEntity.BASE_SLOT);
+        itemModelResolver.updateForTopItem(renderState.base, item, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        renderState.isBaseABlock = item.getItem() instanceof BlockItem;
+
+        item = blockEntity.inventoryHandler.getStackInSlot(StygianAnvilBlockEntity.FIRST_COMPLEMENTARY_SLOT);
+        itemModelResolver.updateForTopItem(renderState.firstComplementary, item, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        renderState.isFirstComplementaryABlock = item.getItem() instanceof BlockItem;
+
+        item = blockEntity.inventoryHandler.getStackInSlot(StygianAnvilBlockEntity.SECOND_COMPLEMENTARY_SLOT);
+        itemModelResolver.updateForTopItem(renderState.secondComplementary, item, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        renderState.isSecondComplementaryABlock = item.getItem() instanceof BlockItem;
+
+        item = blockEntity.inventoryHandler.getStackInSlot(StygianAnvilBlockEntity.THIRD_COMPLEMENTARY_SLOT);
+        itemModelResolver.updateForTopItem(renderState.thirdComplementary, item, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        renderState.isThirdComplementaryABlock = item.getItem() instanceof BlockItem;
+
+        item = blockEntity.inventoryHandler.getStackInSlot(StygianAnvilBlockEntity.FOURTH_COMPLEMENTARY_SLOT);
+        itemModelResolver.updateForTopItem(renderState.fourthComplementary, item, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        renderState.isFourthComplementaryABlock = item.getItem() instanceof BlockItem;
     }
 }

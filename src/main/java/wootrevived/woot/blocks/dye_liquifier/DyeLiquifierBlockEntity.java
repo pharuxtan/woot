@@ -22,10 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -41,9 +42,10 @@ import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.entity.WootMachineBlockEntity;
 import wootrevived.woot.util.entity.WootTags;
+import wootrevived.woot.util.handlers.WootCombinedItemHandler;
 import wootrevived.woot.util.handlers.WootFluidHandlerWrapper;
 import wootrevived.woot.util.handlers.WootItemHandlerWrapper;
-import wootrevived.woot.util.handlers.WootItemStackHandler;
+import wootrevived.woot.util.handlers.WootItemResourceHandler;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
 import java.util.*;
@@ -84,7 +86,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
         super.tick(level, pos, state, blockEntity);
 
-        if(level.isClientSide)
+        if(level.isClientSide())
             return;
 
         generatePureFluid();
@@ -95,61 +97,61 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         tickFluid(outputTankHandler, pos, DyeLiquifierConfig.FLUID_TRANSFER.get(), side -> getProperties(side).getOutputFluidProperty());
     }
 
-    public final WootItemStackHandler redInventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemResourceHandler redInventoryHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack s) {
             DyeLiquifierBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.RED);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.RED);
         }
     };
 
-    public final WootItemStackHandler yellowInventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemResourceHandler yellowInventoryHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack s) {
             DyeLiquifierBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.YELLOW);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.YELLOW);
         }
     };
 
-    public final WootItemStackHandler blueInventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemResourceHandler blueInventoryHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack s) {
             DyeLiquifierBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.BLUE);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.BLUE);
         }
     };
 
-    public final WootItemStackHandler whiteInventoryHandler = new WootItemStackHandler(false) {
+    public final WootItemResourceHandler whiteInventoryHandler = new WootItemResourceHandler(false) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack s) {
             DyeLiquifierBlockEntity.this.onContentsChanged(slot);
             setChanged();
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return DyeLiquifierRecipe.Validator.isIngredientValid(stack, DyeLiquifierRecipe.Colors.WHITE);
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
+            return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.WHITE);
         }
     };
 
     public static int INPUT_SLOT = 0;
-    private final IItemHandler allSlotsHandler = new CombinedInvWrapper(redInventoryHandler, yellowInventoryHandler, blueInventoryHandler, whiteInventoryHandler);
-    public IItemHandler getInventory() { return allSlotsHandler; }
+    private final ItemStacksResourceHandler allSlotsHandler = new WootCombinedItemHandler(redInventoryHandler, yellowInventoryHandler, blueInventoryHandler, whiteInventoryHandler);
+    public ItemStacksResourceHandler getInventory() { return allSlotsHandler; }
 
     public record Properties(DyeLiquifierBlockEntity entity, MachineSide machineSide){
         public MachineSideProperty getRedIngredientProperty(){
@@ -178,7 +180,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         return new Properties(this, MachineSide.getMachineSide(facing, side));
     }
 
-    public static IItemHandler getItemHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<ItemResource> getItemHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.allSlotsHandler;
 
@@ -191,7 +193,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
                 .addHandler(blockEntity.whiteInventoryHandler, properties::getWhiteIngredientProperty);
     }
 
-    public static IFluidHandler getFluidHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
+    public static ResourceHandler<FluidResource> getFluidHandlerCapability(DyeLiquifierBlockEntity blockEntity, @Nullable Direction side){
         if(side == null)
             return blockEntity.outputTankHandler;
 
@@ -203,12 +205,12 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     private DyeLiquifierData.Component getComponent(){
         return new DyeLiquifierData.Component(
-                energyHandler.getEnergyStored(),
+                energyHandler.getAmountAsInt(),
                 getRed(),
                 getYellow(),
                 getBlue(),
                 getWhite(),
-                getOutputTank().getFluid(),
+                getOutputTank().getStack(),
                 getAllMachineSidesProperties()
         );
     }
@@ -219,7 +221,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         yellow = component.yellow();
         blue = component.blue();
         white = component.white();
-        getOutputTank().setFluid(component.outputFluid());
+        getOutputTank().setStack(component.outputFluid());
         // Make properties loading compatible with the previous only 2 properties stored info
         List<EnumMap<MachineSide, MachineSideProperty>> propertiesList = component.listMachineProperties();
         for(int i = 0; i < propertiesList.size(); i++){
@@ -283,28 +285,28 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     public void dropContents(Level level, BlockPos pos) {
         List<ItemStack> drops = new ArrayList<>();
 
-        ItemStack itemStack = redInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        ItemStack itemStack = redInventoryHandler.getStackInSlot(INPUT_SLOT);
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            redInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            redInventoryHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
         }
 
-        itemStack = yellowInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        itemStack = yellowInventoryHandler.getStackInSlot(INPUT_SLOT);
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            yellowInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            yellowInventoryHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
         }
 
-        itemStack = blueInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        itemStack = blueInventoryHandler.getStackInSlot(INPUT_SLOT);
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            blueInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            blueInventoryHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
         }
 
-        itemStack = whiteInventoryHandler.getStackInSlot(INPUT_SLOT).copy();
+        itemStack = whiteInventoryHandler.getStackInSlot(INPUT_SLOT);
         if (!itemStack.isEmpty()) {
             drops.add(itemStack);
-            whiteInventoryHandler.insertItem(INPUT_SLOT, ItemStack.EMPTY, false);
+            whiteInventoryHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
         }
 
         super.dropContents(drops);
@@ -340,11 +342,16 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     private final Map<Integer, DyeLiquifierRecipe> recipes = new HashMap<>();
 
     @Override
-    protected boolean hasEnergy() { return energyHandler.getEnergyStored() > 0; }
+    protected boolean hasEnergy() { return energyHandler.getAmountAsInt() > 0; }
 
     @Override
     protected int useEnergy(){
-        return energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), false);
+        int used = 0;
+        try (var tx = Transaction.openRoot()){
+            used = energyHandler.internalExtractEnergy(getEnergyProcessTransfer(), tx);
+            tx.commit();
+        }
+        return used;
     }
 
     @Override
@@ -359,7 +366,10 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     private void generatePureFluid() {
         while (canCreateOutput() && canStoreOutput()) {
-            outputTankHandler.fill(new FluidStack(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get()), IFluidHandler.FluidAction.EXECUTE);
+            try (Transaction tx = Transaction.openRoot()) {
+                outputTankHandler.insert(FluidResource.of(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get()), DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get(), tx);
+                tx.commit();
+            }
             red -= DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get();
             yellow -= DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get();
             blue -= DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get();
@@ -446,7 +456,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
 
     @Override
     protected boolean canProcess(boolean checkEnergy) {
-        if (checkEnergy && energyHandler.getEnergyStored() <= 0)
+        if (checkEnergy && energyHandler.getAmountAsInt() <= 0)
             return false;
 
         getRecipe();
@@ -521,7 +531,11 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
                 blue >= DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get() &&
                 white >= DyeLiquifierConfig.COLOR_PRODUCE_AMOUNT.get();
     }
-    private boolean canStoreOutput() { return outputTankHandler.fill(new FluidStack(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get(), DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get()), IFluidHandler.FluidAction.SIMULATE ) == DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get(); }
+    private boolean canStoreOutput() {
+        try (var tx = Transaction.openRoot()){
+            return outputTankHandler.insert(FluidResource.of(FluidsRegistry.SOURCE_PURE_DYE_FLUID.get()), DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get(), tx) == DyeLiquifierConfig.PURE_DYE_PRODUCE_AMOUNT.get();
+        }
+    }
 
     public int getEnergyCapacity(){
         return DyeLiquifierConfig.ENERGY_CAPACITY.get();
@@ -547,7 +561,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         return false;
     }
 
-    public Predicate<FluidStack> getInputFluidValidator() {
+    public Predicate<FluidResource> getInputFluidValidator() {
         return null;
     }
 

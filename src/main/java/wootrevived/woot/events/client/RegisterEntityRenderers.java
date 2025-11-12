@@ -10,8 +10,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
+import wootrevived.woot.client.render.factory.FactoryBlockEntityRenderState;
 import wootrevived.woot.client.render.factory.FactoryBlockEntityRenderer;
 import wootrevived.woot.client.render.mob_shard.MobShardProjectileRenderer;
+import wootrevived.woot.client.render.stygian_anvil.StygianAnvilBlockEntityRenderState;
 import wootrevived.woot.client.render.stygian_anvil.StygianAnvilBlockEntityRenderer;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
@@ -22,17 +24,17 @@ public class RegisterEntityRenderers {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ItemsRegistry.MOB_SHARD_PROJECTILE.get(), MobShardProjectileRenderer::new);
 
-        event.registerBlockEntityRenderer(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ENTITY.get(), new BlockEntityRendererProvider<>() {
+        event.registerBlockEntityRenderer(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ENTITY.get(), new BlockEntityRendererProvider<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState>() {
             @Override
-            public @NotNull BlockEntityRenderer<StygianAnvilBlockEntity> create(@NotNull Context context) {
-                return new StygianAnvilBlockEntityRenderer();
+            public BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> create(@NotNull Context context) {
+                return new StygianAnvilBlockEntityRenderer(context);
             }
         });
 
-        BlockEntityRendererProvider<BlockEntity> factoryProvider = new BlockEntityRendererProvider<>() {
+        BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState> factoryProvider = new BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState>() {
             @Override
-            public @NotNull BlockEntityRenderer<BlockEntity> create(@NotNull Context context) {
-                return new FactoryBlockEntityRenderer();
+            public @NotNull BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> create(@NotNull Context context) {
+                return new FactoryBlockEntityRenderer(context);
             }
         };
 

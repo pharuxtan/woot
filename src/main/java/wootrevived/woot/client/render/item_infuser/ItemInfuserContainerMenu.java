@@ -9,8 +9,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.item_infuser.ItemInfuserBlockEntity;
 import wootrevived.woot.recipes.item_infuser.ItemInfuserRecipe;
@@ -39,10 +39,10 @@ public class ItemInfuserContainerMenu extends WootContainerMenu {
         this(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }
 
-    private void createMachineInputSlots(IItemHandler machineInventory){
-        this.addSlot(new SlotItemHandler(machineInventory, 0, 65, 40));
-        this.addSlot(new SlotItemHandler(machineInventory, 1, 85, 40));
-        this.addSlot(new SlotItemHandler(machineInventory, 2, 141, 40){
+    private void createMachineInputSlots(ItemStacksResourceHandler machineInventory){
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 0, 65, 40));
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 1, 85, 40));
+        this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 2, 141, 40){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return false;

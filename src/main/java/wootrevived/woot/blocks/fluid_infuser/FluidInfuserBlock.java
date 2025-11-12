@@ -31,8 +31,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -152,10 +154,13 @@ public class FluidInfuserBlock extends Block implements EntityBlock {
 
         @Override
         public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-            if (level.isClientSide)
+            if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 
-            if (FluidUtil.getFluidHandler(heldItem).isPresent())
+            var itemAccess = ItemAccess.forPlayerInteraction(player, hand).oneByOne();
+            var handHandler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+
+            if(handHandler != null)
                 return FluidUtil.interactWithFluidHandler(player, hand, level, hit.getBlockPos(), hit.getDirection()) ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
 
             if (!(level.getBlockEntity(hit.getBlockPos()) instanceof FluidInfuserBlockEntity blockEntity))

@@ -3,7 +3,7 @@
     size: [1, 2, 1],
     data: [
         {pos: [0, 0, 0], state: "minecraft:magma_block"},
-        {pos: [0, 1, 0], state: "woot_revived:stygian_anvil{facing:west}", nbt: {ForgeCaps: {}, InputInventory: {Items: [{Count: 1b, Slot: 0, id: "minecraft:white_dye"}, {Count: 1b, Slot: 1, id: "minecraft:quartz"}, {Count: 1b, Slot: 2, id: "woot_revived:stygian_ingot"}], Size: 5}, id: "woot_revived:stygian_anvil"}}
+        {pos: [0, 1, 0], state: "woot_revived:stygian_anvil{facing:west}", nbt: {InputInventory: {stacks: [{count: 1b, id: "minecraft:white_dye"}, {count: 1b, id: "minecraft:quartz"}, {count: 1b, id: "woot_revived:stygian_ingot"}, {}, {}]}, id: "woot_revived:stygian_anvil"}}
     ],
     entities: [],
     palette: [

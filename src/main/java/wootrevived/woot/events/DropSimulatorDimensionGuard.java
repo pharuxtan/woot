@@ -29,8 +29,8 @@ public class DropSimulatorDimensionGuard {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         if(DropSimulatorDimension.DROP_SIMULATOR_LEVEL == player.level().dimension()){
-            ServerLevel overworld = player.getServer().overworld();
-            BlockPos respawnPos = overworld.getSharedSpawnPos();
+            ServerLevel overworld = player.level().getServer().overworld();
+            BlockPos respawnPos = overworld.getRespawnData().pos();
             player.teleportTo(overworld, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
         }
     }

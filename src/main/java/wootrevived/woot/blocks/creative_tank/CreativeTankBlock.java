@@ -21,8 +21,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.Woot;
@@ -71,8 +73,11 @@ public class CreativeTankBlock extends Block implements EntityBlock {
             if (!(level.getBlockEntity(hit.getBlockPos()) instanceof CreativeTankBlockEntity createTankBlockEntity))
                 throw new IllegalStateException("BlockEntity is missing");
 
-            if (FluidUtil.getFluidHandler(heldItem).isPresent()) {
-                FluidStack stack = FluidUtil.getFluidHandler(heldItem).map(h -> h.getFluidInTank(0)).orElse(FluidStack.EMPTY);
+            var itemAccess = ItemAccess.forPlayerInteraction(player, hand).oneByOne();
+            var handHandler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+
+            if (handHandler != null) {
+                FluidStack stack = FluidUtil.getFirstStackContained(heldItem);
                 createTankBlockEntity.emptyIfDifferentFluidStack(stack);
                 if (FluidUtil.interactWithFluidHandler(player, hand, level, hit.getBlockPos(), hit.getDirection())) {
                     createTankBlockEntity.setMaxCapacity();

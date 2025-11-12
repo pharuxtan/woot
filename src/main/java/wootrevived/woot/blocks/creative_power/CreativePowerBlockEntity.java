@@ -7,10 +7,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.BlocksRegistry;
+import wootrevived.woot.util.handlers.WootEnergyHandler;
 
 public class CreativePowerBlockEntity extends BlockEntity implements BlockEntityTicker<BlockEntity> {
     public CreativePowerBlockEntity(BlockPos pos, BlockState state) {
@@ -25,27 +26,34 @@ public class CreativePowerBlockEntity extends BlockEntity implements BlockEntity
 
     @Override
     public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
 
         for (Direction facing : Direction.values()) {
-            IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, getBlockPos().relative(facing), facing.getOpposite());
+            EnergyHandler storage = level.getCapability(Capabilities.Energy.BLOCK, getBlockPos().relative(facing), facing.getOpposite());
             if(storage == null)
                 continue;
 
-            if(storage.canReceive())
-                storage.receiveEnergy(1000, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                storage.insert(1000, tx);
+                tx.commit();
+            }
         }
     }
 
-    private final EnergyStorage energyHandler = createEnergy();
-    private EnergyStorage createEnergy() {
-        EnergyStorage es = new EnergyStorage(Integer.MAX_VALUE);
-        es.receiveEnergy(Integer.MAX_VALUE, false);
+    private final EnergyHandler energyHandler = createEnergy();
+    private EnergyHandler createEnergy() {
+        EnergyHandler es = new WootEnergyHandler(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+        try (Transaction tx = Transaction.openRoot()) {
+            es.insert(Integer.MAX_VALUE, tx);
+            tx.commit();
+        }
+
         return es;
     }
 
-    public static IEnergyStorage getEnergyStorageCapability(CreativePowerBlockEntity blockEntity, Direction side){
+    public static EnergyHandler getEnergyStorageCapability(CreativePowerBlockEntity blockEntity, Direction side){
         return blockEntity.energyHandler;
     }
 }
