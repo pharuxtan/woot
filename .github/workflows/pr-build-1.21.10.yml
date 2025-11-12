@@ -1,9 +1,9 @@
-name: PR Build 1.21.8
+name: PR Build 1.21.10
 
 on:
   pull_request_target:
     branches:
-      - 1.21.8
+      - 1.21.10
 
 permissions:
   contents: read
