@@ -25,7 +25,7 @@ public class Looting extends WootUpgradeItem {
     public Looting(int level) { super(new Properties(), level); }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag itemTag) {
         ItemStack itemStack = properties.getMainHandItem();
 
         if(itemStack.getItem().isEnchantable(itemStack))

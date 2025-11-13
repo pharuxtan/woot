@@ -26,7 +26,7 @@ public class Efficiency extends WootUpgradeItem {
     private static final float[] PERCENTAGES = new float[] { 10, 20, 30, 40, 50 };
 
     @Override
-    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
+    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag itemTag) {
         int cost = properties.getVitalityFuelCost();
         float ratio = 1F - PERCENTAGES[getLevel()-1] / 100F;
         properties.setVitalityFuelCost((int)Math.ceil(cost * ratio));

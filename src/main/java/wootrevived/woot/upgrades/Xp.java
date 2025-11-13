@@ -27,7 +27,7 @@ public class Xp extends WootUpgradeItem {
     private static final int[] PERCENTAGES = new int[] { 50, 75, 100, 125, 150 };
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
         List<ItemStack> drops = properties.getItemDrops();
 
         int experience = Math.round(properties.getExperience() * (PERCENTAGES[getLevel() - 1] / 100F));

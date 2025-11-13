@@ -29,7 +29,7 @@ public class ShardDrop extends WootUpgradeItem {
     private static final int[] PERCENTAGES = new int[] { 50, 30, 15, 5 };
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
         Tier tier = properties.getFactoryTier();
         List<ItemStack> drops = properties.getItemDrops();
         RandomSource random = properties.getRandom();

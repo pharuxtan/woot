@@ -26,7 +26,7 @@ public class Rate extends WootUpgradeItem {
     private static final int[] PERCENTAGES = new int[] { 10, 20, 30, 50, 75 };
 
     @Override
-    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
+    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag itemTag) {
         int rate = properties.getSpawnRate();
         float ratio = 1F - PERCENTAGES[getLevel()-1] / 100F;
         properties.setSpawnRate((int)Math.ceil(rate * ratio));

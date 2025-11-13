@@ -27,7 +27,7 @@ public class Decapitate extends WootUpgradeItem {
     public Decapitate(int level) { super(new Properties(), level); }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag itemTag) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -41,7 +41,7 @@ public class Decapitate extends WootUpgradeItem {
     );
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){
