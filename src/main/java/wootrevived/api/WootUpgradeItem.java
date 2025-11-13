@@ -1,14 +1,15 @@
 package wootrevived.api;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.ApiStatus;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -37,52 +38,73 @@ public abstract class WootUpgradeItem extends Item {
     }
 
     /**
-     * Initialize the per-upgrade persistent data container.
+     * Initializes the persistent component container for this upgrade item.
      * <p>
-     * This method is called when the upgrade is installed into a factory.
-     * Addons can use the provided {@code upgradeTag} to store any default keys
-     * or values they need to persist while the upgrade remains installed.
+     * Called when the upgrade is first used by a factory. Implementations may
+     * write default component values into {@code dataComponentHolder}.
      * <p>
-     * The same {@code upgradeTag} instance is passed to later hooks so stored data
-     * can be read or updated across lifecycle stages.
-     * <p>
-     * Note that the tag is <strong>reset each time the player removes and re-adds
-     * the upgrade</strong> to the factory. It should therefore only be used
-     * for runtime or per-installation state, not for long-term persistence.
+     * The backing storage is attached to the item, so values written here
+     * are preserved while the item exists, including when it is removed from
+     * and reinserted into a factory or moved between inventories.
      *
-     * @param upgradeTag persistent data for this upgrade instance
-     * @param registryAccess access to the current registry view
+     * @param dataComponentHolder container for persistent per-upgrade data on this item
+     * @param level the world level containing the upgrade block
+     * @param pos the position of the upgrade block using this upgrade
      */
-    public void initUpgradeTag(CompoundTag upgradeTag, RegistryAccess registryAccess) {
+    public void initDataComponents(MutableDataComponentHolder dataComponentHolder, Level level, BlockPos pos) {
     }
 
     /**
-     * Allows upgrades to adjust factory generation properties
-     * before any ingredients or vitality fuel are consumed.
+     * Clears or adjusts the persistent component data before the item is
+     * removed from a factory. Implementations may remove component keys or
+     * reset values stored on the item's data components.
      * <p>
-     * @param properties mutable generation properties
-     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     * This hook is called immediately before the upgrade item leaves the
+     * upgrade block, allowing cleanup of per-installation state while
+     * preserving any long‑term item data as needed.
+     *
+     * @param dataComponentHolder container for persistent per-upgrade data on this item
+     * @param level the world level containing the upgrade block
+     * @param pos the position of the upgrade block using this upgrade
      */
-    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
+    public void deinitDataComponents(MutableDataComponentHolder dataComponentHolder, Level level, BlockPos pos) {
     }
 
     /**
-     * Allows upgrades to adjust the mob's spawn properties
-     * before the simulation begins.
+     * Modifies the factory's generation-phase configuration.
      * <p>
-     * @param properties mutable spawn properties
-     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     * Invoked before the factory consumes any ingredients or vitality fuel.
+     * Implementations may mutate {@code properties} to influence cost,
+     * throughput, mob selection, or other generation parameters.
+     *
+     * @param properties mutable generation configuration
+     * @param dataComponentHolder persistent upgrade data
      */
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag){
+    public void applyGenerationProperties(WootGenerationProperties properties, MutableDataComponentHolder dataComponentHolder) {
     }
 
     /**
-     * Allows upgrades to inspect and modify drops produced by the simulation.
+     * Modifies spawn-phase configuration before the mob simulation is made.
      * <p>
-     * @param properties mutable access to item/fluids/XP drops and context
-     * @param upgradeTag persistent data for this upgrade across lifecycle stages
+     * Implementations may adjust mob attributes, environmental conditions,
+     * simulation flags, or other runtime spawn parameters.
+     *
+     * @param properties mutable spawn configuration
+     * @param dataComponentHolder persistent upgrade data
      */
-    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder){
+    }
+
+    /**
+     * Inspects or mutates outputs produced by the completed simulation.
+     * <p>
+     * Implementations may change item drops, fluid amounts, experience values,
+     * or contextual metadata available via {@code properties}.
+     *
+     * @param properties mutable access to post-simulation drop data
+     * @param dataComponentHolder persistent upgrade data
+     */
+    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
     }
 
     /**
