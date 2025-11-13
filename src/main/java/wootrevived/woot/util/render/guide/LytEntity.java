@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.util.helper.SerializeEntityNBTHelper;
-import wootrevived.woot.util.render.entity.WootEntityRenderer;
+import wootrevived.woot.util.render.WootEntityRenderer;
 
 import java.util.Optional;
 

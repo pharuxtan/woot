@@ -13,8 +13,7 @@
     "LevelMixin",
     "LivingEntityMixin",
     "PersistentEntitySectionManagerMixin",
-    "ServerLevelMixin",
-    "TesselatorMixin"
+    "ServerLevelMixin"
   ],
   "client": [
     "BufferSourceMixin"

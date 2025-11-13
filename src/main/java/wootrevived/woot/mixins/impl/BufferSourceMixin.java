@@ -15,23 +15,30 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import wootrevived.woot.util.render.entity.WootBufferSource;
+import wootrevived.woot.mixins.accessors.BufferSourceMixinAccessor;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(MultiBufferSource.BufferSource.class)
-public abstract class BufferSourceMixin {
+public abstract class BufferSourceMixin implements BufferSourceMixinAccessor {
     @Unique
     private GpuTexture woot$sampler1;
 
     @Unique
     private GpuTexture woot$sampler2;
 
+    @Unique
+    private boolean woot$isActive = false;
+
+    public void woot$setActive(boolean active){
+        woot$isActive = active;
+    }
+
     @Inject(
             method = "endBatch(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/BufferBuilder;)V",
             at = @At("HEAD")
     )
     private void woot$endBatchHead(RenderType renderType, BufferBuilder builder, CallbackInfo ci){
-        if(((Object)this) instanceof WootBufferSource) {
+        if(woot$isActive) {
             GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
             RenderPipeline pipeline = renderType.getRenderPipeline();
 
@@ -55,7 +62,7 @@ public abstract class BufferSourceMixin {
             at = @At("RETURN")
     )
     private void woot$endBatchReturn(RenderType renderType, BufferBuilder builder, CallbackInfo ci){
-        if(((Object)this) instanceof WootBufferSource) {
+        if(woot$isActive) {
             RenderSystem.setShaderTexture(1, woot$sampler1);
             RenderSystem.setShaderTexture(2, woot$sampler2);
 
