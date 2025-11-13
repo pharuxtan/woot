@@ -24,7 +24,7 @@ public class Burn extends WootUpgradeItem {
     public Burn(int level) { super(new Properties(), level); }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag itemTag) {
         properties.setIsInFire(true);
     }
 

@@ -30,7 +30,7 @@ public class Dimension extends WootUpgradeItem {
     }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag itemTag) {
         properties.setDimension(dimension);
     }
 

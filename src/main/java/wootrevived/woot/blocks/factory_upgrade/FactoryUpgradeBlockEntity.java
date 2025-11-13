@@ -31,25 +31,34 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     public FactoryUpgradeBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.FACTORY_UPGRADE_BLOCK_ENTITY.get(), pos, state);
         this.upgradeItem = null;
-        this.upgradeNBT = new CompoundTag();
+        this.upgradeStack = ItemStack.EMPTY;
     }
 
     private WootUpgradeItem upgradeItem;
-    private CompoundTag upgradeNBT;
+    private ItemStack upgradeStack;
 
     public void applyGenerationProperties(WootGenerationProperties properties){
-        if(upgradeItem != null)
-            upgradeItem.applyGenerationProperties(properties, upgradeNBT);
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.applyGenerationProperties(properties, tag);
+            upgradeStack.setTag(tag);
+        }
     }
 
     public void applySpawnProperties(WootSpawnProperties properties){
-        if(upgradeItem != null)
-            upgradeItem.applySpawnProperties(properties, upgradeNBT);
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.applySpawnProperties(properties, tag);
+            upgradeStack.setTag(tag);
+        }
     }
 
     public void modifyDrops(WootDropsProperties properties){
-        if(upgradeItem != null)
-            upgradeItem.modifyDrops(properties, upgradeNBT);
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.modifyDrops(properties, tag);
+            upgradeStack.setTag(tag);
+        }
     }
 
     public String getUpgradeItemName() {
@@ -57,56 +66,73 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     public ItemStack getUpgradeItemStack() {
-        return upgradeItem == null ? ItemStack.EMPTY : upgradeItem.getDefaultInstance();
+        return upgradeStack;
     }
 
     public void addUpgrade(Level level, Player player, InteractionHand hand, ItemStack stack, WootUpgradeItem newUpgradeItem){
-        if(upgradeItem == newUpgradeItem)
-            return;
+        ItemStack oldStack = upgradeStack;
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.deinitItemTag(tag, level, getBlockPos());
+            upgradeStack.setTag(tag);
+        }
 
-        WootUpgradeItem oldUpgradeItem = upgradeItem;
         upgradeItem = newUpgradeItem;
-        newUpgradeItem.initUpgradeTag(upgradeNBT = new CompoundTag(), level.registryAccess());
+        upgradeStack = stack.copyWithCount(1);
+        CompoundTag tag = upgradeStack.getOrCreateTag();
+        newUpgradeItem.initItemTag(tag, level, getBlockPos());
+        upgradeStack.setTag(tag);
         setChanged();
         player.swing(hand);
 
         if (!player.isCreative()){
             stack.shrink(1);
-            if(oldUpgradeItem != null){
+            if(!oldStack.isEmpty()){
                 if(stack.isEmpty()){
-                    player.setItemInHand(hand, oldUpgradeItem.getDefaultInstance());
+                    player.setItemInHand(hand, oldStack);
                 } else {
-                    dropItem(level, player.getOnPos().above(), oldUpgradeItem);
+                    dropItem(level, player.getOnPos().above(), oldStack);
                 }
             }
         }
     }
 
     public void removeUpgrade(Level level, Player player, InteractionHand hand){
-        WootUpgradeItem oldUpgradeItem = upgradeItem;
+        ItemStack oldStack = upgradeStack;
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.deinitItemTag(tag, level, getBlockPos());
+            upgradeStack.setTag(tag);
+        }
+
         upgradeItem = null;
-        upgradeNBT = new CompoundTag();
+        upgradeStack = ItemStack.EMPTY;
         setChanged();
         player.swing(hand);
 
-        if(oldUpgradeItem != null){
+        if(!oldStack.isEmpty()){
             if(player.getItemInHand(hand).isEmpty()){
-                player.setItemInHand(hand, oldUpgradeItem.getDefaultInstance());
+                player.setItemInHand(hand, oldStack);
             } else {
-                dropItem(level, player.getOnPos().above(), oldUpgradeItem);
+                dropItem(level, player.getOnPos().above(), oldStack);
             }
         }
     }
 
     public void dropItem(Level level, BlockPos pos) {
-        if (upgradeItem == null)
+        if (upgradeStack.isEmpty())
             return;
 
-        dropItem(level, pos, upgradeItem);
+        if(upgradeItem != null) {
+            CompoundTag tag = upgradeStack.getOrCreateTag();
+            upgradeItem.deinitItemTag(tag, level, getBlockPos());
+            upgradeStack.setTag(tag);
+        }
+
+        dropItem(level, pos, upgradeStack);
     }
 
-    public void dropItem(Level level, BlockPos pos, WootUpgradeItem upgradeItem){
-        ItemStack stack = upgradeItem.getDefaultInstance();
+    public void dropItem(Level level, BlockPos pos, ItemStack stack){
         Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
@@ -114,7 +140,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     protected void saveAdditional(@NotNull CompoundTag tag){
         super.saveAdditional(tag);
         tag.put(WootTags.Factory.UPGRADE_ITEM, StringTag.valueOf(getUpgradeItemName()));
-        tag.put(WootTags.Factory.UPGRADE_ITEM_NBT, upgradeNBT);
+        tag.put(WootTags.Factory.UPGRADE_ITEM_STACK, upgradeStack.save(new CompoundTag()));
     }
 
     @Override
@@ -128,8 +154,12 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
             this.upgradeItem = null;
         }
 
-        if(tag.contains(WootTags.Factory.UPGRADE_ITEM_NBT)) {
-            this.upgradeNBT = tag.getCompound(WootTags.Factory.UPGRADE_ITEM_NBT);
+        if(this.upgradeItem == null){
+            this.upgradeStack = ItemStack.EMPTY;
+        } else if(tag.contains(WootTags.Factory.UPGRADE_ITEM_STACK)) {
+            this.upgradeStack = ItemStack.of(tag.getCompound(WootTags.Factory.UPGRADE_ITEM_STACK));
+        } else {
+            this.upgradeStack = this.upgradeItem.getDefaultInstance();
         }
     }
 
