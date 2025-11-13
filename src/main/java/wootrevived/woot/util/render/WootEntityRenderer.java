@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -57,8 +56,7 @@ public class WootEntityRenderer {
                 (int)Math.ceil(size * windowScale * poseScale.x),
                 (int)Math.ceil(size * windowScale * poseScale.y)
         );
-        Tesselator tesselator = Tesselator.getInstance();
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(tesselator.getBuilder());
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         Lighting.setupForFlatItems();
 
         renderer.render(entity, 0F, 0F, pose, bufferSource, LightTexture.pack(15, 15));
