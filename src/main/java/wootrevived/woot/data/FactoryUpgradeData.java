@@ -2,10 +2,10 @@ package wootrevived.woot.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.entity.WootTags;
 
@@ -17,18 +17,18 @@ public final class FactoryUpgradeData {
     public static final Codec<Component> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     Codec.STRING.optionalFieldOf(WootTags.Factory.UPGRADE_ITEM).forGetter(Component::upgradeItem),
-                    CompoundTag.CODEC.optionalFieldOf(WootTags.Factory.UPGRADE_ITEM_NBT).forGetter(Component::upgradeTag)
+                    ItemStack.OPTIONAL_CODEC.optionalFieldOf(WootTags.Factory.UPGRADE_ITEM_STACK).forGetter(Component::upgradeStack)
             ).apply(inst, Component::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), Component::upgradeItem,
-            ByteBufCodecs.OPTIONAL_COMPOUND_TAG, Component::upgradeTag,
+            ByteBufCodecs.optional(ItemStack.OPTIONAL_STREAM_CODEC), Component::upgradeStack,
             Component::new
     );
 
     public record Component(
             @NotNull Optional<String> upgradeItem,
-            @NotNull Optional<CompoundTag> upgradeTag
+            @NotNull Optional<ItemStack> upgradeStack
     ) {}
 }

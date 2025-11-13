@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import wootrevived.api.WootUpgradeItem;
@@ -39,7 +39,7 @@ public class Decapitate extends WootUpgradeItem {
     }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag upgradeTag) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -53,7 +53,7 @@ public class Decapitate extends WootUpgradeItem {
     );
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag upgradeTag) {
+    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){
