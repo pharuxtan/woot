@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import wootrevived.api.WootUpgradeItem;
@@ -37,7 +37,7 @@ public class Efficiency extends WootUpgradeItem {
     private static final float[] PERCENTAGES = new float[] { 10, 20, 30, 40, 50 };
 
     @Override
-    public void applyGenerationProperties(WootGenerationProperties properties, CompoundTag upgradeTag) {
+    public void applyGenerationProperties(WootGenerationProperties properties, MutableDataComponentHolder dataComponentHolder) {
         int cost = properties.getVitalityFuelCost();
         float ratio = 1F - PERCENTAGES[getLevel()-1] / 100F;
         properties.setVitalityFuelCost((int)Math.ceil(cost * ratio));

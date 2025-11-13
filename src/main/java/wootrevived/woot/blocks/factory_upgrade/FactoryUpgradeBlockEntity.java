@@ -33,25 +33,25 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     public FactoryUpgradeBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.FACTORY_UPGRADE_BLOCK_ENTITY.get(), pos, state);
         this.upgradeItem = null;
-        this.upgradeNBT = new CompoundTag();
+        this.upgradeStack = ItemStack.EMPTY;
     }
 
     private WootUpgradeItem upgradeItem;
-    private CompoundTag upgradeNBT;
+    private ItemStack upgradeStack;
 
     public void applyGenerationProperties(WootGenerationProperties properties){
         if(upgradeItem != null)
-            upgradeItem.applyGenerationProperties(properties, upgradeNBT);
+            upgradeItem.applyGenerationProperties(properties, upgradeStack);
     }
 
     public void applySpawnProperties(WootSpawnProperties properties){
         if(upgradeItem != null)
-            upgradeItem.applySpawnProperties(properties, upgradeNBT);
+            upgradeItem.applySpawnProperties(properties, upgradeStack);
     }
 
     public void modifyDrops(WootDropsProperties properties){
         if(upgradeItem != null)
-            upgradeItem.modifyDrops(properties, upgradeNBT);
+            upgradeItem.modifyDrops(properties, upgradeStack);
     }
 
     public String getUpgradeItemName() {
@@ -59,43 +59,47 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     public ItemStack getUpgradeItemStack() {
-        return upgradeItem == null ? ItemStack.EMPTY : upgradeItem.getDefaultInstance();
+        return upgradeStack;
     }
 
     public void addUpgrade(Level level, Player player, InteractionHand hand, ItemStack stack, WootUpgradeItem newUpgradeItem){
-        if(upgradeItem == newUpgradeItem)
-            return;
+        ItemStack oldStack = upgradeStack;
+        if(upgradeItem != null)
+            upgradeItem.deinitDataComponents(oldStack, level, getBlockPos());
 
-        WootUpgradeItem oldUpgradeItem = upgradeItem;
         upgradeItem = newUpgradeItem;
-        newUpgradeItem.initUpgradeTag(upgradeNBT = new CompoundTag(), level.registryAccess());
+        upgradeStack = stack.copyWithCount(1);
+        newUpgradeItem.initDataComponents(upgradeStack, level, getBlockPos());
         setChanged();
         player.swing(hand);
 
         if (!player.isCreative()){
             stack.shrink(1);
-            if(oldUpgradeItem != null){
+            if(!oldStack.isEmpty()){
                 if(stack.isEmpty()){
-                    player.setItemInHand(hand, oldUpgradeItem.getDefaultInstance());
+                    player.setItemInHand(hand, oldStack);
                 } else {
-                    dropItem(level, player.getOnPos().above(), oldUpgradeItem);
+                    dropItem(level, player.getOnPos().above(), oldStack);
                 }
             }
         }
     }
 
     public void removeUpgrade(Level level, Player player, InteractionHand hand){
-        WootUpgradeItem oldUpgradeItem = upgradeItem;
+        ItemStack oldStack = upgradeStack;
+        if(upgradeItem != null)
+            upgradeItem.deinitDataComponents(oldStack, level, getBlockPos());
+
         upgradeItem = null;
-        upgradeNBT = new CompoundTag();
+        upgradeStack = ItemStack.EMPTY;
         setChanged();
         player.swing(hand);
 
-        if(oldUpgradeItem != null){
+        if(!oldStack.isEmpty()){
             if(player.getItemInHand(hand).isEmpty()){
-                player.setItemInHand(hand, oldUpgradeItem.getDefaultInstance());
+                player.setItemInHand(hand, oldStack);
             } else {
-                dropItem(level, player.getOnPos().above(), oldUpgradeItem);
+                dropItem(level, player.getOnPos().above(), oldStack);
             }
         }
     }
@@ -106,19 +110,21 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     public void dropItem(Level level, BlockPos pos) {
-        if (upgradeItem == null)
+        if (upgradeStack.isEmpty())
             return;
 
-        dropItem(level, pos, upgradeItem);
+        if(upgradeItem != null)
+            upgradeItem.deinitDataComponents(upgradeStack, level, getBlockPos());
+
+        dropItem(level, pos, upgradeStack);
     }
 
-    public void dropItem(Level level, BlockPos pos, WootUpgradeItem upgradeItem){
-        ItemStack stack = upgradeItem.getDefaultInstance();
+    public void dropItem(Level level, BlockPos pos, ItemStack stack){
         Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
     private FactoryUpgradeData.Component getComponent(){
-        return new FactoryUpgradeData.Component(Optional.ofNullable(getUpgradeItemName()), Optional.of(upgradeNBT));
+        return new FactoryUpgradeData.Component(Optional.ofNullable(getUpgradeItemName()), Optional.of(upgradeStack));
     }
 
     private void setComponent(FactoryUpgradeData.Component component){
@@ -127,7 +133,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         }, () -> {
             this.upgradeItem = null;
         });
-        upgradeNBT = component.upgradeTag().orElse(new CompoundTag());
+        this.upgradeStack = upgradeItem == null ? ItemStack.EMPTY : component.upgradeStack().orElse(upgradeItem.getDefaultInstance());
     }
 
     @Override
