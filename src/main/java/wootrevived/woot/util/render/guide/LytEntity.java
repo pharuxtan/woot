@@ -10,7 +10,7 @@ import guideme.scene.level.GuidebookLevel;
 import net.minecraft.world.entity.LivingEntity;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.util.helper.SerializeEntityValueHelper;
-import wootrevived.woot.util.render.entity.WootEntityRenderer;
+import wootrevived.woot.util.render.WootEntityRenderer;
 
 import java.util.Optional;
 

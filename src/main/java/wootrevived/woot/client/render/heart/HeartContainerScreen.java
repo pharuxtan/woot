@@ -37,7 +37,7 @@ import wootrevived.woot.util.render.WootResourceHandlerSlot;
 import wootrevived.woot.util.render.WootSlot;
 import wootrevived.woot.util.render.buttons.WootHeartInputButton;
 import wootrevived.woot.util.render.buttons.WootRedstoneButton;
-import wootrevived.woot.util.render.entity.WootEntityRenderer;
+import wootrevived.woot.util.render.WootEntityRenderer;
 
 import java.util.ArrayList;
 import java.util.List;

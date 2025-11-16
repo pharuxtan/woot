@@ -1,4 +1,4 @@
-package wootrevived.woot.util.render.entity;
+package wootrevived.woot.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
