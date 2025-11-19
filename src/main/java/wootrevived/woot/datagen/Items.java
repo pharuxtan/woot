@@ -11,6 +11,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import wootrevived.woot.Woot;
+import wootrevived.api.models.DynamicUpgradeItemModelBuilder;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
@@ -224,5 +225,12 @@ public class Items extends ItemModelProvider {
         getBuilder(itemResource.getPath())
                 .parent(getExistingFile(mcLoc("item/handheld")))
                 .texture("layer0", itemResource);
+    }
+
+    public void itemUpgrade(RegistryObject<?> item){
+        ResourceLocation itemResource = getItemResource((Item) item.get());
+        getBuilder(itemResource.getPath())
+                .parent(getExistingFile(mcLoc("item/generated")))
+                .customLoader(DynamicUpgradeItemModelBuilder::begin);
     }
 }

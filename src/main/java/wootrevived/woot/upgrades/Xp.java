@@ -11,6 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
 import wootrevived.woot.Woot;
@@ -21,16 +22,18 @@ import java.util.List;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class Xp extends WootUpgradeItem {
-    public Xp(int level) { super(new Properties(), level); }
+public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public Xp(UpgradeDefaultVariant variant) {
+        super(new Properties(), variant);
+    }
 
     private static final int[] PERCENTAGES = new int[] { 50, 75, 100, 125, 150 };
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
+    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull CompoundTag itemTag) {
         List<ItemStack> drops = properties.getItemDrops();
 
-        int experience = Math.round(properties.getExperience() * (PERCENTAGES[getLevel() - 1] / 100F));
+        int experience = Math.round(properties.getExperience() * (PERCENTAGES[getVariant(itemTag).level() - 1] / 100F));
         if(experience <= 0)
             return;
 
@@ -53,8 +56,8 @@ public class Xp extends WootUpgradeItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
-        tooltip.add(Component.translatable("info.woot_revived.upgrade.xp.desc.0", PERCENTAGES[getLevel() - 1]).setStyle(DESCRIPTION_STYLE));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+        tooltip.add(Component.translatable("info.woot_revived.upgrade.xp.desc.0", PERCENTAGES[getVariant(stack.getTag()).level() - 1]).setStyle(DESCRIPTION_STYLE));
     }
 
     /* Upgrade Item registration */
@@ -71,17 +74,17 @@ public class Xp extends WootUpgradeItem {
     }
 
     public static final String COPPER_XP_TAG = "copper_xp_upgrade";
-    public static final RegistryObject<Xp> COPPER_XP_ITEM = ITEMS.register(COPPER_XP_TAG, () -> new Xp(1));
+    public static final RegistryObject<Xp> COPPER_XP_ITEM = ITEMS.register(COPPER_XP_TAG, () -> new Xp(UpgradeDefaultVariant.COPPER));
 
     public static final String IRON_XP_TAG = "iron_xp_upgrade";
-    public static final RegistryObject<Xp> IRON_XP_ITEM = ITEMS.register(IRON_XP_TAG, () -> new Xp(2));
+    public static final RegistryObject<Xp> IRON_XP_ITEM = ITEMS.register(IRON_XP_TAG, () -> new Xp(UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_XP_TAG = "gold_xp_upgrade";
-    public static final RegistryObject<Xp> GOLD_XP_ITEM = ITEMS.register(GOLD_XP_TAG, () -> new Xp(3));
+    public static final RegistryObject<Xp> GOLD_XP_ITEM = ITEMS.register(GOLD_XP_TAG, () -> new Xp(UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_XP_TAG = "diamond_xp_upgrade";
-    public static final RegistryObject<Xp> DIAMOND_XP_ITEM = ITEMS.register(DIAMOND_XP_TAG, () -> new Xp(4));
+    public static final RegistryObject<Xp> DIAMOND_XP_ITEM = ITEMS.register(DIAMOND_XP_TAG, () -> new Xp(UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_XP_TAG = "netherite_xp_upgrade";
-    public static final RegistryObject<Xp> NETHERITE_XP_ITEM = ITEMS.register(NETHERITE_XP_TAG, () -> new Xp(5));
+    public static final RegistryObject<Xp> NETHERITE_XP_ITEM = ITEMS.register(NETHERITE_XP_TAG, () -> new Xp(UpgradeDefaultVariant.NETHERITE));
 }

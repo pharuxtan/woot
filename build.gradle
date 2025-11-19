@@ -15,7 +15,7 @@ sourceSets.main.resources.srcDirs += "src/main/generated"
 
 group = 'wootrevived'
 def buildVersion = "${mod_version}"
-version = "${mc_version}-${buildVersion}"
+version = "${buildVersion}"
 
 base {
     archivesName = "woot-revived"
@@ -185,7 +185,7 @@ tasks.register('apiSourcesJar', Jar) {
 
     manifest {
         attributes([
-                'Specification-Title'     : "${mod_name} API",
+                'Specification-Title'     : "${mod_name} API Sources",
                 'Specification-Vendor'    : 'pharuxtan',
                 'Specification-Version'   : "${mc_version}",
                 'Implementation-Title'    : "${mod_id}",

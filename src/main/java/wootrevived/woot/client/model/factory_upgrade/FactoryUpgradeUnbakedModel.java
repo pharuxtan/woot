@@ -17,8 +17,7 @@ import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.client.model.geometry.UnbakedGeometryHelper;
-import net.minecraftforge.registries.RegistryObject;
-import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.interfaces.WootUpgradeEnum;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 
@@ -43,8 +42,31 @@ public class FactoryUpgradeUnbakedModel implements IUnbakedGeometry<FactoryUpgra
 
         addQuads(context, builder, spriteGetter, modelState, modelLocation, factory, "");
 
-        for(RegistryObject<? extends WootUpgradeItem> upgradeItem : UpgradeItemsRegistry.getValues()){
-            String name = UpgradeItemsRegistry.getNameFromItem(upgradeItem);
+        for(UpgradeItemsRegistry.Entry<?> entry : UpgradeItemsRegistry.getEntries())
+            processEntry(builder, entry, context, spriteGetter, modelState, modelLocation);
+
+        for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
+            processDynamicEntry(builder, entry, context, spriteGetter, modelState, modelLocation);
+
+        return builder.build();
+    }
+
+    private <T extends Enum<T> & WootUpgradeEnum<T>> void processEntry(FactoryUpgradeBakedModel.Builder builder, UpgradeItemsRegistry.Entry<T> entry, IGeometryBakingContext context, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ResourceLocation modelLocation) {
+        String name = UpgradeItemsRegistry.getNameFromItem(entry.item());
+
+        TextureAtlasSprite texture = spriteGetter.apply(new Material(
+                InventoryMenu.BLOCK_ATLAS,
+                Woot.location("block/upgrade_item_" + name)
+        ));
+
+        builder.addParticle(name, texture);
+
+        addQuads(context, builder, spriteGetter, modelState, modelLocation, texture, name);
+    }
+
+    private <T extends Enum<T> & WootUpgradeEnum<T>> void processDynamicEntry(FactoryUpgradeBakedModel.Builder builder, UpgradeItemsRegistry.DynamicEntry<T> entry, IGeometryBakingContext context, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ResourceLocation modelLocation) {
+        for (T variant : entry.variantClass().getEnumConstants()) {
+            String name = variant.getSerializedName() + "_" + UpgradeItemsRegistry.getNameFromItem(entry.item());
 
             TextureAtlasSprite texture = spriteGetter.apply(new Material(
                     InventoryMenu.BLOCK_ATLAS,
@@ -55,8 +77,6 @@ public class FactoryUpgradeUnbakedModel implements IUnbakedGeometry<FactoryUpgra
 
             addQuads(context, builder, spriteGetter, modelState, modelLocation, texture, name);
         }
-
-        return builder.build();
     }
 
     @Override

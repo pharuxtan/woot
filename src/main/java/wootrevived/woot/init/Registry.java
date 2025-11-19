@@ -10,7 +10,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import wootrevived.woot.Woot;
-import wootrevived.woot.client.sprite.factory_upgrade.FactoryUpgradeDynamicSpriteSource;
+import wootrevived.woot.client.sprite.FactoryUpgradeDynamicSpriteSource;
+import wootrevived.woot.client.sprite.UpgradeItemDynamicSpriteSource;
 import wootrevived.woot.registries.*;
 
 import java.util.ArrayList;
@@ -26,8 +27,10 @@ public class Registry {
         TABS.register(bus);
 
         RecipesRegistry.register(bus);
-        if(FMLEnvironment.dist == Dist.CLIENT)
+        if(FMLEnvironment.dist == Dist.CLIENT) {
+            UpgradeItemDynamicSpriteSource.register();
             FactoryUpgradeDynamicSpriteSource.register();
+        }
     }
 
     /* Creative Tab */
@@ -38,8 +41,10 @@ public class Registry {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.woot_revived"))
                     .icon(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ITEM.get()::getDefaultInstance)
-                    .displayItems((displayParams, output) ->
-                            WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get())))
+                    .displayItems((displayParams, output) -> {
+                            WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get()));
+                            UpgradeItemsRegistry.displayDynamicCreativeItems(output);
+                    })
                     .build());
 
     public static void addToCreativeTab(RegistryObject<? extends ItemLike> itemLike){

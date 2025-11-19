@@ -62,20 +62,17 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.use(level, player, hand, hit);
 
-            if (!level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
+            if (!level.isClientSide && blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
                 ItemStack stack = player.getItemInHand(hand);
                 if(stack.isEmpty() && player.isShiftKeyDown()){
-                    BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
-                    if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
-                        factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
-                        return InteractionResult.SUCCESS;
-                    }
-                } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem upgradeItem) {
-                    BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
-                    if (blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
-                        factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
-                        return InteractionResult.SUCCESS;
-                    }
+                    factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
+                    return InteractionResult.SUCCESS;
+                } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
+                    factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
+                    return InteractionResult.SUCCESS;
+                } else {
+                    return factoryUpgradeBlockEntity.interactUpgrade(level, player, hand, hit);
                 }
             }
 

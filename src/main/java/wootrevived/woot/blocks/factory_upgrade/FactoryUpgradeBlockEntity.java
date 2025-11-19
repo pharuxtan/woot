@@ -8,11 +8,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
@@ -34,7 +36,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         this.upgradeStack = ItemStack.EMPTY;
     }
 
-    private WootUpgradeItem upgradeItem;
+    private WootUpgradeItem<?> upgradeItem;
     private ItemStack upgradeStack;
 
     public void applyGenerationProperties(WootGenerationProperties properties){
@@ -42,6 +44,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
             CompoundTag tag = upgradeStack.getOrCreateTag();
             upgradeItem.applyGenerationProperties(properties, tag);
             upgradeStack.setTag(tag);
+            setChanged();
         }
     }
 
@@ -50,6 +53,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
             CompoundTag tag = upgradeStack.getOrCreateTag();
             upgradeItem.applySpawnProperties(properties, tag);
             upgradeStack.setTag(tag);
+            setChanged();
         }
     }
 
@@ -58,6 +62,7 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
             CompoundTag tag = upgradeStack.getOrCreateTag();
             upgradeItem.modifyDrops(properties, tag);
             upgradeStack.setTag(tag);
+            setChanged();
         }
     }
 
@@ -69,7 +74,16 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         return upgradeStack;
     }
 
-    public void addUpgrade(Level level, Player player, InteractionHand hand, ItemStack stack, WootUpgradeItem newUpgradeItem){
+    public InteractionResult interactUpgrade(Level level, Player player, InteractionHand hand, BlockHitResult hit){
+        if(upgradeItem == null)
+            return InteractionResult.PASS;
+
+        InteractionResult result = upgradeItem.interact(upgradeStack.getOrCreateTag(), level, player, hand, hit);
+        setChanged();
+        return result;
+    }
+
+    public void addUpgrade(Level level, Player player, InteractionHand hand, ItemStack stack, WootUpgradeItem<?> newUpgradeItem){
         ItemStack oldStack = upgradeStack;
         if(upgradeItem != null) {
             CompoundTag tag = upgradeStack.getOrCreateTag();
