@@ -20,7 +20,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
@@ -32,14 +34,16 @@ import java.util.function.Consumer;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class Decapitate extends WootUpgradeItem {
-    public Decapitate(String tag, int level) {
-        super(new Properties().component(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP, new Tooltip(level))
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))), level);
+public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public Decapitate(String tag, UpgradeDefaultVariant variant) {
+        super(new Properties()
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .component(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP, new Tooltip(variant))
+                , variant);
     }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
+    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -53,12 +57,12 @@ public class Decapitate extends WootUpgradeItem {
     );
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){
             if(vanillaHeads.test(drop))
-                drop.grow(getLevel() - 1);
+                drop.grow(getVariant(dataComponentHolder).level() - 1);
         }
     }
 
@@ -76,46 +80,46 @@ public class Decapitate extends WootUpgradeItem {
     }
 
     public static final String COPPER_DECAPITATE_TAG = "copper_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> COPPER_DECAPITATE_ITEM = ITEMS.register(COPPER_DECAPITATE_TAG, () -> new Decapitate(COPPER_DECAPITATE_TAG, 1));
+    public static final DeferredHolder<Item, Decapitate> COPPER_DECAPITATE_ITEM = ITEMS.register(COPPER_DECAPITATE_TAG, () -> new Decapitate(COPPER_DECAPITATE_TAG, UpgradeDefaultVariant.COPPER));
 
     public static final String IRON_DECAPITATE_TAG = "iron_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> IRON_DECAPITATE_ITEM = ITEMS.register(IRON_DECAPITATE_TAG, () -> new Decapitate(IRON_DECAPITATE_TAG, 2));
+    public static final DeferredHolder<Item, Decapitate> IRON_DECAPITATE_ITEM = ITEMS.register(IRON_DECAPITATE_TAG, () -> new Decapitate(IRON_DECAPITATE_TAG, UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_DECAPITATE_TAG = "gold_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> GOLD_DECAPITATE_ITEM = ITEMS.register(GOLD_DECAPITATE_TAG, () -> new Decapitate(GOLD_DECAPITATE_TAG, 3));
+    public static final DeferredHolder<Item, Decapitate> GOLD_DECAPITATE_ITEM = ITEMS.register(GOLD_DECAPITATE_TAG, () -> new Decapitate(GOLD_DECAPITATE_TAG, UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_DECAPITATE_TAG = "diamond_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> DIAMOND_DECAPITATE_ITEM = ITEMS.register(DIAMOND_DECAPITATE_TAG, () -> new Decapitate(DIAMOND_DECAPITATE_TAG, 4));
+    public static final DeferredHolder<Item, Decapitate> DIAMOND_DECAPITATE_ITEM = ITEMS.register(DIAMOND_DECAPITATE_TAG, () -> new Decapitate(DIAMOND_DECAPITATE_TAG, UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_DECAPITATE_TAG = "netherite_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> NETHERITE_DECAPITATE_ITEM = ITEMS.register(NETHERITE_DECAPITATE_TAG, () -> new Decapitate(NETHERITE_DECAPITATE_TAG, 5));
+    public static final DeferredHolder<Item, Decapitate> NETHERITE_DECAPITATE_ITEM = ITEMS.register(NETHERITE_DECAPITATE_TAG, () -> new Decapitate(NETHERITE_DECAPITATE_TAG, UpgradeDefaultVariant.NETHERITE));
 
     /* Tooltip */
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
 
-    public record Tooltip(int level) implements TooltipProvider {
+    public record Tooltip(UpgradeDefaultVariant variant) implements TooltipProvider {
         public static final String ID = "decapitate_upgrade_tooltip";
 
         public static final Codec<Tooltip> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        Codec.INT.fieldOf("level").forGetter(Tooltip::level)
+                        UpgradeDefaultVariant.CODEC.fieldOf("variant").forGetter(Tooltip::variant)
                 ).apply(inst, Tooltip::new)
         );
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Tooltip> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.INT, Tooltip::level,
+                ByteBufCodecs.fromCodec(UpgradeDefaultVariant.CODEC), Tooltip::variant,
                 Tooltip::new
         );
 
         @Override
-        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
-            consumer.accept(Component.translatable("info.woot_revived.upgrade.decapitate.desc.0", level).setStyle(DESCRIPTION_STYLE));
+        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+            consumer.accept(Component.translatable("info.woot_revived.upgrade.decapitate.desc.0", variant.level()).setStyle(DESCRIPTION_STYLE));
         }
     }
 }
