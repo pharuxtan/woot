@@ -12,6 +12,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import wootrevived.api.models.DynamicUpgradeItemModelUnbaked;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
@@ -175,6 +176,11 @@ public class Items {
 
     public static void itemHandheld(DeferredHolder<Item, ? extends Item> item){
         ItemModel.Unbaked model = ItemModelUtils.plainModel(models.createFlatItemModel(item.get(), ModelTemplates.FLAT_HANDHELD_ITEM));
+        models.itemModelOutput.accept(item.get(), model);
+    }
+
+    public static void itemUpgrade(DeferredHolder<Item, ? extends Item> item){
+        DynamicUpgradeItemModelUnbaked model = new DynamicUpgradeItemModelUnbaked();
         models.itemModelOutput.accept(item.get(), model);
     }
 }

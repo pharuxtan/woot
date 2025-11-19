@@ -9,14 +9,12 @@ import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.interfaces.WootUpgradeEnum;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
@@ -37,8 +35,29 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
         TextureAtlasSprite factory = spriteGetter.get(slots.getMaterial("north"), model);
         variants.put("", getBlockModelParts(model, bake, factory));
 
-        for(DeferredHolder<Item, ? extends WootUpgradeItem> upgradeItem : UpgradeItemsRegistry.getValues()){
-            String name = UpgradeItemsRegistry.getNameFromItem(upgradeItem.get());
+        for(UpgradeItemsRegistry.Entry<?> entry : UpgradeItemsRegistry.getEntries())
+            processEntry(variants, entry, model, bake, spriteGetter);
+
+        for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
+            processDynamicEntry(variants, entry, model, bake, spriteGetter);
+
+        return new FactoryUpgradeDynamicModel(variants, factory);
+    }
+
+    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.Entry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter) {
+        String name = UpgradeItemsRegistry.getNameFromItem(entry.item());
+
+        TextureAtlasSprite texture = spriteGetter.get(new Material(
+                Sheets.BLOCKS_MAPPER.sheet(),
+                Woot.location("block/upgrade_item_" + name)
+        ), model);
+
+        variants.put(name, getBlockModelParts(model, bake, texture));
+    }
+
+    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processDynamicEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.DynamicEntry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter) {
+        for (T variant : entry.variantClass().getEnumConstants()) {
+            String name = variant.getSerializedName() + "_" + UpgradeItemsRegistry.getNameFromItem(entry.item());
 
             TextureAtlasSprite texture = spriteGetter.get(new Material(
                     Sheets.BLOCKS_MAPPER.sheet(),
@@ -47,8 +66,6 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
 
             variants.put(name, getBlockModelParts(model, bake, texture));
         }
-
-        return new FactoryUpgradeDynamicModel(variants, factory);
     }
 
     private static List<BlockModelPart> getBlockModelParts(ResolvedModel model, QuadCollection bake, TextureAtlasSprite texture) {

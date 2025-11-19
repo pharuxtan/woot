@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import wootrevived.api.internal.WootUpgradeComponent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.cell.CellBlock;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlock;
@@ -24,7 +25,12 @@ public class ComponentsRegistry {
         DATA_COMPONENTS.register(bus);
     }
 
-    // Components
+    /* Woot Upgrade Component API */
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WootUpgradeComponent>> WOOT_UPGRADE_COMPONENT =
+            DATA_COMPONENTS.register(WootUpgradeComponent.ID, WootUpgradeComponent::type);
+
+    /* Block Entity Data */
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CellData.Component>> CELL_DATA =
             DATA_COMPONENTS.registerComponentType(
@@ -130,7 +136,7 @@ public class ComponentsRegistry {
                             .networkSynchronized(MobShardData.STREAM_CODEC)
             );
 
-    // Tooltips
+    /* Tooltip */
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<MobShardItem.Tooltip>> MOB_SHARD_ITEM_TOOLTIP =
             DATA_COMPONENTS.registerComponentType(
