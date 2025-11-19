@@ -18,7 +18,9 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
 import wootrevived.woot.Woot;
@@ -30,19 +32,21 @@ import java.util.function.Consumer;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class Xp extends WootUpgradeItem {
-    public Xp(String tag, int level) {
-        super(new Properties().component(ComponentsRegistry.XP_UPGRADE_TOOLTIP, new Tooltip(level))
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))), level);
+public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public Xp(String tag, UpgradeDefaultVariant variant) {
+        super(new Properties()
+                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                .component(ComponentsRegistry.XP_UPGRADE_TOOLTIP, new Tooltip(variant))
+        , variant);
     }
 
     private static final int[] PERCENTAGES = new int[] { 50, 75, 100, 125, 150 };
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
         List<ItemStack> drops = properties.getItemDrops();
 
-        int experience = Math.round(properties.getExperience() * (PERCENTAGES[getLevel() - 1] / 100F));
+        int experience = Math.round(properties.getExperience() * (PERCENTAGES[getVariant(dataComponentHolder).level() - 1] / 100F));
         if(experience <= 0)
             return;
 
@@ -78,46 +82,46 @@ public class Xp extends WootUpgradeItem {
     }
 
     public static final String COPPER_XP_TAG = "copper_xp_upgrade";
-    public static final DeferredHolder<Item, Xp> COPPER_XP_ITEM = ITEMS.register(COPPER_XP_TAG, () -> new Xp(COPPER_XP_TAG, 1));
+    public static final DeferredHolder<Item, Xp> COPPER_XP_ITEM = ITEMS.register(COPPER_XP_TAG, () -> new Xp(COPPER_XP_TAG, UpgradeDefaultVariant.COPPER));
 
     public static final String IRON_XP_TAG = "iron_xp_upgrade";
-    public static final DeferredHolder<Item, Xp> IRON_XP_ITEM = ITEMS.register(IRON_XP_TAG, () -> new Xp(IRON_XP_TAG, 2));
+    public static final DeferredHolder<Item, Xp> IRON_XP_ITEM = ITEMS.register(IRON_XP_TAG, () -> new Xp(IRON_XP_TAG, UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_XP_TAG = "gold_xp_upgrade";
-    public static final DeferredHolder<Item, Xp> GOLD_XP_ITEM = ITEMS.register(GOLD_XP_TAG, () -> new Xp(GOLD_XP_TAG, 3));
+    public static final DeferredHolder<Item, Xp> GOLD_XP_ITEM = ITEMS.register(GOLD_XP_TAG, () -> new Xp(GOLD_XP_TAG, UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_XP_TAG = "diamond_xp_upgrade";
-    public static final DeferredHolder<Item, Xp> DIAMOND_XP_ITEM = ITEMS.register(DIAMOND_XP_TAG, () -> new Xp(DIAMOND_XP_TAG, 4));
+    public static final DeferredHolder<Item, Xp> DIAMOND_XP_ITEM = ITEMS.register(DIAMOND_XP_TAG, () -> new Xp(DIAMOND_XP_TAG, UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_XP_TAG = "netherite_xp_upgrade";
-    public static final DeferredHolder<Item, Xp> NETHERITE_XP_ITEM = ITEMS.register(NETHERITE_XP_TAG, () -> new Xp(NETHERITE_XP_TAG, 5));
+    public static final DeferredHolder<Item, Xp> NETHERITE_XP_ITEM = ITEMS.register(NETHERITE_XP_TAG, () -> new Xp(NETHERITE_XP_TAG, UpgradeDefaultVariant.NETHERITE));
 
     /* Tooltip */
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.XP_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.XP_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
 
-    public record Tooltip(int level) implements TooltipProvider {
+    public record Tooltip(UpgradeDefaultVariant variant) implements TooltipProvider {
         public static final String ID = "xp_upgrade_tooltip";
 
         public static final Codec<Tooltip> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        Codec.INT.fieldOf("level").forGetter(Tooltip::level)
+                        UpgradeDefaultVariant.CODEC.fieldOf("level").forGetter(Tooltip::variant)
                 ).apply(inst, Tooltip::new)
         );
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Tooltip> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.INT, Tooltip::level,
+                ByteBufCodecs.fromCodec(UpgradeDefaultVariant.CODEC), Tooltip::variant,
                 Tooltip::new
         );
 
         @Override
-        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
-            consumer.accept(Component.translatable("info.woot_revived.upgrade.xp.desc.0", PERCENTAGES[level - 1]).setStyle(DESCRIPTION_STYLE));
+        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+            consumer.accept(Component.translatable("info.woot_revived.upgrade.xp.desc.0", PERCENTAGES[variant.level() - 1]).setStyle(DESCRIPTION_STYLE));
         }
     }
 }

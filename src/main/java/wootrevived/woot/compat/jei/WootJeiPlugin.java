@@ -3,9 +3,7 @@ package wootrevived.woot.compat.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.neoforge.NeoForgeTypes;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.*;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +15,11 @@ import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+import wootrevived.api.interfaces.WootUpgradeEnum;
+import wootrevived.api.internal.WootUpgradeComponent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.compat.jei.categories.*;
+import wootrevived.woot.compat.jei.subtypes.UpgradeSubtypeInterpreter;
 import wootrevived.woot.config.DyeLiquifierConfig;
 import wootrevived.woot.config.EnchantedLiquifierConfig;
 import wootrevived.woot.events.LoadRecipes;
@@ -27,10 +28,7 @@ import wootrevived.woot.recipes.enchanted_liquifier.EnchantedLiquifierRecipe;
 import wootrevived.woot.recipes.fluid_infuser.FluidInfuserRecipe;
 import wootrevived.woot.recipes.item_infuser.ItemInfuserRecipe;
 import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
-import wootrevived.woot.registries.BlocksRegistry;
-import wootrevived.woot.registries.FluidsRegistry;
-import wootrevived.woot.registries.ItemsRegistry;
-import wootrevived.woot.registries.RecipesRegistry;
+import wootrevived.woot.registries.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +40,30 @@ public class WootJeiPlugin implements IModPlugin {
     @Override
     public @NotNull ResourceLocation getPluginUid() {
         return Woot.location("jei");
+    }
+
+    @Override
+    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
+        for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
+            registration.registerSubtypeInterpreter(entry.item().get(), UpgradeSubtypeInterpreter.INSTANCE);
+    }
+
+    @Override
+    public void registerExtraIngredients(@NotNull IExtraIngredientRegistration registration) {
+        List<ItemStack> stacks = new ArrayList<>();
+
+        for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
+            addExtraIngredients(stacks, entry);
+
+        registration.addExtraItemStacks(stacks);
+    }
+
+    public <T extends Enum<T> & WootUpgradeEnum<T>> void addExtraIngredients(List<ItemStack> stacks, UpgradeItemsRegistry.DynamicEntry<T> entry) {
+        for(T constant : entry.variantClass().getEnumConstants()){
+            ItemStack stack = entry.item().get().getDefaultInstance();
+            stack.set(WootUpgradeComponent.type(), WootUpgradeComponent.of(constant));
+            stacks.add(stack);
+        }
     }
 
     @Override

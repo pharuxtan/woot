@@ -18,7 +18,9 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
 import wootrevived.woot.Woot;
@@ -28,15 +30,17 @@ import java.util.function.Consumer;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class Mass extends WootUpgradeItem {
-    public Mass(String tag, int level) {
-        super(new Properties().component(ComponentsRegistry.MASS_UPGRADE_TOOLTIP, new Tooltip(level))
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))), level);
+public class Mass extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public Mass(String tag, UpgradeDefaultVariant variant) {
+        super(new Properties()
+                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                .component(ComponentsRegistry.MASS_UPGRADE_TOOLTIP, new Tooltip(variant))
+        , variant);
     }
 
     @Override
-    public void applyGenerationProperties(WootGenerationProperties properties, MutableDataComponentHolder dataComponentHolder) {
-        properties.setNumberOfSimulations(2 * getLevel());
+    public void applyGenerationProperties(@NotNull WootGenerationProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+        properties.setNumberOfSimulations(2 * getVariant(dataComponentHolder).level());
     }
 
     /* Upgrade Item registration */
@@ -53,46 +57,46 @@ public class Mass extends WootUpgradeItem {
     }
 
     public static final String COPPER_MASS_TAG = "copper_mass_upgrade";
-    public static final DeferredHolder<Item, Mass> COPPER_MASS_ITEM = ITEMS.register(COPPER_MASS_TAG, () -> new Mass(COPPER_MASS_TAG, 1));
+    public static final DeferredHolder<Item, Mass> COPPER_MASS_ITEM = ITEMS.register(COPPER_MASS_TAG, () -> new Mass(COPPER_MASS_TAG, UpgradeDefaultVariant.COPPER));
 
     public static final String IRON_MASS_TAG = "iron_mass_upgrade";
-    public static final DeferredHolder<Item, Mass> IRON_MASS_ITEM = ITEMS.register(IRON_MASS_TAG, () -> new Mass(IRON_MASS_TAG, 2));
+    public static final DeferredHolder<Item, Mass> IRON_MASS_ITEM = ITEMS.register(IRON_MASS_TAG, () -> new Mass(IRON_MASS_TAG, UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_MASS_TAG = "gold_mass_upgrade";
-    public static final DeferredHolder<Item, Mass> GOLD_MASS_ITEM = ITEMS.register(GOLD_MASS_TAG, () -> new Mass(GOLD_MASS_TAG, 3));
+    public static final DeferredHolder<Item, Mass> GOLD_MASS_ITEM = ITEMS.register(GOLD_MASS_TAG, () -> new Mass(GOLD_MASS_TAG, UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_MASS_TAG = "diamond_mass_upgrade";
-    public static final DeferredHolder<Item, Mass> DIAMOND_MASS_ITEM = ITEMS.register(DIAMOND_MASS_TAG, () -> new Mass(DIAMOND_MASS_TAG, 4));
+    public static final DeferredHolder<Item, Mass> DIAMOND_MASS_ITEM = ITEMS.register(DIAMOND_MASS_TAG, () -> new Mass(DIAMOND_MASS_TAG, UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_MASS_TAG = "netherite_mass_upgrade";
-    public static final DeferredHolder<Item, Mass> NETHERITE_MASS_ITEM = ITEMS.register(NETHERITE_MASS_TAG, () -> new Mass(NETHERITE_MASS_TAG, 5));
+    public static final DeferredHolder<Item, Mass> NETHERITE_MASS_ITEM = ITEMS.register(NETHERITE_MASS_TAG, () -> new Mass(NETHERITE_MASS_TAG, UpgradeDefaultVariant.NETHERITE));
 
     /* Tooltip */
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.MASS_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.MASS_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
 
-    public record Tooltip(int level) implements TooltipProvider {
+    public record Tooltip(UpgradeDefaultVariant variant) implements TooltipProvider {
         public static final String ID = "mass_upgrade_tooltip";
 
         public static final Codec<Tooltip> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        Codec.INT.fieldOf("level").forGetter(Tooltip::level)
+                        UpgradeDefaultVariant.CODEC.fieldOf("variant").forGetter(Tooltip::variant)
                 ).apply(inst, Tooltip::new)
         );
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Tooltip> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.INT, Tooltip::level,
+                ByteBufCodecs.fromCodec(UpgradeDefaultVariant.CODEC), Tooltip::variant,
                 Tooltip::new
         );
 
         @Override
-        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
-            consumer.accept(Component.translatable("info.woot_revived.upgrade.mass.desc.0", 2 * level).setStyle(DESCRIPTION_STYLE));
+        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+            consumer.accept(Component.translatable("info.woot_revived.upgrade.mass.desc.0", 2 * variant.level()).setStyle(DESCRIPTION_STYLE));
         }
     }
 }

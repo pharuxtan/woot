@@ -4,10 +4,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import wootrevived.woot.Woot;
+import wootrevived.woot.client.model.upgrade_item.DynamicUpgradeItemModel;
 import wootrevived.woot.registries.*;
 
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ public class Registry {
         TABS.register(bus);
 
         RecipesRegistry.register(bus);
+        if(FMLEnvironment.dist == Dist.CLIENT)
+            DynamicUpgradeItemModel.register();
     }
 
     /* Creative Tab */
@@ -35,8 +40,10 @@ public class Registry {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.woot_revived"))
                     .icon(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ITEM.get()::getDefaultInstance)
-                    .displayItems((displayParams, output) ->
-                            WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get())))
+                    .displayItems((displayParams, output) -> {
+                        WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get()));
+                        UpgradeItemsRegistry.displayDynamicCreativeItems(output);
+                    })
                     .build());
 
     public static void addToCreativeTab(DeferredHolder<? extends ItemLike, ? extends ItemLike> itemLike){

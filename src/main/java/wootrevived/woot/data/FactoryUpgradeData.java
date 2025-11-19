@@ -30,5 +30,18 @@ public final class FactoryUpgradeData {
     public record Component(
             @NotNull Optional<String> upgradeItem,
             @NotNull Optional<ItemStack> upgradeStack
-    ) {}
+    ) {
+        @Override
+        public int hashCode() {
+            return upgradeItem.hashCode() + upgradeStack.map(ItemStack::hashItemAndComponents).orElse(0);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(!(obj instanceof Component(Optional<String> item, Optional<ItemStack> stack)))
+                return false;
+
+            return upgradeItem.equals(item) && upgradeStack.map(s -> stack.filter(itemStack -> ItemStack.isSameItemSameComponents(s, itemStack)).isPresent()).orElse(stack.isEmpty());
+        }
+    }
 }
