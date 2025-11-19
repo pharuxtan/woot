@@ -15,7 +15,7 @@ sourceSets.main.resources.srcDirs += "src/main/generated"
 
 group = 'wootrevived'
 def buildVersion = "${mod_version}"
-version = "${mc_version}-${buildVersion}"
+version = "${buildVersion}"
 
 base {
     archivesName = "woot-revived"
@@ -93,7 +93,12 @@ repositories {
     mavenCentral()
     maven { url = "https://maven.neoforged.net/releases" }
     maven { url = "https://maven.minecraftforge.net/" }
-    maven { url = "https://maven.blamejared.com/" }
+    maven {
+        url = "https://maven.blamejared.com/"
+        content {
+            excludeGroup "org.apache.logging.log4j"
+        }
+    }
     maven { url = "https://maven.creeperhost.net" }
     maven { url = "https://maven.architectury.dev" }
     maven { url = "https://cursemaven.com" }
@@ -104,9 +109,7 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
 
     // JEI
-    compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
-    localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
+    implementation "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
     // Jade
     implementation "maven.modrinth:jade:${jade_version}-neoforge"
@@ -133,8 +136,7 @@ jar {
                 'Implementation-Title'    : "${mod_id}",
                 'Implementation-Vendor'   : 'pharuxtan',
                 'Implementation-Version'  : "${mod_version}",
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'MixinConfigs'            : 'woot_revived.mixins.json'
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
@@ -169,7 +171,7 @@ tasks.register('apiSourcesJar', Jar) {
 
     manifest {
         attributes([
-                'Specification-Title'     : "${mod_name} API",
+                'Specification-Title'     : "${mod_name} API Sources",
                 'Specification-Vendor'    : 'pharuxtan',
                 'Specification-Version'   : "${mc_version}",
                 'Implementation-Title'    : "${mod_id}",

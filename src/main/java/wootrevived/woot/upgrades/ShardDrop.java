@@ -13,6 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
 import wootrevived.woot.Woot;
@@ -23,13 +24,15 @@ import java.util.List;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class ShardDrop extends WootUpgradeItem {
-    public ShardDrop(int level) { super(new Properties(), level); }
+public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public ShardDrop(UpgradeDefaultVariant variant) {
+        super(new Properties(), variant);
+    }
 
     private static final int[] PERCENTAGES = new int[] { 50, 30, 15, 5 };
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
+    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull CompoundTag itemTag) {
         Tier tier = properties.getFactoryTier();
         List<ItemStack> drops = properties.getItemDrops();
         RandomSource random = properties.getRandom();
@@ -43,8 +46,10 @@ public class ShardDrop extends WootUpgradeItem {
             drops.add(ItemsRegistry.IRON_SHARD_ITEM.get().getDefaultInstance());
         }
 
+        int level = getVariant(itemTag).level();
+
         // Gold Shard
-        if(getLevel() < 2 || !Tier.TIER_2.isFactoryTierValid(tier))
+        if(level < 3 || !Tier.TIER_2.isFactoryTierValid(tier))
             return;
 
         rand = random.nextFloat();
@@ -53,7 +58,7 @@ public class ShardDrop extends WootUpgradeItem {
         }
 
         // Diamond Shard
-        if(getLevel() < 3 || !Tier.TIER_3.isFactoryTierValid(tier))
+        if(level < 4 || !Tier.TIER_3.isFactoryTierValid(tier))
             return;
 
         rand = random.nextFloat();
@@ -62,7 +67,7 @@ public class ShardDrop extends WootUpgradeItem {
         }
 
         // Netherite Shard
-        if(getLevel() < 4 || !Tier.TIER_4.isFactoryTierValid(tier))
+        if(level < 5 || !Tier.TIER_4.isFactoryTierValid(tier))
             return;
 
         rand = random.nextFloat();
@@ -72,10 +77,11 @@ public class ShardDrop extends WootUpgradeItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
-        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.0", Component.translatable("misc.woot_revived.tier_" + (getLevel() + 1))).setStyle(DESCRIPTION_STYLE));
-        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.1", Component.translatable("misc.woot_revived.tier_" + (getLevel()))).setStyle(DESCRIPTION_STYLE));
-        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.2", PERCENTAGES[getLevel() - 1]).setStyle(DESCRIPTION_STYLE));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+        int l = getVariant(stack.getTag()).level();
+        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.0", Component.translatable("misc.woot_revived.tier_" + l)).setStyle(DESCRIPTION_STYLE));
+        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.1", Component.translatable("misc.woot_revived.tier_" + (l - 1))).setStyle(DESCRIPTION_STYLE));
+        tooltip.add(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.2", PERCENTAGES[l - 2]).setStyle(DESCRIPTION_STYLE));
     }
 
     /* Upgrade Item registration */
@@ -91,14 +97,14 @@ public class ShardDrop extends WootUpgradeItem {
     }
 
     public static final String IRON_SHARD_DROP_TAG = "iron_shard_drop_upgrade";
-    public static final DeferredHolder<Item, ShardDrop> IRON_SHARD_DROP_ITEM = ITEMS.register(IRON_SHARD_DROP_TAG, () -> new ShardDrop(1));
+    public static final DeferredHolder<Item, ShardDrop> IRON_SHARD_DROP_ITEM = ITEMS.register(IRON_SHARD_DROP_TAG, () -> new ShardDrop(UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_SHARD_DROP_TAG = "gold_shard_drop_upgrade";
-    public static final DeferredHolder<Item, ShardDrop> GOLD_SHARD_DROP_ITEM = ITEMS.register(GOLD_SHARD_DROP_TAG, () -> new ShardDrop(2));
+    public static final DeferredHolder<Item, ShardDrop> GOLD_SHARD_DROP_ITEM = ITEMS.register(GOLD_SHARD_DROP_TAG, () -> new ShardDrop(UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_SHARD_DROP_TAG = "diamond_shard_drop_upgrade";
-    public static final DeferredHolder<Item, ShardDrop> DIAMOND_SHARD_DROP_ITEM = ITEMS.register(DIAMOND_SHARD_DROP_TAG, () -> new ShardDrop(3));
+    public static final DeferredHolder<Item, ShardDrop> DIAMOND_SHARD_DROP_ITEM = ITEMS.register(DIAMOND_SHARD_DROP_TAG, () -> new ShardDrop(UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_SHARD_DROP_TAG = "netherite_shard_drop_upgrade";
-    public static final DeferredHolder<Item, ShardDrop> NETHERITE_SHARD_DROP_ITEM = ITEMS.register(NETHERITE_SHARD_DROP_TAG, () -> new ShardDrop(4));
+    public static final DeferredHolder<Item, ShardDrop> NETHERITE_SHARD_DROP_ITEM = ITEMS.register(NETHERITE_SHARD_DROP_TAG, () -> new ShardDrop(UpgradeDefaultVariant.NETHERITE));
 }

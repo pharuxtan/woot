@@ -10,6 +10,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import wootrevived.api.models.DynamicUpgradeItemModelBuilder;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
@@ -224,5 +225,12 @@ public class Items extends ItemModelProvider {
         getBuilder(itemResource.getPath())
                 .parent(getExistingFile(mcLoc("item/handheld")))
                 .texture("layer0", itemResource);
+    }
+
+    public void itemUpgrade(DeferredHolder<Item, ? extends Item> item){
+        ResourceLocation itemResource = getItemResource(item.get());
+        getBuilder(itemResource.getPath())
+                .parent(getExistingFile(mcLoc("item/generated")))
+                .customLoader(DynamicUpgradeItemModelBuilder::begin);
     }
 }

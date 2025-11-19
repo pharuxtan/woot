@@ -13,6 +13,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
@@ -23,11 +24,13 @@ import java.util.List;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 
-public class Decapitate extends WootUpgradeItem {
-    public Decapitate(int level) { super(new Properties(), level); }
+public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
+    public Decapitate(UpgradeDefaultVariant variant) {
+        super(new Properties(), variant);
+    }
 
     @Override
-    public void applySpawnProperties(WootSpawnProperties properties, CompoundTag itemTag) {
+    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull CompoundTag itemTag) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -41,18 +44,18 @@ public class Decapitate extends WootUpgradeItem {
     );
 
     @Override
-    public void modifyDrops(WootDropsProperties properties, CompoundTag itemTag) {
+    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull CompoundTag itemTag) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){
             if(vanillaHeads.test(drop))
-                drop.grow(getLevel() - 1);
+                drop.grow(getVariant(itemTag).level() - 1);
         }
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
-        tooltip.add(Component.translatable("info.woot_revived.upgrade.decapitate.desc.0", getLevel()).setStyle(DESCRIPTION_STYLE));
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+        tooltip.add(Component.translatable("info.woot_revived.upgrade.decapitate.desc.0", getVariant(stack.getTag()).level()).setStyle(DESCRIPTION_STYLE));
     }
 
     /* Upgrade Item registration */
@@ -69,17 +72,17 @@ public class Decapitate extends WootUpgradeItem {
     }
 
     public static final String COPPER_DECAPITATE_TAG = "copper_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> COPPER_DECAPITATE_ITEM = ITEMS.register(COPPER_DECAPITATE_TAG, () -> new Decapitate(1));
+    public static final DeferredHolder<Item, Decapitate> COPPER_DECAPITATE_ITEM = ITEMS.register(COPPER_DECAPITATE_TAG, () -> new Decapitate(UpgradeDefaultVariant.COPPER));
 
     public static final String IRON_DECAPITATE_TAG = "iron_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> IRON_DECAPITATE_ITEM = ITEMS.register(IRON_DECAPITATE_TAG, () -> new Decapitate(2));
+    public static final DeferredHolder<Item, Decapitate> IRON_DECAPITATE_ITEM = ITEMS.register(IRON_DECAPITATE_TAG, () -> new Decapitate(UpgradeDefaultVariant.IRON));
 
     public static final String GOLD_DECAPITATE_TAG = "gold_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> GOLD_DECAPITATE_ITEM = ITEMS.register(GOLD_DECAPITATE_TAG, () -> new Decapitate(3));
+    public static final DeferredHolder<Item, Decapitate> GOLD_DECAPITATE_ITEM = ITEMS.register(GOLD_DECAPITATE_TAG, () -> new Decapitate(UpgradeDefaultVariant.GOLD));
 
     public static final String DIAMOND_DECAPITATE_TAG = "diamond_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> DIAMOND_DECAPITATE_ITEM = ITEMS.register(DIAMOND_DECAPITATE_TAG, () -> new Decapitate(4));
+    public static final DeferredHolder<Item, Decapitate> DIAMOND_DECAPITATE_ITEM = ITEMS.register(DIAMOND_DECAPITATE_TAG, () -> new Decapitate(UpgradeDefaultVariant.DIAMOND));
 
     public static final String NETHERITE_DECAPITATE_TAG = "netherite_decapitate_upgrade";
-    public static final DeferredHolder<Item, Decapitate> NETHERITE_DECAPITATE_ITEM = ITEMS.register(NETHERITE_DECAPITATE_TAG, () -> new Decapitate(5));
+    public static final DeferredHolder<Item, Decapitate> NETHERITE_DECAPITATE_ITEM = ITEMS.register(NETHERITE_DECAPITATE_TAG, () -> new Decapitate(UpgradeDefaultVariant.NETHERITE));
 }

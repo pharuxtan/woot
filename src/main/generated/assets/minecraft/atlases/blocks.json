@@ -1,6 +1,10 @@
 {
   "sources": [
     {
+      "type": "woot_revived:upgrade_item",
+      "id": "woot_revived:upgrade_item"
+    },
+    {
       "type": "woot_revived:factory_upgrade",
       "id": "woot_revived:factory_upgrade"
     }

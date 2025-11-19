@@ -33,8 +33,10 @@ public class Registry {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.woot_revived"))
                     .icon(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ITEM.get()::getDefaultInstance)
-                    .displayItems((displayParams, output) ->
-                            WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get())))
+                    .displayItems((displayParams, output) -> {
+                        WOOT_TAB_ITEMS.forEach(itemLike -> output.accept(itemLike.get()));
+                        UpgradeItemsRegistry.displayDynamicCreativeItems(output);
+                    })
                     .build());
 
     public static void addToCreativeTab(DeferredHolder<? extends ItemLike, ? extends ItemLike> itemLike){
