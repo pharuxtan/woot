@@ -12,6 +12,7 @@ import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -79,7 +80,13 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
     }
 
     public boolean isAnvilHot(Level level, BlockPos pos) {
-        return level.getBlockState(pos.below()).getBlock() == Blocks.MAGMA_BLOCK;
+        Block block = level.getBlockState(pos.below()).getBlock();
+        return block == Blocks.MAGMA_BLOCK ||
+                block == BlocksRegistry.COPPER_MAGMATOR_BLOCK.get() ||
+                block == BlocksRegistry.IRON_MAGMATOR_BLOCK.get() ||
+                block == BlocksRegistry.GOLD_MAGMATOR_BLOCK.get() ||
+                block == BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get() ||
+                block == BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -103,7 +110,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         @Override
         public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
             if (level.isClientSide)
-                super.useItemOn(heldItem, level, player, hand, hit);
+                return InteractionResult.SUCCESS;
 
             BlockEntity be = level.getBlockEntity(hit.getBlockPos());
             if (be instanceof StygianAnvilBlockEntity anvil) {
@@ -111,7 +118,15 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
                     anvil.dropItem(player, hand);
                 } else if (heldItem.getItem() == ItemsRegistry.STYGIAN_HAMMER_ITEM.get()) {
                     // Crafting
-                    anvil.tryCraft(player);
+                    ItemStack stack = anvil.tryCraft(player, false);
+                    if(!stack.isEmpty()){
+                        BlockPos anvilPos = anvil.getBlockPos();
+                        ItemEntity itemEntity = new ItemEntity(level,
+                                anvilPos.getX(), anvilPos.getY() + 1, anvilPos.getZ(),
+                                stack);
+                        itemEntity.setDefaultPickUpDelay();
+                        level.addFreshEntity(itemEntity);
+                    }
                 } else {
                     IItemHandler itemHandler = anvil.getInventory();
                     for(int slot = 0; slot < itemHandler.getSlots(); slot++) {
