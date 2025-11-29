@@ -62,7 +62,14 @@ public class WootEntityRenderer {
         bufferSourceMixin.woot$setActive(true);
         Lighting.setupForFlatItems();
 
-        renderEntity(renderer, entity, pose, bufferSource, LightTexture.pack(15, 15));
+        try {
+            PoseStack entityPose = new PoseStack();
+            entityPose.pushPose();
+            entityPose.last().pose().mul(pose.last().pose());
+            entityPose.last().normal().mul(pose.last().normal());
+
+            renderEntity(renderer, entity, entityPose, bufferSource, LightTexture.pack(15, 15));
+        } catch (Exception ignored) {}
         bufferSource.endLastBatch();
         bufferSourceMixin.woot$setActive(false);
 
