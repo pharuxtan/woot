@@ -30,6 +30,12 @@ public class English extends LanguageProvider {
 
         add(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "Factory Base");
 
+        add(BlocksRegistry.COPPER_MAGMATOR_BLOCK.get(), "Copper Magmator");
+        add(BlocksRegistry.IRON_MAGMATOR_BLOCK.get(), "Iron Magmator");
+        add(BlocksRegistry.GOLD_MAGMATOR_BLOCK.get(), "Gold Magmator");
+        add(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get(), "Diamond Magmator");
+        add(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get(), "Netherite Magmator");
+
         add(BlocksRegistry.HEART_BLOCK.get(), "Factory Heart");
         add(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "Fake Spawner");
 
@@ -249,7 +255,7 @@ public class English extends LanguageProvider {
         add("info.woot_revived.factory.invalid", "INVALID");
         add("info.woot_revived.factory.empty", "EMPTY");
 
-        add("chat.woot_revived.anvil.cold", "Anvil must be sitting on a Magma Block");
+        add("chat.woot_revived.anvil.cold", "Anvil must be sitting on a Magma Block or a Magmator");
         add("chat.woot_revived.anvil.nobase", "Place valid base item first");
 
         add("misc.woot_revived.tier_1", "Copper");

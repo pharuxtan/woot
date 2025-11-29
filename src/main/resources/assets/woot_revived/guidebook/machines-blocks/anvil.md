@@ -14,7 +14,7 @@ To craft with it, you need to right-click it with a <ItemImage id="stygian_hamme
 
 You can take items back by shift-clicking the anvil with an empty hand
 
-The anvil can be automated using item pipe and engines that can right-click the block with a <ItemImage id="stygian_hammer" scale="0.5"/> Stygian Hammer
+The anvil can be automated using item pipe and a <ItemImage id="netherite_magmator" scale="0.5"/> [Magmator](magmator.md)
 
 ## Craft
 

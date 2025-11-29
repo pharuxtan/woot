@@ -14,7 +14,7 @@ navigation:
 
 空手对幽冥砧Shift右击，可取回物品
 
-可使用物品管道，以及能够使用<ItemImage id="stygian_hammer" scale="0.5"/>幽冥锤对方块右击的装置来自动化幽冥砧
+可使用物品管道和<ItemImage id="netherite_magmator" scale="0.5"/>[熔动机](magmator.md)来自动化幽冥砧。
 
 ## 合成
 

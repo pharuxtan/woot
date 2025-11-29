@@ -30,6 +30,12 @@ public class SimplifiedChinese extends LanguageProvider {
 
         add(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "工厂基座");
 
+        add(BlocksRegistry.COPPER_MAGMATOR_BLOCK.get(), "铜熔动机");
+        add(BlocksRegistry.IRON_MAGMATOR_BLOCK.get(), "铁熔动机");
+        add(BlocksRegistry.GOLD_MAGMATOR_BLOCK.get(), "金熔动机");
+        add(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get(), "钻石熔动机");
+        add(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get(), "下界合金熔动机");
+
         add(BlocksRegistry.HEART_BLOCK.get(), "工厂核心");
         add(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "伪刷怪笼");
 
@@ -249,7 +255,7 @@ public class SimplifiedChinese extends LanguageProvider {
         add("info.woot_revived.factory.invalid", "无效");
         add("info.woot_revived.factory.empty", "空");
 
-        add("chat.woot_revived.anvil.cold", "幽冥砧必须置于岩浆块上");
+        add("chat.woot_revived.anvil.cold", "幽冥砧必须置于岩浆块或熔动机上");
         add("chat.woot_revived.anvil.nobase", "需先放置基底物品");
 
         add("misc.woot_revived.tier_1", "铜");

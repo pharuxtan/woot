@@ -43,6 +43,12 @@ public class LootTables extends BlockLootSubProvider {
         copyTagWithEnable(BlocksRegistry.FAKE_SPAWNER_BLOCK, CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                 .copy(WootTags.MOB_TAG, "BlockEntityTag." + WootTags.MOB_TAG, CopyNbtFunction.MergeStrategy.REPLACE));
 
+        dropSelf(BlocksRegistry.COPPER_MAGMATOR_BLOCK);
+        dropSelf(BlocksRegistry.IRON_MAGMATOR_BLOCK);
+        dropSelf(BlocksRegistry.GOLD_MAGMATOR_BLOCK);
+        dropSelf(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK);
+        dropSelf(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK);
+
         dropSelfWithEnable(BlocksRegistry.COPPER_PLINTH_BLOCK);
         dropSelfWithEnable(BlocksRegistry.COPPER_PYLON_BLOCK);
         copyTagWithEnable(BlocksRegistry.COPPER_CELL_BLOCK, CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)

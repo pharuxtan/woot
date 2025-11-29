@@ -63,4 +63,12 @@ public class DefaultsConfig {
     public static class MobShard {
         public static final int NUM_OF_KILLS = 5;
     }
+
+    public static class Magmator {
+        public static final int COPPER_TICK_RATE = 50;
+        public static final int IRON_TICK_RATE = 20;
+        public static final int GOLD_TICK_RATE = 10;
+        public static final int DIAMOND_TICK_RATE = 5;
+        public static final int NETHERITE_TICK_RATE = 1;
+    }
 }

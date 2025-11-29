@@ -92,6 +92,73 @@ public class Vanilla {
                 .unlockedBy("c", recipes.hasItem(Blocks.CRYING_OBSIDIAN))
                 .save(output);
 
+        /* Magmator */
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.COPPER_MAGMATOR_BLOCK.get())
+                .pattern("cbc")
+                .pattern("bab")
+                .pattern("cbc")
+                .define('a', Blocks.MAGMA_BLOCK)
+                .define('b', ItemsRegistry.STYGIAN_PLATE_ITEM.get())
+                .define('c', ItemsRegistry.COPPER_SHARD_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Blocks.MAGMA_BLOCK))
+                .unlockedBy("b", recipes.hasItem(ItemsRegistry.STYGIAN_PLATE_ITEM.get()))
+                .unlockedBy("c", recipes.hasItem(ItemsRegistry.COPPER_SHARD_ITEM.get()))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.IRON_MAGMATOR_BLOCK.get())
+                .pattern("cbc")
+                .pattern("bab")
+                .pattern("cbc")
+                .define('a', Blocks.MAGMA_BLOCK)
+                .define('b', ItemsRegistry.STYGIAN_PLATE_ITEM.get())
+                .define('c', ItemsRegistry.IRON_SHARD_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Blocks.MAGMA_BLOCK))
+                .unlockedBy("b", recipes.hasItem(ItemsRegistry.STYGIAN_PLATE_ITEM.get()))
+                .unlockedBy("c", recipes.hasItem(ItemsRegistry.IRON_SHARD_ITEM.get()))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.GOLD_MAGMATOR_BLOCK.get())
+                .pattern("cbc")
+                .pattern("bab")
+                .pattern("cbc")
+                .define('a', Blocks.MAGMA_BLOCK)
+                .define('b', ItemsRegistry.STYGIAN_PLATE_ITEM.get())
+                .define('c', ItemsRegistry.GOLD_SHARD_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Blocks.MAGMA_BLOCK))
+                .unlockedBy("b", recipes.hasItem(ItemsRegistry.STYGIAN_PLATE_ITEM.get()))
+                .unlockedBy("c", recipes.hasItem(ItemsRegistry.GOLD_SHARD_ITEM.get()))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get())
+                .pattern("cbc")
+                .pattern("bab")
+                .pattern("cbc")
+                .define('a', Blocks.MAGMA_BLOCK)
+                .define('b', ItemsRegistry.STYGIAN_PLATE_ITEM.get())
+                .define('c', ItemsRegistry.DIAMOND_SHARD_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Blocks.MAGMA_BLOCK))
+                .unlockedBy("b", recipes.hasItem(ItemsRegistry.STYGIAN_PLATE_ITEM.get()))
+                .unlockedBy("c", recipes.hasItem(ItemsRegistry.DIAMOND_SHARD_ITEM.get()))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get())
+                .pattern("cbc")
+                .pattern("bab")
+                .pattern("cbc")
+                .define('a', Blocks.MAGMA_BLOCK)
+                .define('b', ItemsRegistry.STYGIAN_PLATE_ITEM.get())
+                .define('c', ItemsRegistry.NETHERITE_SHARD_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Blocks.MAGMA_BLOCK))
+                .unlockedBy("b", recipes.hasItem(ItemsRegistry.STYGIAN_PLATE_ITEM.get()))
+                .unlockedBy("c", recipes.hasItem(ItemsRegistry.NETHERITE_SHARD_ITEM.get()))
+                .save(output);
+
         /* Layout */
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlocksRegistry.LAYOUT_BLOCK.get())

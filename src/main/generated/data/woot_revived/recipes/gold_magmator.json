@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": {
+      "item": "minecraft:magma_block"
+    },
+    "b": {
+      "item": "woot_revived:stygian_plate"
+    },
+    "c": {
+      "item": "woot_revived:gold_shard"
+    }
+  },
+  "pattern": [
+    "cbc",
+    "bab",
+    "cbc"
+  ],
+  "result": {
+    "item": "woot_revived:gold_magmator"
+  }
+}
