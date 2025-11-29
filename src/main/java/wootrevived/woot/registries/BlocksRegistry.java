@@ -37,6 +37,8 @@ import wootrevived.woot.blocks.item_infuser.ItemInfuserBlock;
 import wootrevived.woot.blocks.item_infuser.ItemInfuserBlockEntity;
 import wootrevived.woot.blocks.layout.LayoutBlock;
 import wootrevived.woot.blocks.layout.LayoutBlockEntity;
+import wootrevived.woot.blocks.magmator.MagmatorBlock;
+import wootrevived.woot.blocks.magmator.MagmatorBlockEntity;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlock;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 import wootrevived.woot.blocks.stygian_block.StygianBlock;
@@ -244,6 +246,33 @@ public class BlocksRegistry {
     public static final RegistryObject<Block> NETHERITE_CELL_BLOCK = BLOCKS.register(NETHERITE_CELL_TAG, () -> new CellBlock(BlocksRegistry.NETHERITE_CELL_BLOCK_ENTITY::get));
     public static final RegistryObject<Item> NETHERITE_CELL_BLOCK_ITEM = ITEMS.register(NETHERITE_CELL_TAG, () -> new FactoryBlockItem(NETHERITE_CELL_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<?>> NETHERITE_CELL_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(NETHERITE_CELL_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new CellBlockEntity(BlocksRegistry.NETHERITE_CELL_BLOCK_ENTITY.get(), pos, state), NETHERITE_CELL_BLOCK.get()).build(null));
+
+    /* Magmator */
+
+    public static final String COPPER_MAGMATOR_TAG = "copper_magmator";
+    public static final RegistryObject<MagmatorBlock> COPPER_MAGMATOR_BLOCK = BLOCKS.register(COPPER_MAGMATOR_TAG, () -> new MagmatorBlock(BlocksRegistry.COPPER_MAGMATOR_BLOCK_ENTITY::get));
+    public static final RegistryObject<Item> COPPER_MAGMATOR_BLOCK_ITEM = ITEMS.register(COPPER_MAGMATOR_TAG, () -> new BlockItem(COPPER_MAGMATOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<?>> COPPER_MAGMATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(COPPER_MAGMATOR_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new MagmatorBlockEntity(BlocksRegistry.COPPER_MAGMATOR_BLOCK_ENTITY.get(), pos, state), COPPER_MAGMATOR_BLOCK.get()).build(null));
+
+    public static final String IRON_MAGMATOR_TAG = "iron_magmator";
+    public static final RegistryObject<MagmatorBlock> IRON_MAGMATOR_BLOCK = BLOCKS.register(IRON_MAGMATOR_TAG, () -> new MagmatorBlock(BlocksRegistry.IRON_MAGMATOR_BLOCK_ENTITY::get));
+    public static final RegistryObject<Item> IRON_MAGMATOR_BLOCK_ITEM = ITEMS.register(IRON_MAGMATOR_TAG, () -> new BlockItem(IRON_MAGMATOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<?>> IRON_MAGMATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(IRON_MAGMATOR_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new MagmatorBlockEntity(BlocksRegistry.IRON_MAGMATOR_BLOCK_ENTITY.get(), pos, state), IRON_MAGMATOR_BLOCK.get()).build(null));
+
+    public static final String GOLD_MAGMATOR_TAG = "gold_magmator";
+    public static final RegistryObject<MagmatorBlock> GOLD_MAGMATOR_BLOCK = BLOCKS.register(GOLD_MAGMATOR_TAG, () -> new MagmatorBlock(BlocksRegistry.GOLD_MAGMATOR_BLOCK_ENTITY::get));
+    public static final RegistryObject<Item> GOLD_MAGMATOR_BLOCK_ITEM = ITEMS.register(GOLD_MAGMATOR_TAG, () -> new BlockItem(GOLD_MAGMATOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<?>> GOLD_MAGMATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(GOLD_MAGMATOR_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new MagmatorBlockEntity(BlocksRegistry.GOLD_MAGMATOR_BLOCK_ENTITY.get(), pos, state), GOLD_MAGMATOR_BLOCK.get()).build(null));
+
+    public static final String DIAMOND_MAGMATOR_TAG = "diamond_magmator";
+    public static final RegistryObject<MagmatorBlock> DIAMOND_MAGMATOR_BLOCK = BLOCKS.register(DIAMOND_MAGMATOR_TAG, () -> new MagmatorBlock(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK_ENTITY::get));
+    public static final RegistryObject<Item> DIAMOND_MAGMATOR_BLOCK_ITEM = ITEMS.register(DIAMOND_MAGMATOR_TAG, () -> new BlockItem(DIAMOND_MAGMATOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<?>> DIAMOND_MAGMATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(DIAMOND_MAGMATOR_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new MagmatorBlockEntity(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK_ENTITY.get(), pos, state), DIAMOND_MAGMATOR_BLOCK.get()).build(null));
+
+    public static final String NETHERITE_MAGMATOR_TAG = "netherite_magmator";
+    public static final RegistryObject<MagmatorBlock> NETHERITE_MAGMATOR_BLOCK = BLOCKS.register(NETHERITE_MAGMATOR_TAG, () -> new MagmatorBlock(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK_ENTITY::get));
+    public static final RegistryObject<Item> NETHERITE_MAGMATOR_BLOCK_ITEM = ITEMS.register(NETHERITE_MAGMATOR_TAG, () -> new BlockItem(NETHERITE_MAGMATOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<?>> NETHERITE_MAGMATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(NETHERITE_MAGMATOR_TAG, () -> BlockEntityType.Builder.of((pos, state) -> new MagmatorBlockEntity(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK_ENTITY.get(), pos, state), NETHERITE_MAGMATOR_BLOCK.get()).build(null));
 
     /* Anvil */
 

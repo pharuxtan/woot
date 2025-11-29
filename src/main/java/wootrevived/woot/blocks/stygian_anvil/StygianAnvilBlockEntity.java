@@ -10,7 +10,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -115,10 +114,11 @@ public class StygianAnvilBlockEntity extends BlockEntity {
         }
     }
 
-    public void tryCraft(Player playerEntity) {
+    public ItemStack tryCraft(Player playerEntity, boolean simulate) {
         if (!BlocksRegistry.STYGIAN_ANVIL_BLOCK.get().isAnvilHot(level, getBlockPos())) {
-            playerEntity.displayClientMessage(Component.translatable("chat.woot_revived.anvil.cold"), true);
-            return;
+            if(playerEntity != null)
+                playerEntity.displayClientMessage(Component.translatable("chat.woot_revived.anvil.cold"), true);
+            return ItemStack.EMPTY;
         }
 
         StygianAnvilRecipe recipe = level.getRecipeManager().getRecipeFor(RecipesRegistry.ANVIL_RECIPE_TYPE.get(),
@@ -130,38 +130,38 @@ public class StygianAnvilBlockEntity extends BlockEntity {
                         Either.left(inventoryHandler.getStackInSlot(INGREDIENT_4_SLOT))
                 ),
                 level).orElse(null);
+
         if (recipe == null)
-            return;
+            return ItemStack.EMPTY;
 
         ItemStack output = recipe.getOutput();
         ItemStack baseStack = inventoryHandler.getStackInSlot(BASE_SLOT);
 
         if (baseStack.getItem() instanceof MobShardItem) {
             if(!MobShardItem.isFullyProgrammed(baseStack))
-                return;
+                return ItemStack.EMPTY;
 
             CompoundTag mobTag = MobShardItem.getProgrammedMob(baseStack);
             if(mobTag == null)
-                return;
+                return ItemStack.EMPTY;
 
             output = FakeSpawnerBlockEntity.getItemStack(mobTag);
         }
 
-        for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
-            ItemStack item =  inventoryHandler.getStackInSlot(slot);
-            if(item.getItem().hasCraftingRemainingItem(item)){
-                inventoryHandler.setStackInSlot(slot, item.getItem().getCraftingRemainingItem(item));
-            } else {
-                inventoryHandler.setStackInSlot(slot, ItemStack.EMPTY);
+        if(!simulate){
+            for(int slot = 0; slot < inventoryHandler.getSlots(); slot++) {
+                ItemStack item =  inventoryHandler.getStackInSlot(slot);
+                if(item.getItem().hasCraftingRemainingItem(item)){
+                    inventoryHandler.setStackInSlot(slot, item.getItem().getCraftingRemainingItem(item));
+                } else {
+                    inventoryHandler.setStackInSlot(slot, ItemStack.EMPTY);
+                }
             }
+
+            setChanged();
         }
 
-        setChanged();
-        ItemEntity itemEntity = new ItemEntity(level,
-                getBlockPos().getX(), getBlockPos().getY() + 1, getBlockPos().getZ(),
-                output);
-        itemEntity.setDefaultPickUpDelay();
-        level.addFreshEntity(itemEntity);
+        return output;
     }
 
     @Override

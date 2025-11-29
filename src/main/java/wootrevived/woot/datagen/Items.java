@@ -36,6 +36,12 @@ public class Items extends ItemModelProvider {
         parentedBlock(BlocksRegistry.FACTORY_BASE_BLOCK_ITEM, BlocksRegistry.FACTORY_BASE_BLOCK);
         parentedBlock(BlocksRegistry.STYGIAN_BLOCK_ITEM, BlocksRegistry.STYGIAN_BLOCK);
 
+        parentedBlock(BlocksRegistry.COPPER_MAGMATOR_BLOCK_ITEM, BlocksRegistry.COPPER_MAGMATOR_BLOCK);
+        parentedBlock(BlocksRegistry.IRON_MAGMATOR_BLOCK_ITEM, BlocksRegistry.IRON_MAGMATOR_BLOCK);
+        parentedBlock(BlocksRegistry.GOLD_MAGMATOR_BLOCK_ITEM, BlocksRegistry.GOLD_MAGMATOR_BLOCK);
+        parentedBlock(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK_ITEM, BlocksRegistry.DIAMOND_MAGMATOR_BLOCK);
+        parentedBlock(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK_ITEM, BlocksRegistry.NETHERITE_MAGMATOR_BLOCK);
+
         parentedBlock(BlocksRegistry.HEART_BLOCK_ITEM, BlocksRegistry.HEART_BLOCK);
         parentedBlock(BlocksRegistry.FAKE_SPAWNER_BLOCK_ITEM, BlocksRegistry.FAKE_SPAWNER_BLOCK);
 

@@ -16,6 +16,7 @@ public class CommonConfig {
         EnchantedLiquifierConfig.build(COMMON_BUILDER);
         FluidInfuserConfig.build(COMMON_BUILDER);
         ItemInfuserConfig.build(COMMON_BUILDER);
+        MagmatorConfig.build(COMMON_BUILDER);
         MobShardConfig.build(COMMON_BUILDER);
         GuideConfig.build(COMMON_BUILDER);
 

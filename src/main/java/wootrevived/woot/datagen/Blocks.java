@@ -35,6 +35,12 @@ public class Blocks extends BlockStateProvider {
         cubeAll(BlocksRegistry.FACTORY_BASE_BLOCK);
         cubeAll(BlocksRegistry.STYGIAN_BLOCK);
 
+        cubeAll(BlocksRegistry.COPPER_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.IRON_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.GOLD_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK);
+
         cubeColumn(BlocksRegistry.FAKE_SPAWNER_BLOCK);
 
         cubeAll(BlocksRegistry.COPPER_CELL_BLOCK);
