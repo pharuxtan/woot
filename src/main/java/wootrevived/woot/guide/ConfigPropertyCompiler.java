@@ -61,6 +61,13 @@ public class ConfigPropertyCompiler extends FlowTagCompiler {
             case "item_infuser.energy_process_transfer" -> ItemInfuserConfig.ENERGY_PROCESS_TRANSFER.get();
             case "item_infuser.input_tank_capacity" -> ItemInfuserConfig.INPUT_TANK_CAPACITY.get();
 
+            // Magmator
+            case "magmator.copper_tick_rate" -> MagmatorConfig.COPPER_TICK_RATE.get();
+            case "magmator.iron_tick_rate" -> MagmatorConfig.IRON_TICK_RATE.get();
+            case "magmator.gold_tick_rate" -> MagmatorConfig.GOLD_TICK_RATE.get();
+            case "magmator.diamond_tick_rate" -> MagmatorConfig.DIAMOND_TICK_RATE.get();
+            case "magmator.netherite_tick_rate" -> MagmatorConfig.NETHERITE_TICK_RATE.get();
+
             default -> 0;
         });
 

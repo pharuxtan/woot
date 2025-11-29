@@ -32,6 +32,12 @@ public class Blocks {
 
         cubeColumn(BlocksRegistry.FAKE_SPAWNER_BLOCK);
 
+        cubeAll(BlocksRegistry.COPPER_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.IRON_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.GOLD_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK);
+        cubeAll(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK);
+
         cubeAll(BlocksRegistry.COPPER_CELL_BLOCK);
         cubeColumn(BlocksRegistry.COPPER_PLINTH_BLOCK);
         cubeColumn(BlocksRegistry.COPPER_PYLON_BLOCK);

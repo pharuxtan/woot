@@ -14,6 +14,7 @@ import wootrevived.woot.blocks.enchanted_liquifier.EnchantedLiquifierBlockEntity
 import wootrevived.woot.blocks.fluid_infuser.FluidInfuserBlockEntity;
 import wootrevived.woot.blocks.ingredient_import.IngredientImportBlockEntity;
 import wootrevived.woot.blocks.item_infuser.ItemInfuserBlockEntity;
+import wootrevived.woot.blocks.magmator.MagmatorBlockEntity;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
@@ -62,6 +63,13 @@ public class RegisterCapabilities {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, BlocksRegistry.GOLD_CELL_BLOCK_ENTITY.get(), CellBlockEntity::getFluidHandlerCapability);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, BlocksRegistry.DIAMOND_CELL_BLOCK_ENTITY.get(), CellBlockEntity::getFluidHandlerCapability);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, BlocksRegistry.NETHERITE_CELL_BLOCK_ENTITY.get(), CellBlockEntity::getFluidHandlerCapability);
+
+        /* Magmator */
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlocksRegistry.COPPER_MAGMATOR_BLOCK_ENTITY.get(), MagmatorBlockEntity::getItemHandlerCapability);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlocksRegistry.IRON_MAGMATOR_BLOCK_ENTITY.get(), MagmatorBlockEntity::getItemHandlerCapability);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlocksRegistry.GOLD_MAGMATOR_BLOCK_ENTITY.get(), MagmatorBlockEntity::getItemHandlerCapability);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlocksRegistry.DIAMOND_MAGMATOR_BLOCK_ENTITY.get(), MagmatorBlockEntity::getItemHandlerCapability);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlocksRegistry.NETHERITE_MAGMATOR_BLOCK_ENTITY.get(), MagmatorBlockEntity::getItemHandlerCapability);
 
         /* Enchanted Liquid Bucket */
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) -> new FluidBucketWrapper(stack), FluidsRegistry.ENCHANTED_FLUID_BUCKET.get());

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "woot_revived",
+  "key": {
+    "a": "minecraft:magma_block",
+    "b": "woot_revived:stygian_plate",
+    "c": "woot_revived:netherite_shard"
+  },
+  "pattern": [
+    "cbc",
+    "bab",
+    "cbc"
+  ],
+  "result": {
+    "count": 1,
+    "id": "woot_revived:netherite_magmator"
+  }
+}
