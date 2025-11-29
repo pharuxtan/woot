@@ -59,7 +59,14 @@ public class WootEntityRenderer {
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         Lighting.setupForFlatItems();
 
-        renderer.render(entity, 0F, 0F, pose, bufferSource, LightTexture.pack(15, 15));
+        try {
+            PoseStack entityPose = new PoseStack();
+            entityPose.pushPose();
+            entityPose.last().pose().mul(pose.last().pose());
+            entityPose.last().normal().mul(pose.last().normal());
+
+            renderer.render(entity, 0F, 0F, entityPose, bufferSource, LightTexture.pack(15, 15));
+        } catch (Exception ignored) {}
         bufferSource.endLastBatch();
 
         RenderSystem.disableScissor();
