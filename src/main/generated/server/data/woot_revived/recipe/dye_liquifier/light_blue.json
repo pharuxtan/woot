@@ -2,7 +2,7 @@
   "type": "woot_revived:dye_liquifier",
   "blue_multiplier": 0.5,
   "energy": 500,
-  "ingredients": "#c:dyes/light_blue",
+  "ingredient": "#c:dyes/light_blue",
   "red_multiplier": 0.0,
   "white_multiplier": 0.5,
   "yellow_multiplier": 0.0
