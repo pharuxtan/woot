@@ -2,7 +2,7 @@
   "type": "woot_revived:dye_liquifier",
   "blue_multiplier": 0.0,
   "energy": 500,
-  "ingredients": "minecraft:pink_tulip",
+  "ingredient": "minecraft:pink_tulip",
   "red_multiplier": 0.5,
   "white_multiplier": 0.5,
   "yellow_multiplier": 0.0

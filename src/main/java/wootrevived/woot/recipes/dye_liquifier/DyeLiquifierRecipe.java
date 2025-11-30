@@ -28,7 +28,7 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
             WootCodecs.NON_NEGATIVE_FLOAT.fieldOf("yellow_multiplier").forGetter(DyeLiquifierRecipe::getInternalYellow),
             WootCodecs.NON_NEGATIVE_FLOAT.fieldOf("blue_multiplier").forGetter(DyeLiquifierRecipe::getInternalBlue),
             WootCodecs.NON_NEGATIVE_FLOAT.fieldOf("white_multiplier").forGetter(DyeLiquifierRecipe::getInternalWhite),
-            Ingredient.CODEC.fieldOf("ingredients").forGetter(DyeLiquifierRecipe::getIngredient)
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(DyeLiquifierRecipe::getIngredient)
     ).apply(inst, DyeLiquifierRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DyeLiquifierRecipe> STREAM_CODEC = StreamCodec.composite(
