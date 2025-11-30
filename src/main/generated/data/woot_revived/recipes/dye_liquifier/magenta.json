@@ -2,7 +2,7 @@
   "type": "woot_revived:dye_liquifier",
   "blue_multiplier": 0.25,
   "energy": 500,
-  "ingredients": {
+  "ingredient": {
     "tag": "forge:dyes/magenta"
   },
   "red_multiplier": 0.5,
