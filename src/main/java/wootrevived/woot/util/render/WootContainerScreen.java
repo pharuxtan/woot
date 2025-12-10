@@ -318,7 +318,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         }
     }
 
-    private static RenderPipeline GUI_TEXTURED_OVERLAY = RenderPipelines.GUI_TEXTURED.toBuilder().withLocation("pipeline/woot_gui_textured_overlay").withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withDepthWrite(false).build();
+    public static RenderPipeline GUI_TEXTURED_OVERLAY = RenderPipelines.GUI_TEXTURED.toBuilder().withLocation("pipeline/woot_gui_textured_overlay").withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withDepthWrite(false).build();
 
     public static void renderTiledFluidTextureAtlas(@NotNull GuiGraphics gui, TextureAtlasSprite sprite, int x, int y, int width, int height, int color, boolean enableBlend) {
         int spriteWidth = sprite.contents().width();
