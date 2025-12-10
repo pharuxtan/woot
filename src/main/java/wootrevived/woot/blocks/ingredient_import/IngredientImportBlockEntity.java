@@ -62,7 +62,7 @@ public class IngredientImportBlockEntity extends FactoryBlockBaseEntity {
                 for (int i = 0; i < neighborItemHandler.size(); i++) {
                     ItemResource resource = neighborItemHandler.getResource(i);
                     if(resource.isEmpty())
-                        return;
+                        continue;
 
                     int sim;
                     try (Transaction tx = Transaction.openRoot()) {
@@ -86,7 +86,7 @@ public class IngredientImportBlockEntity extends FactoryBlockBaseEntity {
                 for (int i = 0; i < neighborFluidHandler.size(); i++) {
                     FluidResource resource = neighborFluidHandler.getResource(i);
                     if(resource.isEmpty())
-                        return;
+                        continue;
 
                     int sim;
                     try (Transaction tx = Transaction.openRoot()) {
