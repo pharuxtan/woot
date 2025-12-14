@@ -25,7 +25,6 @@ import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.entity.EntityPersistentStorage;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
@@ -45,7 +44,7 @@ public class DropSimulator {
     private ResourceKey<Level> dimension;
     private ResourceKey<DimensionType> dimensionTypeId;
     private Holder<DimensionType> dimensionTypeRegistration;
-    private FakePlayer fakePlayer = null;
+    private FakeServerPlayer fakePlayer = null;
     private FakeEntityManager<Entity> fakeEntityManager = null;
     private Creeper chargedCreeper = null;
     private DamageSource playerSource = null;
@@ -240,7 +239,7 @@ public class DropSimulator {
     }
 
     private void initFakePlayer(){
-        fakePlayer = new FakePlayer(dimensionLevel, gameProfile);
+        fakePlayer = new FakeServerPlayer(dimensionLevel, gameProfile);
     }
 
     private void initDamageSources(){
