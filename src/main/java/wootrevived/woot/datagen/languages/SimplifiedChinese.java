@@ -311,8 +311,8 @@ public class SimplifiedChinese extends LanguageProvider {
         add("advancements.woot_revived.stygian_plate.description", "在幽冥砧上通过板模具合成一个幽冥板");
         add("advancements.woot_revived.factory_base.title", "你所有问题的根源");
         add("advancements.woot_revived.factory_base.description", "合成一个工厂基座");
-        add("advancements.woot_revived.fluid_infuser.title", "你所有问题的根源");
-        add("advancements.woot_revived.fluid_infuser.description", "合成一个工厂基座");
+        add("advancements.woot_revived.fluid_infuser.title", "向燃料问好");
+        add("advancements.woot_revived.fluid_infuser.description", "合成一个流体灌注器");
         add("advancements.woot_revived.mob_tears_bucket.title", "这些眼泪，享受啊！");
         add("advancements.woot_revived.mob_tears_bucket.description", "收集一桶生物之泪流体");
         add("advancements.woot_revived.vitality_fuel_bucket.title", "能从它们的泪水中获得生命燃料？？？");
