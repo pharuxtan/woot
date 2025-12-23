@@ -28,7 +28,6 @@ navigation:
   <Recipe id="fluid_infuser/mob_tears_7" />
   <Recipe id="fluid_infuser/mob_tears_8" />
   <Recipe id="fluid_infuser/mob_tears_9" />
-  <Recipe id="fluid_infuser/mob_tears_10" />
 </Row>
 
 ## バイタリティ燃料液
@@ -49,4 +48,5 @@ navigation:
   <Recipe id="fluid_infuser/vitality_fuel_10" />
   <Recipe id="fluid_infuser/vitality_fuel_11" />
   <Recipe id="fluid_infuser/vitality_fuel_12" />
+
 </Row>
