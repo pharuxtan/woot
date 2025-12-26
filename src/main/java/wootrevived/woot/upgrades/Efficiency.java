@@ -33,8 +33,6 @@ public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
         int cost = properties.getVitalityFuelCost();
         float ratio = 1F - PERCENTAGES[getVariant(itemTag).level()-1] / 100F;
         properties.setVitalityFuelCost((int)Math.ceil(cost * ratio));
-
-        setVariant(itemTag, UpgradeDefaultVariant.COPPER);
     }
 
     @Override
