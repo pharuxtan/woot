@@ -30,7 +30,6 @@ and can also be used to craft some items using the <ItemImage id="item_infuser" 
   <Recipe id="fluid_infuser/mob_tears_7" />
   <Recipe id="fluid_infuser/mob_tears_8" />
   <Recipe id="fluid_infuser/mob_tears_9" />
-  <Recipe id="fluid_infuser/mob_tears_10" />
 </Row>
 
 ## Vitality Fuel Fluid
