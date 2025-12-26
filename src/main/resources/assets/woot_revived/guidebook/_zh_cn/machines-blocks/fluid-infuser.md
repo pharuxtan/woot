@@ -29,7 +29,6 @@ navigation:
   <Recipe id="fluid_infuser/mob_tears_7" />
   <Recipe id="fluid_infuser/mob_tears_8" />
   <Recipe id="fluid_infuser/mob_tears_9" />
-  <Recipe id="fluid_infuser/mob_tears_10" />
 </Row>
 
 ## 生命燃料流体

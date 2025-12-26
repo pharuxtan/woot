@@ -10,7 +10,7 @@ navigation:
 
 <ItemImage id="enchanted_liquifier" scale="0.5"/>附魔液化器通过对附魔书进行液化来产出<ItemImage id="enchanted_fluid_bucket" scale="0.5"/>附魔流体。
 
-<ItemImage id="minecraft:enchanted_book" scale="0.5"/>附魔书的魔咒每提高一个等级，便能额外产出一桶<ItemImage id="enchanted_fluid_bucket" scale="0.5"/>附魔流体。上限可达<WootConfig key="enchanted_liquifier.max_enchant_lvl" />级。
+每个附魔书的魔咒等级将产出<WootConfig key="enchanted_liquifier.per_enchant_fluid" />毫升的附魔流体。上限为<WootConfig key="enchanted_liquifier.max_enchant_lvl" />级。
 
 这意味着，若附魔书的魔咒等级高于<WootConfig key="enchanted_liquifier.max_enchant_lvl" />，其将被视作<WootConfig key="enchanted_liquifier.max_enchant_lvl" />级魔咒。
 
