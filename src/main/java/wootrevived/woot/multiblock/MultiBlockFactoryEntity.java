@@ -33,7 +33,10 @@ public abstract class MultiBlockFactoryEntity extends BlockEntity implements Blo
     }
 
     public void updatePattern(Level level){
-        Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockState state = getBlockState();
+        if(!state.hasProperty(BlockStateProperties.ENABLED) || !state.getValue(BlockStateProperties.ENABLED))
+            return;
+        Direction facing = state.hasProperty(BlockStateProperties.HORIZONTAL_FACING) ? state.getValue(BlockStateProperties.HORIZONTAL_FACING) : Direction.NORTH;
         Tier newTier = MultiBlockFactory.updatePattern(level, getBlockPos(), facing);
         if(newTier != tier){
             tier = newTier;
