@@ -34,7 +34,7 @@ public class RegisterEntityRenderers {
         BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState> factoryProvider = new BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState>() {
             @Override
             public @NotNull BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> create(@NotNull Context context) {
-                return new FactoryBlockEntityRenderer(context);
+                return new FactoryBlockEntityRenderer();
             }
         };
 

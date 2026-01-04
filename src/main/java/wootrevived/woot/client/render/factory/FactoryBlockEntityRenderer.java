@@ -1,30 +1,18 @@
 package wootrevived.woot.client.render.factory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 
-import javax.annotation.Nullable;
-
 public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> {
-    private final BlockRenderDispatcher blockRenderDispatcher;
-
-    public FactoryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        this.blockRenderDispatcher = context.blockRenderDispatcher();
-    }
-
     @Override
     public void submit(FactoryBlockEntityRenderState state, PoseStack pose, SubmitNodeCollector collector, CameraRenderState camera) {
         if (state.blockState.getRenderShape() == RenderShape.MODEL) {
@@ -49,8 +37,7 @@ public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEnti
         pose.translate((1.0f - scale) / 2f, (1.0f - scale) / 2f, (1.0f - scale) / 2f);
         pose.scale(scale, scale, scale);
 
-        BlockStateModel stateModel = blockRenderDispatcher.getBlockModel(state.blockState);
-        collector.submitBlockModel(pose, RenderType.solid(), stateModel, 1.0F, 1.0F, 1.0F, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        collector.submitMovingBlock(pose, state.movingBlock);
 
         pose.popPose();
     }
@@ -63,6 +50,9 @@ public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEnti
     @Override
     public void extractRenderState(BlockEntity blockEntity, FactoryBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+        renderState.movingBlock.level = blockEntity.getLevel();
+        renderState.movingBlock.blockPos = blockEntity.getBlockPos();
+        renderState.movingBlock.blockState = blockEntity.getBlockState();
         if(blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity)
             renderState.requestModelUpdate = factoryUpgradeBlockEntity::tryRequestModelDataUpdate;
     }

@@ -15,9 +15,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
-
-import javax.annotation.Nullable;
 
 public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> {
     private final ItemModelResolver itemModelResolver;
