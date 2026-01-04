@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.config.DyeLiquifierConfig;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.common.WootCodecs;
@@ -48,7 +47,7 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
     private final float blue;
     private final float white;
 
-    public DyeLiquifierRecipe(int energy, float red, float yellow, float blue, float white, @NotNull Ingredient ingredient) {
+    public DyeLiquifierRecipe(int energy, float red, float yellow, float blue, float white, Ingredient ingredient) {
         this.ingredient = ingredient;
         this.energy = energy;
         this.red = red;
@@ -128,7 +127,7 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
 
     public static float maxMultiplier = 0;
 
-    public static void loadRecipes(@NotNull RecipeMap map){
+    public static void loadRecipes(RecipeMap map){
         Validator.clear();
         maxMultiplier = 0;
         for(RecipeHolder<DyeLiquifierRecipe> recipeHolder : map.byType(RecipesRegistry.DYE_LIQUIFIER_RECIPE_TYPE.get())) {
@@ -177,7 +176,7 @@ public class DyeLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
+    public ItemStack assemble(WootRecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 

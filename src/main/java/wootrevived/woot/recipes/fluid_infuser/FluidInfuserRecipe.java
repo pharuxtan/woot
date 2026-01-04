@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
@@ -41,7 +40,7 @@ public class FluidInfuserRecipe implements Recipe<WootRecipeInput> {
     private final Ingredient ingredient;
     private final FluidStack outputFluid;
 
-    public FluidInfuserRecipe(int energy, @NotNull FluidStack inputFluid, @NotNull Ingredient ingredient, @NotNull FluidStack outputFluid) {
+    public FluidInfuserRecipe(int energy, FluidStack inputFluid, Ingredient ingredient, FluidStack outputFluid) {
         this.energy = energy;
         this.inputFluid = inputFluid;
         this.ingredient = ingredient;
@@ -89,14 +88,14 @@ public class FluidInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public boolean matches(@NotNull WootRecipeInput input, @NotNull Level level) {
+    public boolean matches(WootRecipeInput input, Level level) {
         if(!FluidStack.isSameFluidSameComponents(getInputFluid(), input.getFluid(0)))
             return false;
 
         return getIngredient().test(input.getItem(1));
     }
 
-    public static void loadRecipes(@NotNull RecipeMap map){
+    public static void loadRecipes(RecipeMap map){
         Validator.clear();
         for(RecipeHolder<FluidInfuserRecipe> recipeHolder : map.byType(RecipesRegistry.FLUID_INFUSER_RECIPE_TYPE.get())) {
             Validator.add(recipeHolder.value().ingredient, recipeHolder.value().inputFluid);
@@ -135,7 +134,7 @@ public class FluidInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
+    public ItemStack assemble(WootRecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 

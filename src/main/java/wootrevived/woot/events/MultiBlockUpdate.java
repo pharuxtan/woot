@@ -20,7 +20,7 @@ import wootrevived.woot.multiblock.patterns.Patterns;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class MultiBlockUpdate {
     @SubscribeEvent
     public static void onEntityPlace(BlockEvent.EntityPlaceEvent event) {

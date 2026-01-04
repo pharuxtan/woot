@@ -22,8 +22,7 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -99,7 +98,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
     }
 
     @Override
-    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if(!getBlockState().getValue(BlockStateProperties.ENABLED))
             return;
 
@@ -224,7 +223,7 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
         }
     }
 
-    private @NotNull WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, ValueInput mobValue) {
+    private WootGenerationProperties getWootGenerationProperties(WootFactoryMob<?> mob, ValueInput mobValue) {
         WootGenerationProperties properties = new WootFactoryGenerationProperties(tier, mob, mobValue, (ServerLevel) level, getBlockPos(), mob.getSpawnTickRate(), mob.getVitalityFuelCost());
         for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
             if(upgradeBlockEntity != null)
@@ -332,12 +331,12 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("gui.woot_revived.heart.name");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory, @NotNull Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new HeartContainerMenu(containerId, level, getBlockPos(), playerInventory, player);
     }
 }

@@ -23,8 +23,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.CreativeTankData;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -55,7 +55,7 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if(inputTankHandler.isEmpty())
             return;
 
@@ -109,22 +109,22 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         output.store(CreativeTankData.ID, CreativeTankData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.read(CreativeTankData.ID, CreativeTankData.CODEC).ifPresent(this::setComponent);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("CreativeTankBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -133,7 +133,7 @@ public class CreativeTankBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

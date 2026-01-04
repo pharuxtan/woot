@@ -1,22 +1,21 @@
 package wootrevived.woot;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import wootrevived.woot.guide.WootGuide;
 import wootrevived.woot.init.CommonConfig;
 import wootrevived.woot.init.Registry;
 import wootrevived.woot.init.WootPlugins;
 
-@Mod(Woot.MOD_ID)
+@Mod(Woot.MOD_NAMESPACE)
 public class Woot
 {
-    public static final String MOD_ID = "woot_revived";
+    public static final String MOD_NAMESPACE = "woot_revived";
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Woot(ModContainer container, IEventBus bus)
@@ -30,8 +29,8 @@ public class Woot
         WootGuide.init();
     }
 
-    public static @NotNull ResourceLocation location(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Woot.MOD_ID, path);
+    public static Identifier identifier(String path) {
+        return Identifier.fromNamespaceAndPath(Woot.MOD_NAMESPACE, path);
     }
 
     public static ProblemReporter.ScopedCollector reporter(String path){

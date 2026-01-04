@@ -10,8 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -34,12 +33,12 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     }
 
     @Override
-    public @NotNull ItemStack getMainHandItem() {
+    public ItemStack getMainHandItem() {
         return wootSpawnProperties.getMainHandItem().copy();
     }
 
     @Override
-    public @NotNull ItemStack getOffHandItem() {
+    public ItemStack getOffHandItem() {
         return wootSpawnProperties.getOffHandItem().copy();
     }
 
@@ -84,32 +83,32 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     }
 
     @Override
-    public @NotNull ServerLevel getLevel() {
+    public ServerLevel getLevel() {
         return DropSimulator.getLevel();
     }
 
     @Override
-    public @NotNull RandomSource getRandom() {
+    public RandomSource getRandom() {
         return wootSpawnProperties.getRandom();
     }
 
     @Override
-    public @NotNull RegistryAccess getRegistryAccess() {
+    public RegistryAccess getRegistryAccess() {
         return DropSimulator.getRegistryAccess();
     }
 
     @Override
-    public @NotNull Tier getFactoryTier() {
+    public Tier getFactoryTier() {
         return wootSpawnProperties.getFactoryTier();
     }
 
     @Override
-    public @NotNull WootFactoryMob<?> getFactoryMob() {
+    public WootFactoryMob<?> getFactoryMob() {
         return wootSpawnProperties.getFactoryMob();
     }
 
     @Override
-    public @NotNull ValueInput getFactoryMobValue() {
+    public ValueInput getFactoryMobValue() {
         return wootSpawnProperties.getFactoryMobValue();
     }
 
@@ -119,17 +118,17 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     }
 
     @Override
-    public @NotNull ResourceKey<Level> getDimension() {
+    public ResourceKey<Level> getDimension() {
         return wootSpawnProperties.getDimension();
     }
 
     @Override
-    public @NotNull ServerLevel getHeartLevel() {
+    public ServerLevel getHeartLevel() {
         return wootSpawnProperties.getHeartLevel();
     }
 
     @Override
-    public @NotNull BlockPos getHeartPos() {
+    public BlockPos getHeartPos() {
         return wootSpawnProperties.getHeartPos();
     }
 }

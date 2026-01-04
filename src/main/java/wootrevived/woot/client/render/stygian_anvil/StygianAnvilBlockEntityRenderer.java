@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 
 public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> {
@@ -75,7 +75,7 @@ public class StygianAnvilBlockEntityRenderer implements BlockEntityRenderer<Styg
     }
 
     @Override
-    public void extractRenderState(StygianAnvilBlockEntity blockEntity, StygianAnvilBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+    public void extractRenderState(StygianAnvilBlockEntity blockEntity, StygianAnvilBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
         renderState.facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);

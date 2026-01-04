@@ -23,8 +23,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.util.render.WootShapes;
 
@@ -34,7 +33,7 @@ public abstract class FactoryBlockBase extends Block implements EntityBlock {
     protected final Supplier<BlockEntityType<?>> entity;
 
     public FactoryBlockBase(Supplier<BlockEntityType<?>> entity, String tag, Properties properties) {
-        super(properties.setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag))));
+        super(properties.setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag))));
         this.entity = entity;
     }
 
@@ -44,14 +43,14 @@ public abstract class FactoryBlockBase extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull BlockState playerWillDestroy(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull Player player){
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player){
         if(state.getValue(BlockStateProperties.ENABLED))
             return super.playerWillDestroy(level, pos, state, player);
         return state;
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return entity.get().create(pos, state);
     }
 
@@ -65,7 +64,7 @@ public abstract class FactoryBlockBase extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull VoxelShape getShape(@NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        public VoxelShape getShape(BlockGetter getter, BlockPos pos, CollisionContext context) {
             if (!getValue(BlockStateProperties.ENABLED)) {
                 return WootShapes.disabledShape;
             } else if (getValue(BlockStateProperties.ATTACHED)) {
@@ -76,61 +75,61 @@ public abstract class FactoryBlockBase extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull RenderShape getRenderShape() {
+        public RenderShape getRenderShape() {
             if(getValue(BlockStateProperties.ENABLED) && getValue(BlockStateProperties.ATTACHED))
                 return RenderShape.MODEL;
             return RenderShape.INVISIBLE;
         }
 
         @Override
-        public float getDestroyProgress(@NotNull Player player, @NotNull BlockGetter level, @NotNull BlockPos pos){
+        public float getDestroyProgress(Player player, BlockGetter level, BlockPos pos){
             if(getValue(BlockStateProperties.ENABLED))
                 return super.getDestroyProgress(player, level, pos);
             return 0.0F;
         }
 
         @Override
-        public boolean canSurvive(@NotNull LevelReader level, @NotNull BlockPos pos) {
+        public boolean canSurvive(LevelReader level, BlockPos pos) {
             if(getValue(BlockStateProperties.ENABLED))
                 return super.canSurvive(level, pos);
             return true;
         }
 
         @Override
-        public @NotNull PushReaction getPistonPushReaction() {
+        public PushReaction getPistonPushReaction() {
             if(getValue(BlockStateProperties.ENABLED))
                 return super.getPistonPushReaction();
             return PushReaction.BLOCK;
         }
 
         @Override
-        public @NotNull VoxelShape getCollisionShape(@NotNull BlockGetter level, @NotNull BlockPos pos){
+        public VoxelShape getCollisionShape(BlockGetter level, BlockPos pos){
             if(getValue(BlockStateProperties.ENABLED))
                 return super.getCollisionShape(level, pos);
             return Shapes.empty();
         }
 
         @Override
-        public @NotNull VoxelShape getCollisionShape(@NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context){
+        public VoxelShape getCollisionShape(BlockGetter level, BlockPos pos, CollisionContext context){
             if(getValue(BlockStateProperties.ENABLED))
                 return super.getCollisionShape(level, pos, context);
             return Shapes.empty();
         }
 
         @Override
-        public boolean isRedstoneConductor(@NotNull BlockGetter level, @NotNull BlockPos pos) {
+        public boolean isRedstoneConductor(BlockGetter level, BlockPos pos) {
             return hasProperty(BlockStateProperties.ATTACHED) && getValue(BlockStateProperties.ATTACHED);
         }
 
         @Override
-        public boolean isSuffocating(@NotNull BlockGetter level, @NotNull BlockPos pos) {
+        public boolean isSuffocating(BlockGetter level, BlockPos pos) {
             if(getValue(BlockStateProperties.ENABLED))
                 return super.isSuffocating(level, pos);
             return false;
         }
 
         @Override
-        public boolean isViewBlocking(@NotNull BlockGetter level, @NotNull BlockPos pos) {
+        public boolean isViewBlocking(BlockGetter level, BlockPos pos) {
             if(getValue(BlockStateProperties.ENABLED))
                 return super.isViewBlocking(level, pos);
             return false;

@@ -4,23 +4,22 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
+import org.jspecify.annotations.Nullable;
 
 public class WootFluidType extends FluidType {
-    private final ResourceLocation stillTexture;
-    private final ResourceLocation flowingTexture;
-    private final ResourceLocation overlayTexture;
+    private final Identifier stillTexture;
+    private final Identifier flowingTexture;
+    private final Identifier overlayTexture;
     private final int fogColorR;
     private final int fogColorG;
     private final int fogColorB;
     private final Vector4f fogColor;
 
-    public WootFluidType(final ResourceLocation stillTexture, final ResourceLocation flowingTexture, final ResourceLocation overlayTexture, final int fogColorR, int fogColorG, int fogColorB, final Properties properties) {
+    public WootFluidType(final Identifier stillTexture, final Identifier flowingTexture, final Identifier overlayTexture, final int fogColorR, int fogColorG, int fogColorB, final Properties properties) {
         super(properties);
         this.stillTexture = stillTexture;
         this.flowingTexture = flowingTexture;
@@ -33,22 +32,22 @@ public class WootFluidType extends FluidType {
 
     public final IClientFluidTypeExtensions EXTENSION = new IClientFluidTypeExtensions() {
         @Override
-        public ResourceLocation getStillTexture() {
+        public Identifier getStillTexture() {
             return stillTexture;
         }
 
         @Override
-        public ResourceLocation getFlowingTexture() {
+        public Identifier getFlowingTexture() {
             return flowingTexture;
         }
 
         @Override
-        public ResourceLocation getOverlayTexture() {
+        public Identifier getOverlayTexture() {
             return overlayTexture;
         }
 
         @Override
-        public @NotNull Vector4f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor){
+        public Vector4f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor){
             return fogColor;
         }
 
@@ -63,15 +62,15 @@ public class WootFluidType extends FluidType {
         }
     };
 
-    public ResourceLocation getStillTexture() {
+    public Identifier getStillTexture() {
         return stillTexture;
     }
 
-    public ResourceLocation getFlowingTexture() {
+    public Identifier getFlowingTexture() {
         return flowingTexture;
     }
 
-    public ResourceLocation getOverlayTexture() {
+    public Identifier getOverlayTexture() {
         return overlayTexture;
     }
 

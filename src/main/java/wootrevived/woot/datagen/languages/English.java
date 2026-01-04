@@ -12,7 +12,7 @@ import wootrevived.woot.upgrades.*;
 
 public class English extends LanguageProvider {
     public English(PackOutput output){
-        super(output, Woot.MOD_ID, "en_us");
+        super(output, Woot.MOD_NAMESPACE, "en_us");
     }
 
     @Override
@@ -311,8 +311,8 @@ public class English extends LanguageProvider {
         add("advancements.woot_revived.stygian_plate.description", "Craft a Stygian Plate with the Plate Mold on the Stygian Anvil");
         add("advancements.woot_revived.factory_base.title", "The origin of all your problems");
         add("advancements.woot_revived.factory_base.description", "Craft a Factory Base");
-        add("advancements.woot_revived.fluid_infuser.title", "Say hello to your fuel");
-        add("advancements.woot_revived.fluid_infuser.description", "Craft a Fluid Infuser");
+        add("advancements.woot_revived.fluid_infuser.title", "The origin of all your problems");
+        add("advancements.woot_revived.fluid_infuser.description", "Craft a Factory Base");
         add("advancements.woot_revived.mob_tears_bucket.title", "All these tears, so satisfying!");
         add("advancements.woot_revived.mob_tears_bucket.description", "Collect a bucket of Mob Tears Fluid");
         add("advancements.woot_revived.vitality_fuel_bucket.title", "We can get vitality fuel from their tears???");
@@ -354,7 +354,7 @@ public class English extends LanguageProvider {
         add("advancements.woot_revived.black_dye_plate.title", "Start of upgrades adventure!");
         add("advancements.woot_revived.black_dye_plate.description", "Craft a Black Dye Plate");
         add("advancements.woot_revived.upgrade_base.title", "Where are your upgrades belong!");
-        add("advancements.woot_revived.upgrade_base.description", "Craft an Upgrade Base");
+        add("advancements.woot_revived.upgrade_base.description", "Craft a Black Dye Plate");
         add("advancements.woot_revived.copper_shard.title", "Rusty shard!");
         add("advancements.woot_revived.copper_shard.description", "Craft a Copper Shard on the Stygian Anvil");
         add("advancements.woot_revived.copper_pylon.title", "Your first pylon!");

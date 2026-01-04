@@ -25,15 +25,14 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 
 public class CreativeTankBlock extends Block implements EntityBlock {
     public CreativeTankBlock(String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL));
 
@@ -46,16 +45,16 @@ public class CreativeTankBlock extends Block implements EntityBlock {
 
     protected StateDefinition<Block, BlockState> creativeTankStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.creativeTankStateDefinition;
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return BlocksRegistry.CREATIVE_TANK_BLOCK_ENTITY.get().create(pos, state);
     }
 
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
         return blockEntityType == BlocksRegistry.CREATIVE_TANK_BLOCK_ENTITY.get() ? CreativeTankBlockEntity::ticker : null;
     }
@@ -66,7 +65,7 @@ public class CreativeTankBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack heldItem, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 

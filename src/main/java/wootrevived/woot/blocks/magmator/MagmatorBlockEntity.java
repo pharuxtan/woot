@@ -24,8 +24,8 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 import wootrevived.woot.config.MagmatorConfig;
@@ -67,7 +67,7 @@ public class MagmatorBlockEntity extends BlockEntity implements BlockEntityTicke
     private int delayTick;
 
     @Override
-    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if(level.isClientSide())
             return;
 
@@ -135,14 +135,14 @@ public class MagmatorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
 
         output.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
 
         redstoneMode = input.getInt(WootTags.REDSTONE_MODE_TAG).map(RedstoneMode::byIndex).orElse(RedstoneMode.ALWAYS_ON);
@@ -150,9 +150,9 @@ public class MagmatorBlockEntity extends BlockEntity implements BlockEntityTicke
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("MagmatorBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -161,7 +161,7 @@ public class MagmatorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

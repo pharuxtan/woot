@@ -13,13 +13,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2fStack;
 import wootrevived.woot.Woot;
 import wootrevived.woot.mixins.impl.GuiGraphicsMixin;
@@ -42,7 +41,7 @@ import static wootrevived.woot.util.render.WootStyles.UNIT_STYLE;
  */
 
 public abstract class WootContainerScreen<T extends WootContainerMenu> extends AbstractContainerScreen<T> {
-    public static final ResourceLocation GUI = Woot.location("textures/gui/atlas.png");
+    public static final Identifier GUI = Woot.identifier("textures/gui/atlas.png");
 
     public static final int ATLAS_WIDTH = 256;
     public static final int ATLAS_HEIGHT = 256;
@@ -143,7 +142,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
     }
 
     @Override
-    public void render(@NotNull GuiGraphics gui, int mouseX, int mouseY, float partialTicks){
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTicks){
         for(Slot slot : menu.slots){
             if(slot instanceof WootSlot wootSlot){
                 wootSlot.setActive(activeSideButton == -1);
@@ -167,7 +166,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         }
     }
 
-    private void renderInventoryHoverBox(@NotNull GuiGraphics gui, int minX, int minY, int maxX, int maxY){
+    private void renderInventoryHoverBox(GuiGraphics gui, int minX, int minY, int maxX, int maxY){
         minX += leftPos;
         maxX += leftPos;
         minY += topPos;
@@ -180,13 +179,13 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics gui, int mouseX, int mouseY){
+    protected void renderLabels(GuiGraphics gui, int mouseX, int mouseY){
         int titleX = 1 + (imageWidth - font.width(title)) / 2;
         gui.drawString(font, title, titleX, 6, 0xFF404040, false);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics gui, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics gui, float partialTicks, int mouseX, int mouseY) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         Matrix3x2fStack pose = gui.pose();
@@ -200,16 +199,16 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         pose.popMatrix();
     }
 
-    protected abstract void renderMenuBackground(@NotNull GuiGraphics gui);
-    protected abstract void renderState(@NotNull GuiGraphics gui);
+    protected abstract void renderMenuBackground(GuiGraphics gui);
+    protected abstract void renderState(GuiGraphics gui);
 
-    public static void renderSlot(@NotNull GuiGraphics gui, int x, int y, int color){
+    public static void renderSlot(GuiGraphics gui, int x, int y, int color){
         stroke(gui, x - 1, y - 1, x + 18, y + 18, color & 0x2F_FFFFFF);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 228, 0, 18, 18, ATLAS_WIDTH, ATLAS_HEIGHT);
         gui.fill(x + 1, y + 1, x + 17, y + 17, color & 0x4F_FFFFFF);
     }
 
-    public static void renderVanillaSlot(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderVanillaSlot(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 7, 101, 18, 18, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
@@ -220,23 +219,23 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         xSides += 18;
     }
 
-    public static void renderEnergyBg(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderEnergyBg(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 0, 18, 56, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
-    public static void renderEnergy(@NotNull GuiGraphics gui, int x, int y, int fill, int capacity){
+    public static void renderEnergy(GuiGraphics gui, int x, int y, int fill, int capacity){
         int fillHeight = Mth.clamp(fill * 50 / capacity, 0, 50);
         int fillY = 50 - fillHeight;
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, y + fillY + 3, 196, 3 + fillY, 12, fillHeight, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
-    public void renderEnergyTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity) {
+    public void renderEnergyTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity) {
         if(isHovering(x, y, 18, 56, mouseX, mouseY)){
             _renderEnergyTooltip(gui, mouseX, mouseY, x, y, fill, capacity, true, true);
         }
     }
 
-    public static void _renderEnergyTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, boolean skipHover, boolean showCapacity){
+    public static void _renderEnergyTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, boolean skipHover, boolean showCapacity){
         if(skipHover || _isHovering(x, y, 18, 56, mouseX, mouseY)){
             List<Component> tooltip;
             if(showCapacity){
@@ -258,11 +257,11 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         }
     }
 
-    public static void renderFluidBg(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderFluidBg(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 209, 0, 18, 56, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
-    public static void renderFluid(@NotNull GuiGraphics gui, int x, int y, FluidStack fluid, int capacity){
+    public static void renderFluid(GuiGraphics gui, int x, int y, FluidStack fluid, int capacity){
         if(fluid == null || fluid.isEmpty())
             return;
 
@@ -282,13 +281,13 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         xSides += 18;
     }
 
-    public void renderFluidTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid, int capacity) {
+    public void renderFluidTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid, int capacity) {
         if(isHovering(x, y, 18, 56, mouseX, mouseY)) {
             _renderFluidTooltip(gui, mouseX, mouseY, x, y, fluid, capacity, true, true);
         }
     }
 
-    public static void _renderFluidTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid, int capacity, boolean skipHover, boolean showCapacity){
+    public static void _renderFluidTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, FluidStack fluid, int capacity, boolean skipHover, boolean showCapacity){
         if(skipHover || _isHovering(x, y, 18, 56, mouseX, mouseY)){
             List<Component> tooltip;
             if(showCapacity){
@@ -320,7 +319,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
 
     public static RenderPipeline GUI_TEXTURED_OVERLAY = RenderPipelines.GUI_TEXTURED.toBuilder().withLocation("pipeline/woot_gui_textured_overlay").withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withDepthWrite(false).build();
 
-    public static void renderTiledFluidTextureAtlas(@NotNull GuiGraphics gui, TextureAtlasSprite sprite, int x, int y, int width, int height, int color, boolean enableBlend) {
+    public static void renderTiledFluidTextureAtlas(GuiGraphics gui, TextureAtlasSprite sprite, int x, int y, int width, int height, int color, boolean enableBlend) {
         int spriteWidth = sprite.contents().width();
         int spriteHeight = sprite.contents().height();
 
@@ -336,30 +335,30 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         );
     }
 
-    public static void renderProgressArrowBg(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderProgressArrowBg(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 228, 19, 22, 15, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
-    public static void renderProgressArrow(@NotNull GuiGraphics gui, int x, int y, int progress){
+    public static void renderProgressArrow(GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 22 / 100, 0, 22);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 228, 35, fillWidth, 16, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 
-    public void renderProgressArrowTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
+    public void renderProgressArrowTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
         renderProgressTooltip(gui, mouseX, mouseY, x, y, 22, 16, progress, eta, usage);
     }
 
-    public static void _renderProgressArrowTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
+    public static void _renderProgressArrowTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
         _renderProgressTooltip(gui, mouseX, mouseY, x, y, 22, 16, progress, eta, usage, skipHover);
     }
 
-    public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int width, int height, int progress, float eta, int usage) {
+    public void renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int width, int height, int progress, float eta, int usage) {
         if(isHovering(x, y, width, height, mouseX, mouseY)) {
             _renderProgressTooltip(gui, mouseX, mouseY, x, y, width, height, progress, eta, usage, true);
         }
     }
 
-    public static void _renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int width, int height, int progress, float eta, int usage, boolean skipHover){
+    public static void _renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int width, int height, int progress, float eta, int usage, boolean skipHover){
         if(skipHover || _isHovering(x, y, width, height, mouseX, mouseY)){
             List<Component> tooltip = List.of(
                     Component.empty()
@@ -382,23 +381,23 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         }
     }
 
-    public static void renderColorBarBg(@NotNull GuiGraphics gui, int x, int y, int color){
+    public static void renderColorBarBg(GuiGraphics gui, int x, int y, int color){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 57, 56, 11, ATLAS_WIDTH, ATLAS_HEIGHT);
         ((GuiGraphicsMixin) gui).woot$innerBlit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, x + 53, y + 3, y + 8, 180F / 256F, 230F / 256F, 69F / 256F, 74F / 256F, color);
     }
 
-    public static void renderColorBar(@NotNull GuiGraphics gui, int x, int y, int fill, int capacity, int color){
+    public static void renderColorBar(GuiGraphics gui, int x, int y, int fill, int capacity, int color){
         int fillWidth = Mth.clamp(fill * 50 / capacity, 0, 50);
         ((GuiGraphicsMixin) gui).woot$innerBlit(RenderPipelines.GUI_TEXTURED, GUI, x + 3, x + 3 + fillWidth, y + 3, y + 8, 180F / 256F, (180F + (float)fillWidth) / 256F, 75F / 256F, 80F / 256F, color);
     }
 
-    public void renderColorBarTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName) {
+    public void renderColorBarTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName) {
         if(isHovering(x + 1, y + 1, 54, 9, mouseX, mouseY)) {
             _renderColorBarTooltip(gui, mouseX, mouseY, x, y, fill, capacity, colorName, true, true);
         }
     }
 
-    public static void _renderColorBarTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName, boolean skipHover, boolean showCapacity){
+    public static void _renderColorBarTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int fill, int capacity, MutableComponent colorName, boolean skipHover, boolean showCapacity){
         if(skipHover || _isHovering(x + 1, y + 1, 54, 9, mouseX, mouseY)){
             List<Component> tooltip;
             if(showCapacity){
@@ -420,7 +419,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         }
     }
 
-    public static void stroke(@NotNull GuiGraphics gui, int minX, int minY, int maxX, int maxY, int color){
+    public static void stroke(GuiGraphics gui, int minX, int minY, int maxX, int maxY, int color){
         gui.hLine(minX, maxX, minY, color);
         gui.vLine(maxX, minY, maxY, color);
         gui.hLine(maxX, minX, maxY, color);
@@ -445,7 +444,7 @@ public abstract class WootContainerScreen<T extends WootContainerMenu> extends A
         return mouseX >= (double)(x - 1) && mouseX < (double)(x + width + 1) && mouseY >= (double)(y - 1) && mouseY < (double)(y + height + 1);
     }
 
-    public static void renderPlus(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderPlus(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 234, 57, 13, 14, ATLAS_WIDTH, ATLAS_HEIGHT);
     }
 }

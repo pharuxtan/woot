@@ -5,19 +5,19 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.*;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.client.RenderTypeGroup;
+import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.model.UnbakedElementsHelper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootUpgradeEnum;
 import wootrevived.api.models.DynamicUpgradeItemModelUnbaked;
@@ -27,6 +27,7 @@ import wootrevived.woot.registries.UpgradeItemsRegistry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DynamicUpgradeItemModel implements ItemModel {
@@ -39,7 +40,7 @@ public class DynamicUpgradeItemModel implements ItemModel {
 
     private DynamicUpgradeItemModel(BakingContext bakingContext) {
         this.bakingContext = bakingContext;
-        ResolvedModel baseItemModel = bakingContext.blockModelBaker().getModel(ResourceLocation.withDefaultNamespace("item/generated"));
+        ResolvedModel baseItemModel = bakingContext.blockModelBaker().getModel(Identifier.withDefaultNamespace("item/generated"));
         if (baseItemModel == null) {
             throw new IllegalStateException("Failed to access item/generated model");
         }
@@ -60,22 +61,24 @@ public class DynamicUpgradeItemModel implements ItemModel {
 
         Material material = new Material(
                 Sheets.BLOCKS_MAPPER.sheet(),
-                Woot.location("item/upgrade_item_" + key)
+                Woot.identifier("item/upgrade_item_" + key)
         );
 
         TextureAtlasSprite sprite = spriteGetter.get(material, DEBUG_NAME);
-        ModelRenderProperties renderProperties = new ModelRenderProperties(false, sprite, itemTransforms);
-        RenderTypeGroup renderType = new RenderTypeGroup(ChunkSectionLayer.TRANSLUCENT, NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
 
         var unbaked = UnbakedElementsHelper.createUnbakedItemElements(0, sprite);
-        var quads = UnbakedElementsHelper.bakeElements(unbaked, $ -> sprite, BlockModelRotation.X0_Y0);
+        var quads = UnbakedElementsHelper.bakeElements(unbaked, $ -> sprite, BlockModelRotation.IDENTITY);
 
-        return new BlockModelWrapper(List.of(), quads, renderProperties, renderType.entity());
+        ModelRenderProperties renderProperties = new ModelRenderProperties(false, sprite, itemTransforms);
+        RenderTypeGroup renderTypeGroup = new RenderTypeGroup(ChunkSectionLayer.TRANSLUCENT, NeoForgeRenderTypes::getUnsortedTranslucent);
+        Function<ItemStack, RenderType> renderType = RenderTypeHelper.detectItemModelRenderType(quads, renderTypeGroup);
+
+        return new BlockModelWrapper(List.of(), quads, renderProperties, renderType);
     }
 
     @Override
-    public void update(@NotNull ItemStackRenderState renderState, @NotNull ItemStack stack, @NotNull ItemModelResolver modelResolver, @NotNull ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner itemOwner, int seed) {
-        ResourceLocation itemLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
+    public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner itemOwner, int seed) {
+        Identifier itemLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
         UpgradeItemsRegistry.DynamicEntry<?> entry = upgradeItems.get(itemLocation.toString());
 
         if(entry == null)

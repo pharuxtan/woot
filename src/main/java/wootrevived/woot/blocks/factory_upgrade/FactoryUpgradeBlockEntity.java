@@ -18,7 +18,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
@@ -154,22 +154,22 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         output.store(FactoryUpgradeData.ID, FactoryUpgradeData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.read(FactoryUpgradeData.ID, FactoryUpgradeData.CODEC).ifPresent(this::setComponent);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FactoryUpgradeBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -178,14 +178,14 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }
 
     private static final ModelProperty<String> UPGRADE_MODEL_PROPERTY = new ModelProperty<>();
 
-    public @NotNull ModelData getModelData(){
+    public ModelData getModelData(){
         return super.getModelData().derive().with(UPGRADE_MODEL_PROPERTY, getUpgradeItemName()).build();
     }
 

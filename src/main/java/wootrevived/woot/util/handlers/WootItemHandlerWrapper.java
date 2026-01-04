@@ -3,7 +3,6 @@ package wootrevived.woot.util.handlers;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.common.MachineSideProperty;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class WootItemHandlerWrapper implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public @NotNull ItemResource getResource(int index) {
+    public ItemResource getResource(int index) {
         int size = 0;
         for(ItemHandlerWrapper wrapper : wrappers){
             WootItemResourceHandler handler = wrapper.handler;
@@ -59,7 +58,7 @@ public class WootItemHandlerWrapper implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public long getCapacityAsLong(int index, @NotNull ItemResource resource) {
+    public long getCapacityAsLong(int index, ItemResource resource) {
         int size = 0;
         for(ItemHandlerWrapper wrapper : wrappers){
             WootItemResourceHandler handler = wrapper.handler;
@@ -74,7 +73,7 @@ public class WootItemHandlerWrapper implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public boolean isValid(int index, @NotNull ItemResource resource) {
+    public boolean isValid(int index, ItemResource resource) {
         int size = 0;
         for(ItemHandlerWrapper wrapper : wrappers){
             WootItemResourceHandler handler = wrapper.handler;
@@ -89,7 +88,7 @@ public class WootItemHandlerWrapper implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public int insert(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
         int size = 0;
         for(ItemHandlerWrapper wrapper : wrappers){
             WootItemResourceHandler handler = wrapper.handler;
@@ -108,7 +107,7 @@ public class WootItemHandlerWrapper implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public int extract(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
         int size = 0;
         for(ItemHandlerWrapper wrapper : wrappers){
             WootItemResourceHandler handler = wrapper.handler;

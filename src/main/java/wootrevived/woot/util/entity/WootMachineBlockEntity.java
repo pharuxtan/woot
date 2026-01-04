@@ -32,8 +32,8 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
 import wootrevived.woot.client.render.dye_liquifier.DyeLiquifierContainerMenu;
 import wootrevived.woot.network.WootMachineUpdate;
@@ -151,7 +151,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     @Override
-    public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if(level.isClientSide())
             return;
 
@@ -430,7 +430,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
 
         long progress = ((long)processMax << 32) | (long) processRemaining;
@@ -440,7 +440,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
 
         input.getLong(WootTags.PROGRESS_TAG).ifPresent(progress -> {
@@ -458,9 +458,9 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
 
     protected abstract ProblemReporter.ScopedCollector getReporter();
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(getReporter(), provider);
         saveAdditional(output);
@@ -469,7 +469,7 @@ public abstract class WootMachineBlockEntity extends BlockEntity implements Bloc
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

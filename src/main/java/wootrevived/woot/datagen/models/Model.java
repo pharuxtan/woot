@@ -8,7 +8,7 @@ import wootrevived.woot.Woot;
 
 public class Model extends ModelProvider {
     public Model(PackOutput output) {
-        super(output, Woot.MOD_ID);
+        super(output, Woot.MOD_NAMESPACE);
     }
 
     @Override

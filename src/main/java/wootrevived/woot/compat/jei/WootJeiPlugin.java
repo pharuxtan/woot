@@ -6,7 +6,7 @@ import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.registration.*;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.interfaces.WootUpgradeEnum;
 import wootrevived.api.internal.WootUpgradeComponent;
 import wootrevived.woot.Woot;
@@ -38,18 +37,18 @@ import java.util.Map;
 @JeiPlugin
 public class WootJeiPlugin implements IModPlugin {
     @Override
-    public @NotNull ResourceLocation getPluginUid() {
-        return Woot.location("jei");
+    public Identifier getPluginUid() {
+        return Woot.identifier("jei");
     }
 
     @Override
-    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
         for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
             registration.registerSubtypeInterpreter(entry.item().get(), UpgradeSubtypeInterpreter.INSTANCE);
     }
 
     @Override
-    public void registerExtraIngredients(@NotNull IExtraIngredientRegistration registration) {
+    public void registerExtraIngredients(IExtraIngredientRegistration registration) {
         List<ItemStack> stacks = new ArrayList<>();
 
         for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
@@ -78,7 +77,7 @@ public class WootJeiPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipes(@NotNull IRecipeRegistration registration) {
+    public void registerRecipes(IRecipeRegistration registration) {
         RecipeMap recipeMap = LoadRecipes.ClientSide.recipeMap;
 
         List<StygianAnvilRecipe> stygianAnvilRecipes = new ArrayList<>();

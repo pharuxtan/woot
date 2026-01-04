@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.FactoryBlockData;
 
@@ -56,22 +56,22 @@ public class FactoryBlockBaseEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         output.store(FactoryBlockData.ID, FactoryBlockData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.read(FactoryBlockData.ID, FactoryBlockData.CODEC).ifPresent(this::setComponent);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FactoryBlockBaseEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -80,7 +80,7 @@ public class FactoryBlockBaseEntity extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.fluid_infuser.FluidInfuserBlockEntity;
 import wootrevived.woot.config.FluidInfuserConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
@@ -41,7 +40,7 @@ public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuse
     }
 
     @Override
-    protected void renderMenuBackground(@NotNull GuiGraphics gui) {
+    protected void renderMenuBackground(GuiGraphics gui) {
         renderSlot(gui, INPUT_SLOT_X, INPUT_SLOT_Y, INPUT_SLOT_COLOR);
         renderEnergyBg(gui, ENERGY_X, ENERGY_Y);
         renderFluidBg(gui, INPUT_FLUID_X, INPUT_FLUID_Y);
@@ -50,7 +49,7 @@ public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuse
     }
 
     @Override
-    protected void renderState(@NotNull GuiGraphics gui) {
+    protected void renderState(GuiGraphics gui) {
         renderEnergy(gui, ENERGY_X, ENERGY_Y, menu.getEnergy(), FluidInfuserConfig.ENERGY_CAPACITY.get());
         renderFluid(gui, INPUT_FLUID_X, INPUT_FLUID_Y, menu.getInputFluid(), FluidInfuserConfig.INPUT_TANK_CAPACITY.get());
         renderFluid(gui, OUTPUT_FLUID_X, OUTPUT_FLUID_Y, menu.getOutputFluid(), FluidInfuserConfig.OUTPUT_TANK_CAPACITY.get());
@@ -58,27 +57,27 @@ public class FluidInfuserContainerScreen extends WootContainerScreen<FluidInfuse
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY){
+    protected void renderTooltip(GuiGraphics gui, int mouseX, int mouseY){
         renderEnergyTooltip(gui, mouseX, mouseY, ENERGY_X, ENERGY_Y, menu.getEnergy(), FluidInfuserConfig.ENERGY_CAPACITY.get());
         renderFluidTooltip(gui, mouseX, mouseY, INPUT_FLUID_X, INPUT_FLUID_Y, menu.getInputFluid(), FluidInfuserConfig.INPUT_TANK_CAPACITY.get());
         renderFluidTooltip(gui, mouseX, mouseY, OUTPUT_FLUID_X, OUTPUT_FLUID_Y, menu.getOutputFluid(), FluidInfuserConfig.OUTPUT_TANK_CAPACITY.get());
         renderProgressTooltip(gui, mouseX, mouseY, PROGRESS_X, PROGRESS_Y, menu.getProgress(), menu.getLeftSeconds(), menu.getEnergyProcessTransfer());
     }
 
-    public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderProgressBg(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 81, 65, 24, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
-    public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
+    public static void renderProgress(GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 65 / 100, 0, 65);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 106, fillWidth, 25, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
-    public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
+    public void renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
         renderProgressTooltip(gui, mouseX, mouseY, x, y, 65, 25, progress, eta, usage);
     }
 
-    public static void _renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
+    public static void _renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
         _renderProgressTooltip(gui, mouseX, mouseY, x, y, 65, 25, progress, eta, usage, skipHover);
     }
 }

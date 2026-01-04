@@ -33,8 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
@@ -52,7 +51,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
 
     public StygianAnvilBlock(String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -66,7 +65,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
 
     protected StateDefinition<Block, BlockState> anvilStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.anvilStateDefinition;
     }
 
@@ -89,7 +88,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
                 block == BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get();
     }
 
-    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random){
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random){
         super.animateTick(state, level, pos, random);
 
         if (Minecraft.getInstance().options.particles().get() != ParticleStatus.MINIMAL && random.nextInt(10) == 0 && isAnvilHot(level, pos))
@@ -97,7 +96,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return BlocksRegistry.STYGIAN_ANVIL_BLOCK_ENTITY.get().create(pos, state);
     }
 
@@ -107,7 +106,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack heldItem, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 
@@ -151,12 +150,12 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
+        public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit){
             return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
         @Override
-        public @NotNull VoxelShape getShape(@NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        public VoxelShape getShape(BlockGetter getter, BlockPos pos, CollisionContext context) {
             Direction direction = getValue(BlockStateProperties.HORIZONTAL_FACING);
             return direction.getAxis() == Direction.Axis.X ? X_AXIS_AABB : Z_AXIS_AABB;
         }
@@ -166,7 +165,7 @@ public class StygianAnvilBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull BlockState mirror(Mirror mirror) {
+        public BlockState mirror(Mirror mirror) {
             return rotate(null, null, mirror.getRotation(getValue(BlockStateProperties.HORIZONTAL_FACING)));
         }
     }

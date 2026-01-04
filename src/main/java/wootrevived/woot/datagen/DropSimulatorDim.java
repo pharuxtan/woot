@@ -17,6 +17,6 @@ public class DropSimulatorDim extends DatapackBuiltinEntriesProvider {
             .add(Registries.LEVEL_STEM, DropSimulatorDimension::bootstrapStem);
 
     public DropSimulatorDim(PackOutput output, CompletableFuture<HolderLookup.Provider> registries){
-        super(output, registries, BUILDER, Set.of(Woot.MOD_ID));
+        super(output, registries, BUILDER, Set.of(Woot.MOD_NAMESPACE));
     }
 }

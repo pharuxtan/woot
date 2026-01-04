@@ -10,7 +10,6 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -160,7 +159,7 @@ public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public @NotNull ItemResource getResource(int index) {
+    public ItemResource getResource(int index) {
         return ItemResource.EMPTY;
     }
 
@@ -170,7 +169,7 @@ public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public long getCapacityAsLong(int index, @NotNull ItemResource resource) {
+    public long getCapacityAsLong(int index, ItemResource resource) {
         int count = 0;
         for(int i = 0; i < 4; i++){
             List<ItemStack> list = importItems.get(i);
@@ -186,7 +185,7 @@ public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public boolean isValid(int index, @NotNull ItemResource resource) {
+    public boolean isValid(int index, ItemResource resource) {
         for(int i = 0; i < 4; i++){
             List<ItemStack> list = importItems.get(i);
             if(list == null)
@@ -201,7 +200,7 @@ public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public int insert(@NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(ItemResource resource, int amount, TransactionContext transaction) {
         if(!isValid(0, resource) || resource.isEmpty())
             return 0;
 
@@ -242,12 +241,12 @@ public class WootImportItemHandler implements ResourceHandler<ItemResource> {
     }
 
     @Override
-    public int insert(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
         return insert(resource, amount, transaction);
     }
 
     @Override
-    public int extract(int index, @NotNull ItemResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
         return 0;
     }
 

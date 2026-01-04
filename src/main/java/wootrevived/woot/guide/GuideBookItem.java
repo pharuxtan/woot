@@ -8,17 +8,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 
 public class GuideBookItem extends Item {
     public GuideBookItem(String tag) {
         super(new Properties().stacksTo(1)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag))));
     }
 
     @Override
-    public InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if(level.isClientSide())
             GuidesCommon.openGuide(player, WootGuide.ID);
 

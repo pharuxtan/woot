@@ -10,7 +10,7 @@ import wootrevived.woot.config.GuideConfig;
 import wootrevived.woot.guide.GuideBookPersistentState;
 import wootrevived.woot.registries.ItemsRegistry;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class GuideBook {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

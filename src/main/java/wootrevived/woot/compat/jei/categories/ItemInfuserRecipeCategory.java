@@ -12,7 +12,6 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.compat.jei.WootJeiCustomFluidRenderer;
 import wootrevived.woot.compat.jei.WootJeiPluginTypes;
 import wootrevived.woot.config.ItemInfuserConfig;
@@ -50,7 +49,7 @@ public class ItemInfuserRecipeCategory implements IRecipeCategory<ItemInfuserRec
     }
 
     @Override
-    public void draw(ItemInfuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(ItemInfuserRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
         int totalProgressTick = recipe.getEnergy() / ItemInfuserConfig.ENERGY_PROCESS_TRANSFER.get();
         int progress = (GlobalClientTicker.tickCounter % totalProgressTick) * 100 / totalProgressTick;
 
@@ -79,22 +78,22 @@ public class ItemInfuserRecipeCategory implements IRecipeCategory<ItemInfuserRec
     }
 
     @Override
-    public @NotNull IRecipeType<ItemInfuserRecipe> getRecipeType() {
+    public IRecipeType<ItemInfuserRecipe> getRecipeType() {
         return WootJeiPluginTypes.ITEM_INFUSER_TYPE;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return Component.translatable("gui.woot_revived.item_infuser.name");
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ItemInfuserRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ItemInfuserRecipe recipe, IFocusGroup focuses) {
         FluidStack inputFluid = recipe.getFluid();
 
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_FLUID_X + 3, INPUT_FLUID_Y + 3)

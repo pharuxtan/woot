@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import wootrevived.woot.Woot;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RemoveNBTTooltip {
     @SubscribeEvent
     public static void onGatherTooltip(RenderTooltipEvent.GatherComponents event) {

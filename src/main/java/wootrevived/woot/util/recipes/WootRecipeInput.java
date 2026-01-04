@@ -5,7 +5,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 
 public class WootRecipeInput implements RecipeInput {
     private final int size;
@@ -23,7 +22,7 @@ public class WootRecipeInput implements RecipeInput {
     }
 
     @Override
-    public @NotNull ItemStack getItem(int slot) {
+    public ItemStack getItem(int slot) {
         return slot >= 0 && slot < ingredients.size() ? this.ingredients.get(slot).left().orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
     }
 

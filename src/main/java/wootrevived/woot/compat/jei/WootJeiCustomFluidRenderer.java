@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.render.WootContainerScreen;
 
 import java.util.List;
@@ -22,18 +21,18 @@ public class WootJeiCustomFluidRenderer implements IIngredientRenderer<FluidStac
     }
 
     @Override
-    public void render(@NotNull GuiGraphics gui, @NotNull FluidStack ingredient) {
+    public void render(GuiGraphics gui, FluidStack ingredient) {
         WootContainerScreen.renderFluid(gui, -3, -3, ingredient, capacity);
     }
 
     @Override
     @SuppressWarnings("removal")
-    public @NotNull List<Component> getTooltip(@NotNull FluidStack ingredient, @NotNull TooltipFlag tooltipFlag) {
+    public List<Component> getTooltip(FluidStack ingredient, TooltipFlag tooltipFlag) {
         return List.of();
     }
 
     @Override
-    public void getTooltip(@NotNull ITooltipBuilder tooltip, FluidStack ingredient, @NotNull TooltipFlag tooltipFlag) {
+    public void getTooltip(ITooltipBuilder tooltip, FluidStack ingredient, TooltipFlag tooltipFlag) {
         tooltip.add(Component.empty()
                 .append(Component.translatable("info.woot_revived.fluid").append(Component.literal(": ")).setStyle(MACHINE_STYLE))
                 .append(ingredient != null && !ingredient.isEmpty() ? ingredient.getHoverName() : Component.translatable("info.woot_revived.empty"))

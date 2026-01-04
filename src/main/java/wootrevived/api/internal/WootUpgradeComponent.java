@@ -13,7 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootUpgradeEnum;
 
@@ -161,7 +161,7 @@ public record WootUpgradeComponent(Class<? extends WootUpgradeEnum<?>> clazz, Wo
     @SuppressWarnings("unchecked")
     private static final StreamCodec<RegistryFriendlyByteBuf, WootUpgradeComponent> STREAM_CODEC = new StreamCodec<>(){
         @Override
-        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull WootUpgradeComponent comp) {
+        public void encode(@NonNull RegistryFriendlyByteBuf buf, @NonNull WootUpgradeComponent comp) {
             buf.writeUtf(comp.clazz().getName());
 
             Codec<WootUpgradeEnum<?>> codec = (Codec<WootUpgradeEnum<?>>) comp.variant().codec();
@@ -177,7 +177,7 @@ public record WootUpgradeComponent(Class<? extends WootUpgradeEnum<?>> clazz, Wo
         }
 
         @Override
-        public @NotNull WootUpgradeComponent decode(@NotNull RegistryFriendlyByteBuf buf) {
+        public @NonNull WootUpgradeComponent decode(@NonNull RegistryFriendlyByteBuf buf) {
             String className = buf.readUtf();
             Class<? extends WootUpgradeEnum<?>> clazz;
             try {

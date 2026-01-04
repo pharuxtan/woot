@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
@@ -45,7 +44,7 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
     private final Optional<Ingredient> augment;
     private final ItemStack output;
 
-    public ItemInfuserRecipe(int energy, @NotNull FluidStack fluid, @NotNull Ingredient ingredient, @NotNull Optional<Ingredient> augment, @NotNull ItemStack output) {
+    public ItemInfuserRecipe(int energy, FluidStack fluid, Ingredient ingredient, Optional<Ingredient> augment, ItemStack output) {
         this.energy = energy;
         this.fluid = fluid;
         this.ingredient = ingredient;
@@ -73,19 +72,19 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
         return RecipesRegistry.ITEM_INFUSER_RECIPE_BOOK_CATEGORY.get();
     }
 
-    public @NotNull FluidStack getFluid(){
+    public FluidStack getFluid(){
         return this.fluid.copy();
     }
 
-    public @NotNull Ingredient getIngredient(){
+    public Ingredient getIngredient(){
         return this.ingredient;
     }
 
-    public @NotNull Optional<Ingredient> getAugment(){
+    public Optional<Ingredient> getAugment(){
         return this.augment;
     }
 
-    public @NotNull ItemStack getOutput(){
+    public ItemStack getOutput(){
         return output.copy();
     }
 
@@ -102,7 +101,7 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public boolean matches(@NotNull WootRecipeInput input, @NotNull Level level) {
+    public boolean matches(WootRecipeInput input, Level level) {
         if(!FluidStack.isSameFluidSameComponents(getFluid(), input.getFluid(0)))
             return false;
 
@@ -112,7 +111,7 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
         return getAugment().isEmpty() || getAugment().get().test(input.getItem(2));
     }
 
-    public static void loadRecipes(@NotNull RecipeMap map){
+    public static void loadRecipes(RecipeMap map){
         Validator.clear();
         for(RecipeHolder<ItemInfuserRecipe> recipeHolder : map.byType(RecipesRegistry.ITEM_INFUSER_RECIPE_TYPE.get())) {
             Validator.add(recipeHolder.value().ingredient, recipeHolder.value().augment, recipeHolder.value().fluid);
@@ -162,7 +161,7 @@ public class ItemInfuserRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
+    public ItemStack assemble(WootRecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 

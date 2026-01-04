@@ -6,22 +6,22 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.nautilus.ZombieNautilus;
 import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.registrations.WootFactoryMobRegistration;
 
-public class CatMob extends WootFactoryMob<Cat> {
-    public CatMob(EntityType<Cat> entityType, Properties properties) {
+public class ZombieNautilusMob extends WootFactoryMob<ZombieNautilus> {
+    public ZombieNautilusMob(EntityType<ZombieNautilus> entityType, Properties properties) {
         super(entityType, properties);
     }
 
     @Override
     public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.empty();
-        VariantUtils.readVariant(input, Registries.CAT_VARIANT).flatMap(Holder::unwrapKey).ifPresent(key -> {
+        VariantUtils.readVariant(input, Registries.ZOMBIE_NAUTILUS_VARIANT).flatMap(Holder::unwrapKey).ifPresent(key -> {
             tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.identifier().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
         });
         return tip.append(super.getDisplayName(input));
@@ -35,10 +35,10 @@ public class CatMob extends WootFactoryMob<Cat> {
     @Override
     public void saveTag(ValueInput input, ValueOutput output){
         super.saveTag(input, output);
-        VariantUtils.readVariant(input, Registries.CAT_VARIANT).ifPresent(variant -> VariantUtils.writeVariant(output, variant));
+        VariantUtils.readVariant(input, Registries.ZOMBIE_NAUTILUS_VARIANT).ifPresent(variant -> VariantUtils.writeVariant(output, variant));
     }
 
     public static void register(WootFactoryMobRegistration registration) {
-        registration.registerFactoryMob(new CatMob(EntityType.CAT, new Properties()));
+        registration.registerFactoryMob(new ZombieNautilusMob(EntityType.ZOMBIE_NAUTILUS, new Properties()));
     }
 }

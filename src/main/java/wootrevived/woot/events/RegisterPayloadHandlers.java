@@ -8,11 +8,11 @@ import wootrevived.woot.Woot;
 import wootrevived.woot.network.WootFakeSpawnerUpdate;
 import wootrevived.woot.network.WootMachineUpdate;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class RegisterPayloadHandlers {
     @SubscribeEvent
     public static void registerPayloadHandler(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(Woot.MOD_ID).versioned("1").optional();
+        PayloadRegistrar registrar = event.registrar(Woot.MOD_NAMESPACE).versioned("1").optional();
 
         registrar.playToServer(
                 WootMachineUpdate.TYPE,

@@ -7,12 +7,13 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -32,15 +33,15 @@ public class GiveCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("give")
-                .requires(cs -> cs.hasPermission(2))
+                .requires(cs -> cs.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(
                         Commands.argument("target", EntityArgument.player())
                                 .then(
-                                        Commands.argument("entity", ResourceLocationArgument.id()).suggests(suggestionProvider)
+                                        Commands.argument("entity", IdentifierArgument.id()).suggests(suggestionProvider)
                                                 .executes(ctx -> giveItem(
                                                         ctx.getSource(),
                                                         EntityArgument.getPlayer(ctx, "target"),
-                                                        ResourceLocationArgument.getId(ctx, "entity"),
+                                                        IdentifierArgument.getId(ctx, "entity"),
                                                         new CompoundTag()
                                                 ))
                                                 .then(
@@ -48,7 +49,7 @@ public class GiveCommand {
                                                                 .executes(ctx -> giveItem(
                                                                         ctx.getSource(),
                                                                         EntityArgument.getPlayer(ctx, "target"),
-                                                                        ResourceLocationArgument.getId(ctx, "entity"),
+                                                                        IdentifierArgument.getId(ctx, "entity"),
                                                                         CompoundTagArgument.getCompoundTag(ctx, "nbt")
                                                                 ))
                                                 )
@@ -56,7 +57,7 @@ public class GiveCommand {
                 );
     }
 
-    private static int giveItem(CommandSourceStack source, ServerPlayer target, ResourceLocation resourceLocation, CompoundTag tag) {
+    private static int giveItem(CommandSourceStack source, ServerPlayer target, Identifier resourceLocation, CompoundTag tag) {
         Holder.Reference<EntityType<?>> entityTypeholder = BuiltInRegistries.ENTITY_TYPE.get(resourceLocation).orElse(null);
         if(entityTypeholder == null)
             return 1;

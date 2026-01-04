@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,7 +18,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.ItemsRegistry;
 
 public class MobShardProjectile extends ThrowableItemProjectile {
@@ -34,7 +33,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
     }
 
     @Override
-    protected @NotNull Item getDefaultItem() {
+    protected Item getDefaultItem() {
         return ItemsRegistry.MOB_SHARD_ITEM.get();
     }
 
@@ -56,7 +55,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult result){
+    protected void onHitBlock(BlockHitResult result){
         if(!this.level().isClientSide()) {
             this.remove(RemovalReason.DISCARDED);
 
@@ -68,7 +67,7 @@ public class MobShardProjectile extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult result) {
+    protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
 
         if(this.level() instanceof ServerLevel serverLevel) {

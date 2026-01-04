@@ -20,7 +20,7 @@ import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class MobShardKillCheck {
     @SubscribeEvent
     public static void onLivingDeathEvent(LivingDeathEvent event) {

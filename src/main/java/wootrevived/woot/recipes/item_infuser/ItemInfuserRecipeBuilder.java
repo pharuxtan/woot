@@ -71,7 +71,7 @@ public class ItemInfuserRecipeBuilder {
 
     public void save(RecipeOutput recipeOutput, String path){
         recipeOutput.accept(
-                ResourceKey.create(Registries.RECIPE, Woot.location(BlocksRegistry.ITEM_INFUSER_TAG + "/" + path)),
+                ResourceKey.create(Registries.RECIPE, Woot.identifier(BlocksRegistry.ITEM_INFUSER_TAG + "/" + path)),
                 new ItemInfuserRecipe(energy, fluid, ingredient, augment, output),
                 null
         );

@@ -6,7 +6,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import wootrevived.woot.Woot;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class GlobalClientTicker {
     public static int tickCounter = 0;
 

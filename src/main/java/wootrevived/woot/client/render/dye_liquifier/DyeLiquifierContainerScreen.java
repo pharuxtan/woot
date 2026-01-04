@@ -7,7 +7,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.dye_liquifier.DyeLiquifierBlockEntity;
 import wootrevived.woot.config.DyeLiquifierConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
@@ -60,7 +59,7 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     }
 
     @Override
-    protected void renderMenuBackground(@NotNull GuiGraphics gui) {
+    protected void renderMenuBackground(GuiGraphics gui) {
         renderSlot(gui, RED_INPUT_SLOT_X, RED_INPUT_SLOT_Y, RED_INPUT_SLOT_COLOR);
         renderSlot(gui, YELLOW_INPUT_SLOT_X, YELLOW_INPUT_SLOT_Y, YELLOW_INPUT_SLOT_COLOR);
         renderSlot(gui, BLUE_INPUT_SLOT_X, BLUE_INPUT_SLOT_Y, BLUE_INPUT_SLOT_COLOR);
@@ -75,7 +74,7 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     }
 
     @Override
-    protected void renderState(@NotNull GuiGraphics gui) {
+    protected void renderState(GuiGraphics gui) {
         renderEnergy(gui, ENERGY_X, ENERGY_Y, menu.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get());
         renderColorBar(gui, COLOR_BAR_X, RED_COLOR_BAR_Y, menu.getRedDyeAmount(), DyeLiquifierConfig.RED_TANK_CAPACITY.get(), DyeColor.RED.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
         renderColorBar(gui, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, menu.getYellowDyeAmount(), DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get(), DyeColor.YELLOW.getMapColor().calculateARGBColor(MapColor.Brightness.HIGH));
@@ -86,7 +85,7 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY){
+    protected void renderTooltip(GuiGraphics gui, int mouseX, int mouseY){
         renderEnergyTooltip(gui, mouseX, mouseY, ENERGY_X, ENERGY_Y, menu.getEnergy(), DyeLiquifierConfig.ENERGY_CAPACITY.get());
         renderColorBarTooltip(gui, mouseX, mouseY, COLOR_BAR_X, RED_COLOR_BAR_Y, menu.getRedDyeAmount(), DyeLiquifierConfig.RED_TANK_CAPACITY.get(), Component.translatable("info.woot_revived.dye.red"));
         renderColorBarTooltip(gui, mouseX, mouseY, COLOR_BAR_X, YELLOW_COLOR_BAR_Y, menu.getYellowDyeAmount(), DyeLiquifierConfig.YELLOW_TANK_CAPACITY.get(), Component.translatable("info.woot_revived.dye.yellow"));
@@ -96,20 +95,20 @@ public class DyeLiquifierContainerScreen extends WootContainerScreen<DyeLiquifie
         renderProgressTooltip(gui, mouseX, mouseY, PROGRESS_X, PROGRESS_Y, menu.getProgress(), menu.getLeftSeconds(), menu.getEnergyProcessTransfer());
     }
 
-    public static void renderProgressBg(@NotNull GuiGraphics gui, int x, int y){
+    public static void renderProgressBg(GuiGraphics gui, int x, int y){
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 177, 132, 18, 43, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
-    public static void renderProgress(@NotNull GuiGraphics gui, int x, int y, int progress){
+    public static void renderProgress(GuiGraphics gui, int x, int y, int progress){
         int fillWidth = Mth.clamp(progress * 18 / 100, 0, 18);
         gui.blit(RenderPipelines.GUI_TEXTURED, GUI, x, y, 196, 132, fillWidth, 44, WootContainerScreen.ATLAS_WIDTH, WootContainerScreen.ATLAS_HEIGHT);
     }
 
-    public void renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
+    public void renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage){
         renderProgressTooltip(gui, mouseX, mouseY, x, y, 18, 44, progress, eta, usage);
     }
 
-    public static void _renderProgressTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
+    public static void _renderProgressTooltip(GuiGraphics gui, int mouseX, int mouseY, int x, int y, int progress, float eta, int usage, boolean skipHover){
         _renderProgressTooltip(gui, mouseX, mouseY, x, y, 18, 44, progress, eta, usage, skipHover);
     }
 }

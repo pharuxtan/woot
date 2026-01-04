@@ -8,7 +8,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
@@ -60,13 +59,13 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public boolean matches(@NotNull WootRecipeInput input, @NotNull Level level) {
+    public boolean matches(WootRecipeInput input, Level level) {
         return false;
     }
 
     public static List<Enchantment> enchantments = new ArrayList<>();
 
-    public static void loadRecipes(@NotNull Level level){
+    public static void loadRecipes(Level level){
         RegistryAccess accessor = level.registryAccess();
         HolderLookup.RegistryLookup<Enchantment> lookup = accessor.lookupOrThrow(Registries.ENCHANTMENT);
 
@@ -78,7 +77,7 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
+    public ItemStack assemble(WootRecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 

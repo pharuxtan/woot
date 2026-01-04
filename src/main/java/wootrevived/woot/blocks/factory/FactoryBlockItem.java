@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.block.FactoryBlockBase;
 
 public class FactoryBlockItem extends BlockItem {
@@ -21,7 +20,7 @@ public class FactoryBlockItem extends BlockItem {
         super(block, properties);
     }
 
-    public @NotNull InteractionResult useOn(UseOnContext context){
+    public InteractionResult useOn(UseOnContext context){
         Level level = context.getLevel();
         Player player = context.getPlayer();
         BlockPos pos = context.getClickedPos();

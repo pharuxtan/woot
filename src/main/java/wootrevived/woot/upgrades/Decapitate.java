@@ -20,7 +20,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -37,13 +36,13 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
     public Decapitate(String tag, UpgradeDefaultVariant variant) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
 
     @Override
-    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
         properties.setDoSimulateChargedCreeper(true);
     }
 
@@ -57,7 +56,7 @@ public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
     );
 
     @Override
-    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
         List<ItemStack> drops = properties.getItemDrops();
 
         for(ItemStack drop : drops){
@@ -68,7 +67,7 @@ public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -98,7 +97,7 @@ public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.DECAPITATE_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -118,7 +117,7 @@ public class Decapitate extends WootUpgradeItem<UpgradeDefaultVariant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.decapitate.desc.0", variant.level()).setStyle(DESCRIPTION_STYLE));
         }
     }

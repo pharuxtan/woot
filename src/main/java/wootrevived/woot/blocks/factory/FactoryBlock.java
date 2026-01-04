@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.block.FactoryBlockBase;
 
 import java.util.function.Supplier;
@@ -34,7 +33,7 @@ public class FactoryBlock extends FactoryBlockBase {
 
     protected StateDefinition<Block, BlockState> factoryStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.factoryStateDefinition;
     }
 

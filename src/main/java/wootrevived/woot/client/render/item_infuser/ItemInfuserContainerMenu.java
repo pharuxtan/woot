@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.item_infuser.ItemInfuserBlockEntity;
 import wootrevived.woot.recipes.item_infuser.ItemInfuserRecipe;
 import wootrevived.woot.registries.BlocksRegistry;
@@ -44,7 +43,7 @@ public class ItemInfuserContainerMenu extends WootContainerMenu {
         this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 1, 85, 40));
         this.addSlot(new ResourceHandlerSlot(machineInventory, machineInventory::set, 2, 141, 40){
             @Override
-            public boolean mayPlace(@NotNull ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return false;
             }
         });
@@ -62,7 +61,7 @@ public class ItemInfuserContainerMenu extends WootContainerMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         // Based off Gigaherz Elements Of Power code
         Slot slot = this.slots.get(index);
         if (!slot.hasItem())
@@ -119,7 +118,7 @@ public class ItemInfuserContainerMenu extends WootContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, BlocksRegistry.ITEM_INFUSER_BLOCK.get());
     }
 }

@@ -12,25 +12,24 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 
 public class CreativePowerBlock extends Block implements EntityBlock {
     public CreativePowerBlock(String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL));
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return BlocksRegistry.CREATIVE_POWER_BLOCK_ENTITY.get().create(pos, state);
     }
 
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
         return blockEntityType == BlocksRegistry.CREATIVE_POWER_BLOCK_ENTITY.get() ? CreativePowerBlockEntity::ticker : null;
     }

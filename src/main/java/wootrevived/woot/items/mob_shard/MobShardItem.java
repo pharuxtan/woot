@@ -1,6 +1,7 @@
 package wootrevived.woot.items.mob_shard;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.Woot;
 import wootrevived.woot.config.MobShardConfig;
@@ -49,13 +49,13 @@ import static wootrevived.woot.util.render.WootStyles.*;
 public class MobShardItem extends Item {
     public MobShardItem(String tag) {
         super(new Properties().stacksTo(1)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                 .component(ComponentsRegistry.MOB_SHARD_ITEM_TOOLTIP, Tooltip.INSTANCE)
                 .component(ComponentsRegistry.MOB_SHARD_DATA, new MobShardData.Component(Optional.empty(), 0, false)));
     }
 
     @Override
-    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, LivingEntity tmpAttacker) {
+    public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity tmpAttacker) {
         if (tmpAttacker.level().isClientSide() || !(tmpAttacker instanceof Player))
             return;
 
@@ -200,13 +200,13 @@ public class MobShardItem extends Item {
     }
 
     @Override
-    public boolean isFoil(@NotNull ItemStack itemStack) {
+    public boolean isFoil(ItemStack itemStack) {
         if (isFullyProgrammed(itemStack)) return true;
         return isJEIShard(itemStack);
     }
 
     @Override
-    public InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand){
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand){
         ItemStack itemStack = player.getItemInHand(usedHand);
 
         if(isProgrammed(itemStack))
@@ -217,17 +217,17 @@ public class MobShardItem extends Item {
     }
 
     @Override
-    public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
         return ItemUseAnimation.BOW;
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }
 
     @Override
-    public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity entity, int timeLeft){
+    public boolean releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft){
         if(!(entity instanceof Player player)) return false;
         int used = this.getUseDuration(stack, entity) - timeLeft;
         float pull = Math.min(used / 20f, 1f);
@@ -250,7 +250,7 @@ public class MobShardItem extends Item {
         public static final Tooltip INSTANCE = new Tooltip();
 
         public static final String ID = "mob_shard_item_tooltip";
-        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<Tooltip> CODEC = MapCodec.unit(() -> INSTANCE).codec();
         public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override

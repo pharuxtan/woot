@@ -3,7 +3,7 @@ package wootrevived.api;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -13,8 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -135,7 +135,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param properties     standard item properties
      * @param defaultVariant the variant to fall back to when no component value is present
      */
-    public WootUpgradeItem(@NotNull Properties properties, @NotNull T defaultVariant) {
+    public WootUpgradeItem(@NonNull Properties properties, @NonNull T defaultVariant) {
         super(properties.component(WootUpgradeComponent.type(), WootUpgradeComponent.of(defaultVariant)));
         this.defaultVariant = WootUpgradeComponent.of(defaultVariant);
     }
@@ -148,7 +148,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param level the world level containing the upgrade block
      * @param pos the block position of the upgrade block
      */
-    public void initDataComponents(@NotNull MutableDataComponentHolder dataComponentHolder, @NotNull Level level, @NotNull BlockPos pos) {
+    public void initDataComponents(@NonNull MutableDataComponentHolder dataComponentHolder, @NonNull Level level, @NonNull BlockPos pos) {
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param level the world level containing the upgrade block
      * @param pos the block position of the upgrade block
      */
-    public void deinitDataComponents(@NotNull MutableDataComponentHolder dataComponentHolder, @NotNull Level level, @NotNull BlockPos pos) {
+    public void deinitDataComponents(@NonNull MutableDataComponentHolder dataComponentHolder, @NonNull Level level, @NonNull BlockPos pos) {
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param properties mutable generation configuration
      * @param dataComponentHolder persistent upgrade data
      */
-    public void applyGenerationProperties(@NotNull WootGenerationProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applyGenerationProperties(@NonNull WootGenerationProperties properties, @NonNull MutableDataComponentHolder dataComponentHolder) {
     }
 
     /**
@@ -179,7 +179,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param properties mutable spawn configuration
      * @param dataComponentHolder persistent upgrade data
      */
-    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder){
+    public void applySpawnProperties(@NonNull WootSpawnProperties properties, @NonNull MutableDataComponentHolder dataComponentHolder){
     }
 
     /**
@@ -189,7 +189,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param properties mutable access to post-simulation drop data
      * @param dataComponentHolder persistent upgrade data
      */
-    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(@NonNull WootDropsProperties properties, @NonNull MutableDataComponentHolder dataComponentHolder) {
     }
 
     /**
@@ -207,7 +207,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      *
      * @return an {@link InteractionResult} indicating whether the action was handled
      */
-    public @NotNull InteractionResult interact(@NotNull MutableDataComponentHolder dataComponentHolder, @NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit){
+    public @NonNull InteractionResult interact(@NonNull MutableDataComponentHolder dataComponentHolder, @NonNull ItemStack stack, @NonNull Level level, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hit){
         return InteractionResult.PASS;
     }
 
@@ -222,7 +222,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @return the resolved variant value
      */
     @SuppressWarnings("unchecked")
-    public final @NotNull T getVariant(@Nullable MutableDataComponentHolder dataComponentHolder){
+    public final @NonNull T getVariant(@Nullable MutableDataComponentHolder dataComponentHolder){
         if(dataComponentHolder == null)
             return (T) defaultVariant.variant();
 
@@ -241,7 +241,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param dataComponentHolder the persistent component container for this item
      * @param variant new variant value, or {@code null} to remove the stored component
      */
-    public final void setVariant(@NotNull MutableDataComponentHolder dataComponentHolder, @Nullable T variant){
+    public final void setVariant(@NonNull MutableDataComponentHolder dataComponentHolder, @Nullable T variant){
         if(variant != null)
             dataComponentHolder.set(WootUpgradeComponent.type(), WootUpgradeComponent.of(variant));
         else
@@ -255,9 +255,9 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * to supply variant-specific icons.
      *
      * @param variant the upgrade variant whose icon is being requested
-     * @return a {@link ResourceLocation} pointing to the item texture
+     * @return a {@link Identifier} pointing to the item texture
      */
-    public ResourceLocation getTextureLocation(@NotNull T variant){
+    public Identifier getTextureLocation(@NonNull T variant){
         return BuiltInRegistries.ITEM.getKey(this).withPrefix("textures/item/").withSuffix(".png");
     }
 
@@ -268,7 +268,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param upgradeItem mutable pixel buffer containing the upgrade item's icon
      * @param variant      the active variant for which the icon is being prepared
      */
-    public void applyItemTexture(@NotNull NativeImage upgradeItem, @NotNull T variant){
+    public void applyItemTexture(@NonNull NativeImage upgradeItem, @NonNull T variant){
     }
 
     /**
@@ -279,7 +279,7 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      * @param upgradeItem  the previously processed upgrade-item icon (after applyItemTexture)
      * @param variant      the active variant for which this composite texture is being produced
      */
-    public void applyUpgradeTexture(@NotNull NativeImage upgradeSide, @NotNull NativeImage upgradeItem, @NotNull T variant){
+    public void applyUpgradeTexture(@NonNull NativeImage upgradeSide, @NonNull NativeImage upgradeItem, @NonNull T variant){
         for(int y = 2; y < 14; y++){
             for(int x = 2; x < 14; x++){
                 int color = upgradeItem.getPixel(x, y);

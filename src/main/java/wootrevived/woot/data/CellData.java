@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.entity.WootTags;
 
 public final class CellData {
@@ -23,7 +22,7 @@ public final class CellData {
     );
 
     public record Component(
-            @NotNull FluidStack tankFluid
+            FluidStack tankFluid
     ) {
         @Override
         public int hashCode() {

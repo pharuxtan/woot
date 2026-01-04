@@ -10,13 +10,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 
 public class FactoryBaseBlock extends Block {
     public FactoryBaseBlock(String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -30,7 +29,7 @@ public class FactoryBaseBlock extends Block {
 
     protected StateDefinition<Block, BlockState> baseStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.baseStateDefinition;
     }
 

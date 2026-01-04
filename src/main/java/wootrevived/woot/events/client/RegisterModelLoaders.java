@@ -9,7 +9,7 @@ import wootrevived.api.models.DynamicUpgradeItemModelUnbaked;
 import wootrevived.woot.Woot;
 import wootrevived.woot.client.model.factory_upgrade.FactoryUpgradeBlockBaseModel;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterModelLoaders {
     @SubscribeEvent
     public static void registerBlockStateModels(RegisterBlockStateModels event) {
@@ -18,6 +18,6 @@ public class RegisterModelLoaders {
 
     @SubscribeEvent
     static void registerItemModels(RegisterItemModelsEvent event) {
-        event.register(Woot.location(DynamicUpgradeItemModelUnbaked.ID), DynamicUpgradeItemModelUnbaked.TYPE);
+        event.register(Woot.identifier(DynamicUpgradeItemModelUnbaked.ID), DynamicUpgradeItemModelUnbaked.TYPE);
     }
 }

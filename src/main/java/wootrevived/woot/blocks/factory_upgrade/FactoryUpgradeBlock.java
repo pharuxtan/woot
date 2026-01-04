@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.woot.util.block.FactoryBlockBase;
 
@@ -43,12 +42,12 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
 
     protected StateDefinition<Block, BlockState> upgradeStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.upgradeStateDefinition;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
     }
 
@@ -58,7 +57,7 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack stack, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.useItemOn(stack, level, player, hand, hit);
 
@@ -79,7 +78,7 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
         }
 
         @Override
-        public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
+        public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit){
             return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
     }

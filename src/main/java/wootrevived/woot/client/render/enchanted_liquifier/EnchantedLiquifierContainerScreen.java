@@ -3,7 +3,6 @@ package wootrevived.woot.client.render.enchanted_liquifier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.enchanted_liquifier.EnchantedLiquifierBlockEntity;
 import wootrevived.woot.config.EnchantedLiquifierConfig;
 import wootrevived.woot.util.render.WootContainerScreen;
@@ -34,7 +33,7 @@ public class EnchantedLiquifierContainerScreen extends WootContainerScreen<Encha
     }
 
     @Override
-    protected void renderMenuBackground(@NotNull GuiGraphics gui) {
+    protected void renderMenuBackground(GuiGraphics gui) {
         renderSlot(gui, INPUT_SLOT_X, INPUT_SLOT_Y, INPUT_SLOT_COLOR);
         renderEnergyBg(gui, ENERGY_X, ENERGY_Y);
         renderFluidBg(gui, OUTPUT_FLUID_X, OUTPUT_FLUID_Y);
@@ -42,14 +41,14 @@ public class EnchantedLiquifierContainerScreen extends WootContainerScreen<Encha
     }
 
     @Override
-    protected void renderState(@NotNull GuiGraphics gui){
+    protected void renderState(GuiGraphics gui){
         renderEnergy(gui, ENERGY_X, ENERGY_Y, menu.getEnergy(), EnchantedLiquifierConfig.ENERGY_CAPACITY.get());
         renderFluid(gui, OUTPUT_FLUID_X, OUTPUT_FLUID_Y, menu.getOutputFluid(), EnchantedLiquifierConfig.OUTPUT_TANK_CAPACITY.get());
         renderProgressArrow(gui, PROGRESS_X, PROGRESS_Y, menu.getProgress());
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics gui, int mouseX, int mouseY){
+    protected void renderTooltip(GuiGraphics gui, int mouseX, int mouseY){
         renderEnergyTooltip(gui, mouseX, mouseY, ENERGY_X, ENERGY_Y, menu.getEnergy(), EnchantedLiquifierConfig.ENERGY_CAPACITY.get());
         renderFluidTooltip(gui, mouseX, mouseY, OUTPUT_FLUID_X, OUTPUT_FLUID_Y, menu.getOutputFluid(), EnchantedLiquifierConfig.OUTPUT_TANK_CAPACITY.get());
         renderProgressArrowTooltip(gui, mouseX, mouseY, PROGRESS_X, PROGRESS_Y, menu.getProgress(), menu.getLeftSeconds(), menu.getEnergyProcessTransfer());

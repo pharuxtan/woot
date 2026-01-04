@@ -18,7 +18,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootGenerationProperties;
@@ -33,7 +32,7 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
     public Efficiency(String tag, UpgradeDefaultVariant variant) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.EFFICIENCY_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
@@ -41,7 +40,7 @@ public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
     private static final float[] PERCENTAGES = new float[] { 10, 20, 30, 40, 50 };
 
     @Override
-    public void applyGenerationProperties(@NotNull WootGenerationProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applyGenerationProperties(WootGenerationProperties properties, MutableDataComponentHolder dataComponentHolder) {
         int cost = properties.getVitalityFuelCost();
         float ratio = 1F - PERCENTAGES[getVariant(dataComponentHolder).level() - 1] / 100F;
         properties.setVitalityFuelCost((int)Math.ceil(cost * ratio));
@@ -49,7 +48,7 @@ public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -79,7 +78,7 @@ public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.EFFICIENCY_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.EFFICIENCY_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -99,7 +98,7 @@ public class Efficiency extends WootUpgradeItem<UpgradeDefaultVariant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.efficiency.desc.0", PERCENTAGES[variant.level()-1]).setStyle(DESCRIPTION_STYLE));
         }
     }

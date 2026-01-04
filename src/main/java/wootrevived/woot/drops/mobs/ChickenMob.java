@@ -6,7 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -22,7 +22,7 @@ public class ChickenMob extends WootFactoryMob<Chicken> {
     public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.empty();
         VariantUtils.readVariant(input, Registries.CHICKEN_VARIANT).flatMap(Holder::unwrapKey).ifPresent(key -> {
-            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.location().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
+            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.identifier().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
         });
         return tip.append(super.getDisplayName(input));
     }

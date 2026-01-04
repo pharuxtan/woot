@@ -31,7 +31,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.config.CellConfig;
 import wootrevived.woot.data.CellData;
@@ -65,7 +64,7 @@ public class CellBlock extends FactoryBlockBase {
 
     protected StateDefinition<Block, BlockState> cellStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.cellStateDefinition;
     }
 
@@ -129,7 +128,7 @@ public class CellBlock extends FactoryBlockBase {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit){
+        public InteractionResult useItemOn(ItemStack heldItem, Level level, Player player, InteractionHand hand, BlockHitResult hit){
             if(level.isClientSide())
                 return InteractionResult.SUCCESS;
 

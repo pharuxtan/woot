@@ -10,11 +10,11 @@ import wootrevived.woot.client.sprite.FactoryUpgradeDynamicSpriteSource;
 import wootrevived.woot.client.sprite.UpgradeItemDynamicSpriteSource;
 import wootrevived.woot.registries.BlocksRegistry;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterSpriteSources {
     @SubscribeEvent
     public static void registerSpriteSourceTypes(RegisterSpriteSourcesEvent event){
-        event.register(Woot.location(DynamicUpgradeItemModelUnbaked.ID), UpgradeItemDynamicSpriteSource.CODEC);
-        event.register(Woot.location(BlocksRegistry.FACTORY_UPGRADE_TAG), FactoryUpgradeDynamicSpriteSource.CODEC);
+        event.register(Woot.identifier(DynamicUpgradeItemModelUnbaked.ID), UpgradeItemDynamicSpriteSource.CODEC);
+        event.register(Woot.identifier(BlocksRegistry.FACTORY_UPGRADE_TAG), FactoryUpgradeDynamicSpriteSource.CODEC);
     }
 }

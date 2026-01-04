@@ -2,12 +2,10 @@ package wootrevived.woot.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.entity.WootTags;
 
 import java.util.Optional;
@@ -29,8 +27,8 @@ public final class FactoryUpgradeData {
     );
 
     public record Component(
-            @NotNull Optional<String> upgradeItem,
-            @NotNull Optional<ItemStack> upgradeStack
+            Optional<String> upgradeItem,
+            Optional<ItemStack> upgradeStack
     ) {
         @Override
         public int hashCode() {

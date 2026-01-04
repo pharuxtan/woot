@@ -22,7 +22,7 @@ public class FrogMob extends WootFactoryMob<Frog> {
     public MutableComponent getDisplayName(ValueInput input) {
         MutableComponent tip = Component.empty();
         VariantUtils.readVariant(input, Registries.FROG_VARIANT).flatMap(Holder::unwrapKey).ifPresent(key -> {
-            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.location().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
+            tip.append(Component.literal(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, key.identifier().getPath().replaceAll("([a-z])([A-Z])", "$1 $2") + " ")));
         });
         return tip.append(super.getDisplayName(input));
     }

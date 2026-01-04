@@ -29,7 +29,7 @@ public class Registry {
 
     /* Creative Tab */
 
-    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Woot.MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Woot.MOD_NAMESPACE);
     public static final List<Supplier<? extends ItemLike>> WOOT_TAB_ITEMS = new ArrayList<>();
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> WOOT_TAB = TABS.register("woot_tab",
             () -> CreativeModeTab.builder()

@@ -3,7 +3,7 @@ package wootrevived.api.models;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.item.ItemModel;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
@@ -16,16 +16,16 @@ public class DynamicUpgradeItemModelUnbaked implements ItemModel.Unbaked {
     public static Function<ItemModel.BakingContext, ItemModel> BAKER;
 
     @Override
-    public @NotNull MapCodec<? extends ItemModel.Unbaked> type() {
+    public @NonNull MapCodec<? extends ItemModel.Unbaked> type() {
         return TYPE;
     }
 
     @Override
-    public @NotNull ItemModel bake(@NotNull ItemModel.BakingContext bakingContext) {
+    public @NonNull ItemModel bake(ItemModel.@NonNull BakingContext bakingContext) {
         return BAKER.apply(bakingContext);
     }
 
     @Override
-    public void resolveDependencies(@NotNull Resolver resolver) {
+    public void resolveDependencies(@NonNull Resolver resolver) {
     }
 }

@@ -1,6 +1,7 @@
 package wootrevived.woot.upgrades;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.UpgradeNoVariant;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -31,19 +31,19 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Burn extends WootUpgradeItem<UpgradeNoVariant> {
     public Burn(String tag) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.BURN_UPGRADE_TOOLTIP, Tooltip.INSTANCE)
                 , UpgradeNoVariant.NONE);
     }
 
     @Override
-    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
         properties.setIsInFire(true);
     }
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -57,7 +57,7 @@ public class Burn extends WootUpgradeItem<UpgradeNoVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.BURN_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.BURN_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -66,11 +66,11 @@ public class Burn extends WootUpgradeItem<UpgradeNoVariant> {
         public static final Tooltip INSTANCE = new Tooltip();
 
         public static final String ID = "burn_upgrade_tooltip";
-        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<Tooltip> CODEC = MapCodec.unit(() -> INSTANCE).codec();
         public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.burn.desc.0").setStyle(DESCRIPTION_STYLE));
         }
     }

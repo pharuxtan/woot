@@ -4,7 +4,6 @@ import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.level.entity.EntityPersistentStorage;
 import net.minecraft.world.level.entity.LevelCallback;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +25,13 @@ public class FakeEntityManager<T extends EntityAccess> extends PersistentEntityS
     }
 
     @Override
-    public boolean addNewEntity(@NotNull T entity) {
+    public boolean addNewEntity(T entity) {
         entityList.add(entity);
         return false;
     }
 
     @Override
-    public boolean addNewEntityWithoutEvent(@NotNull T entity) {
+    public boolean addNewEntityWithoutEvent(T entity) {
         entityList.add(entity);
         return false;
     }

@@ -19,8 +19,10 @@ public class Atlas extends SpriteSourceProvider {
 
     @Override
     protected void gather() {
+        atlas(AtlasIds.ITEMS)
+                .addSource(new UpgradeItemDynamicSpriteSource(Woot.identifier(DynamicUpgradeItemModelUnbaked.ID)));
+
         atlas(AtlasIds.BLOCKS)
-                .addSource(new UpgradeItemDynamicSpriteSource(Woot.location(DynamicUpgradeItemModelUnbaked.ID)))
-                .addSource(new FactoryUpgradeDynamicSpriteSource(Woot.location(BlocksRegistry.FACTORY_UPGRADE_TAG)));
+                .addSource(new FactoryUpgradeDynamicSpriteSource(Woot.identifier(BlocksRegistry.FACTORY_UPGRADE_TAG)));
     }
 }

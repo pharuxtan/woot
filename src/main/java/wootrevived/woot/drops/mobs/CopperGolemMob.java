@@ -4,7 +4,7 @@ import com.google.common.base.CaseFormat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.coppergolem.CopperGolem;
+import net.minecraft.world.entity.animal.golem.CopperGolem;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;

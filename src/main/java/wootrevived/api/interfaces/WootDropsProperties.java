@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 
@@ -35,8 +35,8 @@ import java.util.List;
  * interface themselves.
  */
 public interface WootDropsProperties {
-    @NotNull ItemStack getMainHandItem();
-    @NotNull ItemStack getOffHandItem();
+    @NonNull ItemStack getMainHandItem();
+    @NonNull ItemStack getOffHandItem();
     float getLuck();
     boolean doSimulateChargedCreeper();
     boolean isEnderDragonAlreadyKilled();
@@ -49,22 +49,22 @@ public interface WootDropsProperties {
     int getExperience();
     void setExperience(int experience);
 
-    @NotNull ServerLevel getLevel();
-    @NotNull RandomSource getRandom();
-    @NotNull RegistryAccess getRegistryAccess();
-    @NotNull Tier getFactoryTier();
-    @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull ValueInput getFactoryMobValue();
+    @NonNull ServerLevel getLevel();
+    @NonNull RandomSource getRandom();
+    @NonNull RegistryAccess getRegistryAccess();
+    @NonNull Tier getFactoryTier();
+    @NonNull WootFactoryMob<?> getFactoryMob();
+    @NonNull ValueInput getFactoryMobValue();
 
     @ApiStatus.AvailableSince("1.0.4")
     @Nullable LivingEntity getEntity();
 
     @ApiStatus.AvailableSince("1.0.6")
-    @NotNull ResourceKey<Level> getDimension();
+    @NonNull ResourceKey<Level> getDimension();
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull ServerLevel getHeartLevel();
+    @NonNull ServerLevel getHeartLevel();
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull BlockPos getHeartPos();
+    @NonNull BlockPos getHeartPos();
 }

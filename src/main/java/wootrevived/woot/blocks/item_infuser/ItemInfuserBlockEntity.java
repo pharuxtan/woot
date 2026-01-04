@@ -27,8 +27,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.client.render.item_infuser.ItemInfuserContainerMenu;
 import wootrevived.woot.config.ItemInfuserConfig;
@@ -78,7 +77,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     }
 
     @Override
-    public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         super.tick(level, pos, state, blockEntity);
 
         if(level.isClientSide())
@@ -101,7 +100,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return ItemInfuserRecipe.Validator.isIngredientValid(stack.toStack());
         }
     };
@@ -113,7 +112,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return ItemInfuserRecipe.Validator.isAugmentValid(stack.toStack());
         }
     };
@@ -208,7 +207,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
 
         inputSlotHandler.serialize(output.child(WootTags.INPUT_INVENTORY_TAG));
@@ -219,7 +218,7 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
 
         input.child(WootTags.INPUT_INVENTORY_TAG).ifPresent(inputSlotHandler::deserialize);
@@ -257,12 +256,12 @@ public class ItemInfuserBlockEntity extends WootMachineBlockEntity implements Me
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("gui.woot_revived.item_infuser.name");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory, @NotNull Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new ItemInfuserContainerMenu(containerId, level, getBlockPos(), playerInventory, player);
     }
 

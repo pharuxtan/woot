@@ -1,9 +1,9 @@
-name: Build 1.21.10
+name: Build 1.21.11
 
 on:
   push:
     branches:
-      - 1.21.10
+      - 1.21.11
 
 jobs:
   build:
@@ -31,5 +31,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Woot Revived 1.21.10 ${{ steps.var.outputs.commit_hash }}
+          name: Woot Revived 1.21.11 ${{ steps.var.outputs.commit_hash }}
           path: build/libs

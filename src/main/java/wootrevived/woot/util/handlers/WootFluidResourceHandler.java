@@ -3,7 +3,6 @@ package wootrevived.woot.util.handlers;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -41,7 +40,7 @@ public class WootFluidResourceHandler extends FluidStacksResourceHandler {
     }
 
     @Override
-    public boolean isValid(int index, @NotNull FluidResource resource) {
+    public boolean isValid(int index, FluidResource resource) {
         return validator.test(resource);
     }
 

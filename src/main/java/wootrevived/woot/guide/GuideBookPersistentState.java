@@ -17,19 +17,19 @@ public class GuideBookPersistentState extends SavedData {
     private final Set<String> receivedPlayers;
 
     public static final SavedDataType<GuideBookPersistentState> TYPE = new SavedDataType<>(
-            Woot.MOD_ID + "_guidebook",
+            Woot.MOD_NAMESPACE + "_guidebook",
             GuideBookPersistentState::new,
-            ctx -> RecordCodecBuilder.create(inst -> inst.group(
+            level -> RecordCodecBuilder.create(inst -> inst.group(
                     Codec.STRING.listOf().xmap(Set::copyOf, List::copyOf).fieldOf("receivedPlayers").forGetter(state -> state.receivedPlayers)
             ).apply(inst, GuideBookPersistentState::new))
     );
 
-    private GuideBookPersistentState(Set<String> receivedPlayers) {
-        this.receivedPlayers = receivedPlayers;
+    private GuideBookPersistentState(ServerLevel level) {
+        this(new HashSet<>());
     }
 
-    public GuideBookPersistentState(Context context) {
-        this(new HashSet<>());
+    private GuideBookPersistentState(Set<String> receivedPlayers) {
+        this.receivedPlayers = receivedPlayers;
     }
 
     public boolean hasPlayerReceivedGuideBook(Player player) {

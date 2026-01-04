@@ -19,7 +19,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.enums.UpgradeDefaultVariant;
@@ -37,7 +36,7 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
     public ShardDrop(String tag, UpgradeDefaultVariant variant) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.SHARD_DROP_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
@@ -45,7 +44,7 @@ public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
     private static final int[] PERCENTAGES = new int[] { 50, 30, 15, 5 };
 
     @Override
-    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
         Tier tier = properties.getFactoryTier();
         List<ItemStack> drops = properties.getItemDrops();
         RandomSource random = properties.getRandom();
@@ -91,7 +90,7 @@ public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -117,7 +116,7 @@ public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.SHARD_DROP_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.SHARD_DROP_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -137,7 +136,7 @@ public class ShardDrop extends WootUpgradeItem<UpgradeDefaultVariant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.0", Component.translatable("misc.woot_revived.tier_" + variant.level())).setStyle(DESCRIPTION_STYLE));
             consumer.accept(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.1", Component.translatable("misc.woot_revived.tier_" + (variant.level() - 1))).setStyle(DESCRIPTION_STYLE));
             consumer.accept(Component.translatable("info.woot_revived.upgrade.shard_drop.desc.2", PERCENTAGES[variant.level() - 2]).setStyle(DESCRIPTION_STYLE));

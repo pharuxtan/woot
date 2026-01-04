@@ -7,7 +7,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.stygian_anvil.StygianAnvilBlockEntity;
 import wootrevived.woot.client.render.factory.FactoryBlockEntityRenderState;
@@ -18,7 +17,7 @@ import wootrevived.woot.client.render.stygian_anvil.StygianAnvilBlockEntityRende
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterEntityRenderers {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -26,14 +25,14 @@ public class RegisterEntityRenderers {
 
         event.registerBlockEntityRenderer(BlocksRegistry.STYGIAN_ANVIL_BLOCK_ENTITY.get(), new BlockEntityRendererProvider<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState>() {
             @Override
-            public BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> create(@NotNull Context context) {
+            public BlockEntityRenderer<StygianAnvilBlockEntity, StygianAnvilBlockEntityRenderState> create(Context context) {
                 return new StygianAnvilBlockEntityRenderer(context);
             }
         });
 
         BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState> factoryProvider = new BlockEntityRendererProvider<BlockEntity, FactoryBlockEntityRenderState>() {
             @Override
-            public @NotNull BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> create(@NotNull Context context) {
+            public BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> create(Context context) {
                 return new FactoryBlockEntityRenderer();
             }
         };

@@ -20,7 +20,7 @@ import wootrevived.woot.recipes.item_infuser.ItemInfuserRecipe;
 import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
 import wootrevived.woot.registries.RecipesRegistry;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class LoadRecipes {
     private static MinecraftServer server;
 
@@ -41,7 +41,7 @@ public class LoadRecipes {
         );
     }
 
-    @EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+    @EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
     public static class ClientSide {
         public static RecipeMap recipeMap = null;
 

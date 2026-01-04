@@ -28,8 +28,7 @@ import net.minecraft.world.level.entity.EntityPersistentStorage;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.common.CommonHooks;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.woot.Woot;
@@ -42,7 +41,7 @@ import java.util.*;
 public class DropSimulator {
     private static final DropSimulator INSTANCE = new DropSimulator();
 
-    private final GameProfile gameProfile = new GameProfile(UUID.nameUUIDFromBytes(Woot.MOD_ID.getBytes()), Woot.MOD_ID);
+    private final GameProfile gameProfile = new GameProfile(UUID.nameUUIDFromBytes(Woot.MOD_NAMESPACE.getBytes()), Woot.MOD_NAMESPACE);
     private ServerLevel dimensionLevel = null;
     private ResourceKey<Level> dimension;
     private Holder<DimensionType> dimensionTypeRegistration;
@@ -56,15 +55,15 @@ public class DropSimulator {
         INSTANCE.simulate(properties);
     }
 
-    public static @NotNull ServerLevel getLevel() {
+    public static ServerLevel getLevel() {
         return INSTANCE.dimensionLevel;
     }
 
-    public static @NotNull RandomSource getRandom() {
+    public static RandomSource getRandom() {
         return INSTANCE.dimensionLevel.getRandom();
     }
 
-    public static @NotNull RegistryAccess getRegistryAccess() {
+    public static RegistryAccess getRegistryAccess() {
         return INSTANCE.dimensionLevel.registryAccess();
     }
 
@@ -148,7 +147,7 @@ public class DropSimulator {
             drops.addAll(simulateChargedCreeper(livingEntity));
     }
 
-    private @NotNull List<ItemStack> simulateChargedCreeper(@NotNull LivingEntity livingEntity){
+    private List<ItemStack> simulateChargedCreeper(LivingEntity livingEntity){
         fakeEntityManager.clearEntityList();
 
         livingEntity.tickCount = 0;
@@ -174,7 +173,7 @@ public class DropSimulator {
         return drops;
     }
 
-    private void simulateEnderdragon(@NotNull EnderDragon enderDragon, WootDropsProperties properties){
+    private void simulateEnderdragon(EnderDragon enderDragon, WootDropsProperties properties){
         fakeEntityManager.clearEntityList();
 
         EndDragonFight.Data data = new EndDragonFight.Data(false, false, properties.isEnderDragonAlreadyKilled(), false, Optional.empty(), Optional.empty(), Optional.empty());

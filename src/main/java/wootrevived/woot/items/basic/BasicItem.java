@@ -4,7 +4,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 
 public class BasicItem extends Item {
@@ -12,14 +11,14 @@ public class BasicItem extends Item {
 
     public BasicItem(Type itemType, String tag, int stackSize) {
         super(new Properties().stacksTo(stackSize)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag))));
         this.itemType = itemType;
     }
 
     public BasicItem(Type itemType, String tag) { this(itemType, tag, 64); }
 
     @Override
-    public boolean isFoil(@NotNull ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return itemType == Type.COPPER_ENCHANTED_PLATE ||
                itemType == Type.IRON_ENCHANTED_PLATE ||
                itemType == Type.GOLD_ENCHANTED_PLATE ||

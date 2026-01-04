@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.blocks.enchanted_liquifier.EnchantedLiquifierBlockEntity;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.util.render.WootContainerMenu;
@@ -54,7 +53,7 @@ public class EnchantedLiquifierContainerMenu extends WootContainerMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         // Based off Gigaherz Elements Of Power code
         Slot slot = this.slots.get(index);
         if (!slot.hasItem())
@@ -107,7 +106,7 @@ public class EnchantedLiquifierContainerMenu extends WootContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get());
     }
 }

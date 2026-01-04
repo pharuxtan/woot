@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherDataClient(GatherDataEvent.Client event) {

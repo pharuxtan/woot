@@ -18,7 +18,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootDropsProperties;
@@ -35,7 +34,7 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
     public Xp(String tag, UpgradeDefaultVariant variant) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.XP_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
@@ -43,7 +42,7 @@ public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
     private static final int[] PERCENTAGES = new int[] { 50, 75, 100, 125, 150 };
 
     @Override
-    public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
         List<ItemStack> drops = properties.getItemDrops();
 
         int experience = Math.round(properties.getExperience() * (PERCENTAGES[getVariant(dataComponentHolder).level() - 1] / 100F));
@@ -70,7 +69,7 @@ public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -100,7 +99,7 @@ public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.XP_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.XP_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -120,7 +119,7 @@ public class Xp extends WootUpgradeItem<UpgradeDefaultVariant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.xp.desc.0", PERCENTAGES[variant.level() - 1]).setStyle(DESCRIPTION_STYLE));
         }
     }

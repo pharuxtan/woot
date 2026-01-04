@@ -6,7 +6,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.util.entity.WootTags;
 
@@ -25,6 +24,6 @@ public final class LayoutData {
     );
 
     public record Component(
-            @NotNull Tier tier
+            Tier tier
     ) {}
 }

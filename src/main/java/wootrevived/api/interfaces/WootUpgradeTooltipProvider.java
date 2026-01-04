@@ -3,8 +3,8 @@ package wootrevived.api.interfaces;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.internal.WootUpgradeComponent;
 
 /**
@@ -43,7 +43,7 @@ public interface WootUpgradeTooltipProvider<T extends Enum<T> & WootUpgradeEnum<
      * @return the variant value, or {@code null} if not present or unreadable
      */
     @SuppressWarnings("unchecked")
-    default @Nullable T getVariant(@NotNull DataComponentGetter dataComponentGetter) {
+    default @Nullable T getVariant(@NonNull DataComponentGetter dataComponentGetter) {
         try {
             WootUpgradeComponent component = dataComponentGetter.get(WootUpgradeComponent.type());
             if(component == null)
@@ -62,7 +62,7 @@ public interface WootUpgradeTooltipProvider<T extends Enum<T> & WootUpgradeEnum<
      * @param defaultVariant the fallback value to return when no variant is stored
      * @return the stored variant, or {@code defaultVariant} if none exists
      */
-    default @NotNull T getVariant(@NotNull DataComponentGetter dataComponentGetter, @NotNull T defaultVariant) {
+    default @NonNull T getVariant(@NonNull DataComponentGetter dataComponentGetter, @NonNull T defaultVariant) {
         T variant = getVariant(dataComponentGetter);
         return variant == null ? defaultVariant : variant;
     }

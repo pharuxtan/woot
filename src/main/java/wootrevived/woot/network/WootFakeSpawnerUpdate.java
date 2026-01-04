@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,7 +15,7 @@ import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.util.common.RedstoneMode;
 
 public record WootFakeSpawnerUpdate(BlockPos blockPos, RedstoneMode redstoneMode) implements CustomPacketPayload {
-    public static final ResourceLocation ID = Woot.location("woot_fake_spawner_update");
+    public static final Identifier ID = Woot.identifier("woot_fake_spawner_update");
     public static final Type<WootFakeSpawnerUpdate> TYPE = new Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, WootFakeSpawnerUpdate> STREAM_CODEC = StreamCodec.composite(

@@ -27,8 +27,7 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.client.render.dye_liquifier.DyeLiquifierContainerMenu;
 import wootrevived.woot.config.DyeLiquifierConfig;
@@ -83,7 +82,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         super.tick(level, pos, state, blockEntity);
 
         if(level.isClientSide())
@@ -105,7 +104,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.RED);
         }
     };
@@ -118,7 +117,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.YELLOW);
         }
     };
@@ -131,7 +130,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.BLUE);
         }
     };
@@ -144,7 +143,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             return DyeLiquifierRecipe.Validator.isIngredientValid(stack.toStack(), DyeLiquifierRecipe.Colors.WHITE);
         }
     };
@@ -254,7 +253,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
 
         redInventoryHandler.serialize(output.child(WootTags.DyeLiquifier.RED_INVENTORY_TAG));
@@ -266,7 +265,7 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
 
         input.child(WootTags.DyeLiquifier.RED_INVENTORY_TAG).ifPresent(redInventoryHandler::deserialize);
@@ -313,12 +312,12 @@ public class DyeLiquifierBlockEntity extends WootMachineBlockEntity implements M
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("gui.woot_revived.dye_liquifier.name");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory, @NotNull Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new DyeLiquifierContainerMenu(containerId, level, getBlockPos(), playerInventory, player);
     }
 

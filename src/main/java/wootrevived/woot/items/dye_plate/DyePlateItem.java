@@ -13,7 +13,7 @@ public class DyePlateItem extends WootDyeItem {
 
     public DyePlateItem(DyeColor color, String tag) {
         super(new Item.Properties().stacksTo(64)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag))));
         this.color = color;
     }
 

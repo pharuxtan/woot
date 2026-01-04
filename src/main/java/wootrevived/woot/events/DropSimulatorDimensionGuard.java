@@ -14,7 +14,7 @@ import wootrevived.woot.drops.simulator.DropSimulatorDimension;
 
 import java.util.Set;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class DropSimulatorDimensionGuard {
     @SubscribeEvent
     public static void onDimensionChange(EntityTravelToDimensionEvent event){

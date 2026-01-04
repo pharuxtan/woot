@@ -6,7 +6,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.common.MachineSide;
 import wootrevived.woot.util.common.MachineSideProperty;
 import wootrevived.woot.util.common.WootCodecs;
@@ -61,7 +60,7 @@ public final class DyeLiquifierData {
             int yellow,
             int blue,
             int white,
-            @NotNull FluidStack outputFluid,
+            FluidStack outputFluid,
             List<EnumMap<MachineSide, MachineSideProperty>> listMachineProperties
     ) {
         @Override

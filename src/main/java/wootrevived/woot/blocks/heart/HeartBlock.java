@@ -26,8 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.multiblock.MultiBlockFactory;
 import wootrevived.woot.util.render.WootShapes;
 
@@ -50,13 +49,13 @@ public class HeartBlock extends MultiBlockFactory {
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return HeartBlockEntity::ticker;
     }
 
     protected StateDefinition<Block, BlockState> heartStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.heartStateDefinition;
     }
 
@@ -77,7 +76,7 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack stack, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 
@@ -93,7 +92,7 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
+        public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit){
             return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
@@ -102,12 +101,12 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public @NotNull BlockState mirror(Mirror mirror) {
+        public BlockState mirror(Mirror mirror) {
             return rotate(null, null, mirror.getRotation(getValue(BlockStateProperties.HORIZONTAL_FACING)));
         }
 
         @Override
-        public @NotNull VoxelShape getShape(@NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        public VoxelShape getShape(BlockGetter getter, BlockPos pos, CollisionContext context) {
             if(!getValue(BlockStateProperties.ENABLED)) {
                 return WootShapes.disabledShape;
             } else {
@@ -116,20 +115,20 @@ public class HeartBlock extends MultiBlockFactory {
         }
 
         @Override
-        public @NotNull RenderShape getRenderShape() {
+        public RenderShape getRenderShape() {
             if(getValue(BlockStateProperties.ENABLED))
                 return RenderShape.MODEL;
             return RenderShape.INVISIBLE;
         }
 
         @Override
-        public void onPlace(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        public void onPlace(Level level, BlockPos pos, BlockState newState, boolean isMoving) {
             if(getValue(BlockStateProperties.ENABLED))
                 super.onPlace(level, pos, newState, isMoving);
         }
 
         @Override
-        public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
+        public void affectNeighborsAfterRemoval(ServerLevel level, BlockPos pos, boolean movedByPiston) {
             if(getValue(BlockStateProperties.ENABLED))
                 super.affectNeighborsAfterRemoval(level, pos, movedByPiston);
         }

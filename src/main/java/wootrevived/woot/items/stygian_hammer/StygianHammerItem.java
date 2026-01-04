@@ -9,7 +9,7 @@ import wootrevived.woot.Woot;
 public class StygianHammerItem extends Item {
     public StygianHammerItem(String tag) {
         super(new Item.Properties().stacksTo(1)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag))));
     }
 
     @Override

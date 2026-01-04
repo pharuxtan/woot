@@ -3,7 +3,7 @@ package wootrevived.woot.compat.jade;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -33,8 +33,8 @@ public enum WootMachineProvider implements StreamServerDataProvider<BlockAccesso
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return Woot.location("machines");
+    public Identifier getUid() {
+        return Woot.identifier("machines");
     }
 
     public record Data(int progress) {
@@ -59,8 +59,8 @@ public enum WootMachineProvider implements StreamServerDataProvider<BlockAccesso
         }
 
         @Override
-        public ResourceLocation getUid() {
-            return Woot.location("machines");
+        public Identifier getUid() {
+            return Woot.identifier("machines");
         }
     }
 }

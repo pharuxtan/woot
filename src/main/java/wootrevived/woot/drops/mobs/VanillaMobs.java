@@ -16,6 +16,7 @@ public class VanillaMobs {
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.GIANT, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.SKELETON, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.BOGGED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
+        registration.registerFactoryMob(new WootFactoryMob<>(EntityType.PARCHED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.DROWNED, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_2)));
         registration.registerFactoryMob(new WootFactoryMob<>(EntityType.ZOMBIFIED_PIGLIN, new WootFactoryMob.Properties().tier(Tier.TIER_2)));

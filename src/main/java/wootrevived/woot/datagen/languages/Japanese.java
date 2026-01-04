@@ -12,7 +12,7 @@ import wootrevived.woot.upgrades.*;
 
 public class Japanese extends LanguageProvider {
     public Japanese(PackOutput output){
-        super(output, Woot.MOD_ID, "ja_jp");
+        super(output, Woot.MOD_NAMESPACE, "ja_jp");
     }
 
     @Override

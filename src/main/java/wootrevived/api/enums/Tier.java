@@ -1,7 +1,7 @@
 package wootrevived.api.enums;
 
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.EnumSet;
 import java.util.Locale;
@@ -35,12 +35,14 @@ public enum Tier implements StringRepresentable {
      * @return the default vitality cost, or {@code 0} for {@link #INVALID}
      */
     public int defaultVitalityCost(){
-        if(this == TIER_1) return 1500;
-        if(this == TIER_2) return 3500;
-        if(this == TIER_3) return 7500;
-        if(this == TIER_4) return 15000;
-        if(this == TIER_5) return 30000;
-        return 0;
+        return switch(this){
+            case TIER_1 -> 1500;
+            case TIER_2 -> 3500;
+            case TIER_3 -> 7500;
+            case TIER_4 -> 15000;
+            case TIER_5 -> 30000;
+            default -> 0;
+        };
     }
 
     private static final EnumSet<Tier> MOB_VALID_FOR_TIER_1 = EnumSet.of(TIER_1);
@@ -57,12 +59,14 @@ public enum Tier implements StringRepresentable {
      * @return {@code true} if this factory tier supports that mob tier
      */
     public boolean isMobTierValid(Tier tier) {
-        if (this == TIER_1) return MOB_VALID_FOR_TIER_1.contains(tier);
-        if (this == TIER_2) return MOB_VALID_FOR_TIER_2.contains(tier);
-        if (this == TIER_3) return MOB_VALID_FOR_TIER_3.contains(tier);
-        if (this == TIER_4) return MOB_VALID_FOR_TIER_4.contains(tier);
-        if (this == TIER_5) return MOB_VALID_FOR_TIER_5.contains(tier);
-        return false;
+        return switch(this){
+            case TIER_1 -> MOB_VALID_FOR_TIER_1.contains(tier);
+            case TIER_2 -> MOB_VALID_FOR_TIER_2.contains(tier);
+            case TIER_3 -> MOB_VALID_FOR_TIER_3.contains(tier);
+            case TIER_4 -> MOB_VALID_FOR_TIER_4.contains(tier);
+            case TIER_5 -> MOB_VALID_FOR_TIER_5.contains(tier);
+            default -> false;
+        };
     }
 
     private static final EnumSet<Tier> FACTORY_VALID_FOR_TIER_1 = EnumSet.range(Tier.TIER_1, Tier.TIER_5);
@@ -79,12 +83,14 @@ public enum Tier implements StringRepresentable {
      * @return {@code true} if the mob tier can run inside that factory
      */
     public boolean isFactoryTierValid(Tier tier) {
-        if (this == TIER_1) return FACTORY_VALID_FOR_TIER_1.contains(tier);
-        if (this == TIER_2) return FACTORY_VALID_FOR_TIER_2.contains(tier);
-        if (this == TIER_3) return FACTORY_VALID_FOR_TIER_3.contains(tier);
-        if (this == TIER_4) return FACTORY_VALID_FOR_TIER_4.contains(tier);
-        if (this == TIER_5) return FACTORY_VALID_FOR_TIER_5.contains(tier);
-        return false;
+        return switch(this){
+            case TIER_1 -> FACTORY_VALID_FOR_TIER_1.contains(tier);
+            case TIER_2 -> FACTORY_VALID_FOR_TIER_2.contains(tier);
+            case TIER_3 -> FACTORY_VALID_FOR_TIER_3.contains(tier);
+            case TIER_4 -> FACTORY_VALID_FOR_TIER_4.contains(tier);
+            case TIER_5 -> FACTORY_VALID_FOR_TIER_5.contains(tier);
+            default -> false;
+        };
     }
 
     /**
@@ -95,7 +101,7 @@ public enum Tier implements StringRepresentable {
      * @return the lowercase identifier for this tier
      */
     @Override
-    public @NotNull String getSerializedName() {
+    public @NonNull String getSerializedName() {
         return name().toLowerCase(Locale.ROOT);
     }
 }

@@ -1,6 +1,7 @@
 package wootrevived.woot.blocks.fake_spawner;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -21,8 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.woot.blocks.factory.FactoryBlockItem;
 import wootrevived.woot.data.FakeSpawnerData;
@@ -52,7 +52,7 @@ public class FakeSpawnerBlockItem extends FactoryBlockItem {
         public static final Tooltip INSTANCE = new Tooltip();
 
         public static final String ID = "fake_spawner_block_tooltip";
-        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<Tooltip> CODEC = MapCodec.unit(() -> INSTANCE).codec();
         public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override
@@ -83,7 +83,7 @@ public class FakeSpawnerBlockItem extends FactoryBlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(@NotNull BlockPos pos, @NotNull Level level, @Nullable Player player, @NotNull ItemStack stack, @NotNull BlockState state) {
+    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
         super.updateCustomBlockEntityTag(pos, level, player, stack, state);
 
         FakeSpawnerData.Component component = stack.get(ComponentsRegistry.FAKE_SPAWNER_DATA);

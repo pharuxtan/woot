@@ -5,7 +5,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.ValueInput;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootGenerationProperties;
@@ -64,42 +63,42 @@ public class WootFactoryGenerationProperties implements WootGenerationProperties
     }
 
     @Override
-    public @NotNull ServerLevel getLevel() {
+    public ServerLevel getLevel() {
         return DropSimulator.getLevel();
     }
 
     @Override
-    public @NotNull RandomSource getRandom() {
+    public RandomSource getRandom() {
         return DropSimulator.getRandom();
     }
 
     @Override
-    public @NotNull RegistryAccess getRegistryAccess() {
+    public RegistryAccess getRegistryAccess() {
         return DropSimulator.getRegistryAccess();
     }
 
     @Override
-    public @NotNull Tier getFactoryTier() {
+    public Tier getFactoryTier() {
         return factoryTier;
     }
 
     @Override
-    public @NotNull WootFactoryMob<?> getFactoryMob() {
+    public WootFactoryMob<?> getFactoryMob() {
         return factoryMob;
     }
 
     @Override
-    public @NotNull ValueInput getFactoryMobValue() {
+    public ValueInput getFactoryMobValue() {
         return factoryMobValue;
     }
 
     @Override
-    public @NotNull ServerLevel getHeartLevel() {
+    public ServerLevel getHeartLevel() {
         return heartLevel;
     }
 
     @Override
-    public @NotNull BlockPos getHeartPos() {
+    public BlockPos getHeartPos() {
         return heartPos;
     }
 }

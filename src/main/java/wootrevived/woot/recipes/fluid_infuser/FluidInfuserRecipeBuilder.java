@@ -58,7 +58,7 @@ public class FluidInfuserRecipeBuilder {
 
     public void save(RecipeOutput recipeOutput, String path){
         recipeOutput.accept(
-                ResourceKey.create(Registries.RECIPE, Woot.location(BlocksRegistry.FLUID_INFUSER_TAG + "/" + path)),
+                ResourceKey.create(Registries.RECIPE, Woot.identifier(BlocksRegistry.FLUID_INFUSER_TAG + "/" + path)),
                 new FluidInfuserRecipe(energy, inputFluid, ingredient, outputFluid),
                 null
         );

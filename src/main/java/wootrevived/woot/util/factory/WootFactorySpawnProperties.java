@@ -13,7 +13,6 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -46,22 +45,22 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     }
 
     @Override
-    public @NotNull ItemStack getMainHandItem() {
+    public ItemStack getMainHandItem() {
         return mainHandItem;
     }
 
     @Override
-    public void setMainHandItem(@NotNull ItemStack itemStack) {
+    public void setMainHandItem(ItemStack itemStack) {
         mainHandItem = itemStack;
     }
 
     @Override
-    public @NotNull ItemStack getOffHandItem() {
+    public ItemStack getOffHandItem() {
         return offHandItem;
     }
 
     @Override
-    public void setOffHandItem(@NotNull ItemStack itemStack) {
+    public void setOffHandItem(ItemStack itemStack) {
         offHandItem = itemStack;
     }
 
@@ -106,32 +105,32 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     }
 
     @Override
-    public @NotNull ServerLevel getLevel() {
+    public ServerLevel getLevel() {
         return DropSimulator.getLevel();
     }
 
     @Override
-    public @NotNull RandomSource getRandom() {
+    public RandomSource getRandom() {
         return DropSimulator.getRandom();
     }
 
     @Override
-    public @NotNull RegistryAccess getRegistryAccess() {
+    public RegistryAccess getRegistryAccess() {
         return DropSimulator.getRegistryAccess();
     }
 
     @Override
-    public @NotNull Tier getFactoryTier() {
+    public Tier getFactoryTier() {
         return factoryTier;
     }
 
     @Override
-    public @NotNull WootFactoryMob<?> getFactoryMob() {
+    public WootFactoryMob<?> getFactoryMob() {
         return factoryMob;
     }
 
     @Override
-    public @NotNull ValueInput getFactoryMobValue() {
+    public ValueInput getFactoryMobValue() {
         return TagValueInput.create(SerializeEntityValueHelper.REPORTER, getRegistryAccess(), factoryMobTag);
     }
 
@@ -146,22 +145,22 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     }
 
     @Override
-    public @NotNull ResourceKey<Level> getDimension() {
+    public ResourceKey<Level> getDimension() {
         return dimension;
     }
 
     @Override
-    public void setDimension(@NotNull ResourceKey<Level> dimension) {
+    public void setDimension(ResourceKey<Level> dimension) {
         this.dimension = dimension;
     }
 
     @Override
-    public @NotNull ServerLevel getHeartLevel() {
+    public ServerLevel getHeartLevel() {
         return heartLevel;
     }
 
     @Override
-    public @NotNull BlockPos getHeartPos() {
+    public BlockPos getHeartPos() {
         return heartPos;
     }
 }

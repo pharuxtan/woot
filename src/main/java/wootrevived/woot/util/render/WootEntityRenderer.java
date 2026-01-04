@@ -8,7 +8,6 @@ import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
 import org.joml.Quaternionf;
@@ -17,7 +16,7 @@ import wootrevived.woot.events.client.GlobalClientTicker;
 import wootrevived.woot.mixins.impl.GuiGraphicsMixin;
 
 public class WootEntityRenderer {
-    public static void render(@NotNull GuiGraphics gui, int x, int y, @NotNull LivingEntity entity, double size, double padding, float max_entity_size){
+    public static void render(GuiGraphics gui, int x, int y, LivingEntity entity, double size, double padding, float max_entity_size){
         EntityRenderer<? super Entity, ?> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
         if(renderer == null)
             return;

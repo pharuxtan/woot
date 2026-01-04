@@ -3,16 +3,15 @@ package wootrevived.woot.datagen;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.KilledTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.KilledTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
@@ -30,10 +29,10 @@ public class Advancements extends AdvancementProvider {
     }
 
     public static final class Provider implements AdvancementSubProvider {
-        private static final ResourceLocation background = ResourceLocation.withDefaultNamespace("textures/block/black_concrete_powder.png");
+        private static final Identifier background = Identifier.withDefaultNamespace("textures/block/black_concrete_powder.png");
 
         @Override
-        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> saver) {
+        public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver) {
             AdvancementHolder wootRevived = Advancement.Builder.advancement()
                     .display(BlocksRegistry.HEART_BLOCK.get(),
                             Component.translatable("advancements.woot_revived.root.title"),
@@ -131,7 +130,7 @@ public class Advancements extends AdvancementProvider {
         }
 
         private String getNameId(String id) {
-            return Woot.MOD_ID + ":main/" + id;
+            return Woot.MOD_NAMESPACE + ":main/" + id;
         }
     }
 }

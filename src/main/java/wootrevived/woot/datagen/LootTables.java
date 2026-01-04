@@ -1,11 +1,11 @@
 package wootrevived.woot.datagen;
 
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -17,7 +17,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.ComponentsRegistry;
 
@@ -32,7 +31,7 @@ public class LootTables extends BlockLootSubProvider {
     }
 
     @Override
-    protected @NotNull Iterable<Block> getKnownBlocks() {
+    protected Iterable<Block> getKnownBlocks() {
         return BlocksRegistry.BLOCKS.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList());
     }
 
@@ -88,7 +87,7 @@ public class LootTables extends BlockLootSubProvider {
         copyComponent(BlocksRegistry.DYE_LIQUIFIER_BLOCK, ComponentsRegistry.DYE_LIQUIFIER_DATA);
     }
 
-    public ResourceLocation getBlockResource(Block block){
+    public Identifier getBlockResource(Block block){
         return Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
     }
 

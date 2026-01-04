@@ -21,8 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 
 import java.util.function.Supplier;
@@ -32,7 +31,7 @@ public class MagmatorBlock extends Block implements EntityBlock {
 
     public MagmatorBlock(Supplier<BlockEntityType<?>> entity, String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -48,16 +47,16 @@ public class MagmatorBlock extends Block implements EntityBlock {
 
     protected StateDefinition<Block, BlockState> magmatorStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.magmatorStateDefinition;
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return entity.get().create(pos, state);
     }
 
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
         return MagmatorBlockEntity::ticker;
     }
@@ -68,7 +67,7 @@ public class MagmatorBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack heldItem, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             BlockEntity be = level.getBlockEntity(hit.getBlockPos());
             if(player.isShiftKeyDown() && be instanceof MagmatorBlockEntity entity){
                 entity.nextRedstoneMode(player);
@@ -79,7 +78,7 @@ public class MagmatorBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
+        public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit){
             return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
     }

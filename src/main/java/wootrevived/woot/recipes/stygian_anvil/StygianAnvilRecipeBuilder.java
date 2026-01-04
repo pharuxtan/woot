@@ -51,7 +51,7 @@ public class StygianAnvilRecipeBuilder {
         itemInputs.add(base);
         itemInputs.addAll(ingredients);
         recipeOutput.accept(
-                ResourceKey.create(Registries.RECIPE, Woot.location(BlocksRegistry.STYGIAN_ANVIL_TAG + "/" + path)),
+                ResourceKey.create(Registries.RECIPE, Woot.identifier(BlocksRegistry.STYGIAN_ANVIL_TAG + "/" + path)),
                 new StygianAnvilRecipe(
                         base,
                         ingredients.isEmpty() ? Optional.empty() : Optional.of(ingredients.get(0)),

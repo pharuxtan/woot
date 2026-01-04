@@ -26,8 +26,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.items.mob_shard.MobShardItem;
@@ -50,7 +50,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack) {
+        public boolean isValid(int slot, ItemResource stack) {
             if(slot == BASE_SLOT){
                 if(stack.getItem() instanceof MobShardItem)
                     return MobShardItem.isFullyProgrammed(stack.toStack());
@@ -162,22 +162,22 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         inventoryHandler.serialize(output.child(WootTags.INPUT_INVENTORY_TAG));
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.child(WootTags.INPUT_INVENTORY_TAG).ifPresent(inventoryHandler::deserialize);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("StygianAnvilBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -186,7 +186,7 @@ public class StygianAnvilBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

@@ -4,7 +4,6 @@ import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.display.DisplayContentsFactory;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,11 +17,11 @@ public class WootSlotDisplay implements SlotDisplay {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> @NotNull Stream<T> resolve(@NotNull ContextMap contextMap, @NotNull DisplayContentsFactory<T> displayContentsFactory) {
+    public <T> Stream<T> resolve(ContextMap contextMap, DisplayContentsFactory<T> displayContentsFactory) {
         return (Stream<T>) stacks.stream();
     }
 
     @Override
     @SuppressWarnings("DataFlowIssue")
-    public @NotNull Type<WootSlotDisplay> type() { return null; }
+    public Type<WootSlotDisplay> type() { return null; }
 }

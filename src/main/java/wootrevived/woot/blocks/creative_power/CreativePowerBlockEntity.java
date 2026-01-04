@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.util.handlers.WootEnergyHandler;
 
@@ -25,7 +24,7 @@ public class CreativePowerBlockEntity extends BlockEntity implements BlockEntity
     }
 
     @Override
-    public void tick(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if (level.isClientSide())
             return;
 

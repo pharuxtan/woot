@@ -11,7 +11,6 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -161,7 +160,7 @@ public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public @NotNull FluidResource getResource(int index) {
+    public FluidResource getResource(int index) {
         return FluidResource.EMPTY;
     }
 
@@ -171,7 +170,7 @@ public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public long getCapacityAsLong(int index, @NotNull FluidResource resource) {
+    public long getCapacityAsLong(int index, FluidResource resource) {
         int capacity = 0;
         for(int i = 0; i < 4; i++){
             List<FluidStack> list = importFluids.get(i);
@@ -187,7 +186,7 @@ public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public boolean isValid(int index, @NotNull FluidResource resource) {
+    public boolean isValid(int index, FluidResource resource) {
         for(int i = 0; i < 4; i++){
             List<FluidStack> list = importFluids.get(i);
             if(list == null)
@@ -202,7 +201,7 @@ public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int insert(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(FluidResource resource, int amount, TransactionContext transaction) {
         if(!isValid(0, resource) || resource.isEmpty())
             return 0;
 
@@ -243,12 +242,12 @@ public class WootImportFluidHandler implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int insert(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
         return insert(resource, amount, transaction);
     }
 
     @Override
-    public int extract(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
         return 0;
     }
 

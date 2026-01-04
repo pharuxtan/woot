@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.LayoutData;
@@ -52,7 +52,7 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
     private int delayTick = TICK_DELAY;
 
     @Override
-    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         int height = Patterns.getHeight();
@@ -93,7 +93,7 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
         blockRenderOffset++;
     }
 
-    public static void placePatternBlock(@NotNull Level level, Direction facing, BlockPos layoutPos, Pattern.PatternBlock patternBlock, int blockRenderOffset) {
+    public static void placePatternBlock(Level level, Direction facing, BlockPos layoutPos, Pattern.PatternBlock patternBlock, int blockRenderOffset) {
         Block block = patternBlock.blocks[blockRenderOffset % (int) Arrays.stream(patternBlock.blocks).count()];
         BlockState blockState = block.getStateDefinition().any();
         if(blockState.hasProperty(BlockStateProperties.ENABLED))
@@ -112,7 +112,7 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
         }
     }
 
-    public static void removePatternBlock(@NotNull Level level, BlockPos layoutPos, Pattern.PatternBlock patternBlock) {
+    public static void removePatternBlock(Level level, BlockPos layoutPos, Pattern.PatternBlock patternBlock) {
         for(Block block :  patternBlock.blocks){
             BlockPos blockPos = patternBlock.getLevelBlockPos(layoutPos);
 
@@ -142,22 +142,22 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         output.store(LayoutData.ID, LayoutData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.read(LayoutData.ID, LayoutData.CODEC).ifPresent(this::setComponent);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("LayoutBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -166,7 +166,7 @@ public class LayoutBlockEntity extends BlockEntity implements BlockEntityTicker<
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

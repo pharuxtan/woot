@@ -16,8 +16,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.Woot;
@@ -218,7 +218,7 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
 
         output.putInt(WootTags.REDSTONE_MODE_TAG, redstoneMode.ordinal());
@@ -232,7 +232,7 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
 
         input.getInt(WootTags.REDSTONE_MODE_TAG).ifPresent(mode -> redstoneMode = RedstoneMode.byIndex(mode));
@@ -247,9 +247,9 @@ public class FakeSpawnerBlockEntity extends FactoryBlockBaseEntity {
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("FakeSpawnerBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);

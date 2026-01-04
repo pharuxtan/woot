@@ -3,7 +3,6 @@ package wootrevived.woot.util.handlers;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.common.MachineSideProperty;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public @NotNull FluidResource getResource(int index) {
+    public FluidResource getResource(int index) {
         if(index < 0 || index >= wrappers.size())
             return FluidResource.EMPTY;
 
@@ -40,7 +39,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public long getCapacityAsLong(int index, @NotNull FluidResource resource) {
+    public long getCapacityAsLong(int index, FluidResource resource) {
         if(index < 0 || index >= wrappers.size())
             return 0;
 
@@ -48,7 +47,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public boolean isValid(int index, @NotNull FluidResource resource) {
+    public boolean isValid(int index, FluidResource resource) {
         if(index < 0 || index >= wrappers.size())
             return false;
 
@@ -56,7 +55,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int insert(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
         if(index < 0 || index >= wrappers.size())
             return 0;
 
@@ -70,7 +69,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int insert(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int insert(FluidResource resource, int amount, TransactionContext transaction) {
         int fill = 0;
         for (FluidHandlerWrapper wrapper : wrappers) {
             WootFluidResourceHandler handler = wrapper.handler;
@@ -87,7 +86,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int extract(@NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int extract(FluidResource resource, int amount, TransactionContext transaction) {
         int extract = 0;
         for(FluidHandlerWrapper wrapper : wrappers) {
             WootFluidResourceHandler handler = wrapper.handler;
@@ -104,7 +103,7 @@ public class WootFluidHandlerWrapper implements ResourceHandler<FluidResource> {
     }
 
     @Override
-    public int extract(int index, @NotNull FluidResource resource, int amount, @NotNull TransactionContext transaction) {
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
         if(index < 0 || index >= wrappers.size())
             return 0;
 

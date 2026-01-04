@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.entity.WootTags;
 
 import java.util.Optional;
@@ -26,6 +25,6 @@ public final class FactoryBlockData {
     );
 
     public record Component(
-            @NotNull Optional<BlockPos> heartPos
+            Optional<BlockPos> heartPos
     ) {}
 }

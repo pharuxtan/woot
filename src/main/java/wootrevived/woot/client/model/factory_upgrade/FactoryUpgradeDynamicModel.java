@@ -12,8 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 import wootrevived.api.interfaces.WootUpgradeEnum;
 import wootrevived.woot.Woot;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
@@ -24,51 +22,51 @@ import java.util.List;
 import java.util.Map;
 
 public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> variants, TextureAtlasSprite defaultParticle) implements DynamicBlockStateModel {
-    public static @NotNull FactoryUpgradeDynamicModel bake(ResolvedModel model, ModelBaker baker) {
+    public static FactoryUpgradeDynamicModel bake(ResolvedModel model, ModelBaker baker) {
         Map<String, List<BlockModelPart>> variants = new HashMap<>();
 
         TextureSlots slots = model.getTopTextureSlots();
         SpriteGetter spriteGetter = baker.sprites();
 
-        QuadCollection bake = model.bakeTopGeometry(slots, baker, BlockModelRotation.X0_Y0);
+        QuadCollection bake = model.bakeTopGeometry(slots, baker, BlockModelRotation.IDENTITY);
 
         TextureAtlasSprite factory = spriteGetter.get(slots.getMaterial("north"), model);
-        variants.put("", getBlockModelParts(model, bake, factory));
+        variants.put("", getBlockModelParts(model, bake, factory, baker.parts()));
 
         for(UpgradeItemsRegistry.Entry<?> entry : UpgradeItemsRegistry.getEntries())
-            processEntry(variants, entry, model, bake, spriteGetter);
+            processEntry(variants, entry, model, bake, spriteGetter, baker.parts());
 
         for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries())
-            processDynamicEntry(variants, entry, model, bake, spriteGetter);
+            processDynamicEntry(variants, entry, model, bake, spriteGetter, baker.parts());
 
         return new FactoryUpgradeDynamicModel(variants, factory);
     }
 
-    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.Entry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter) {
+    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.Entry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter, ModelBaker.PartCache cache) {
         String name = UpgradeItemsRegistry.getNameFromItem(entry.item());
 
         TextureAtlasSprite texture = spriteGetter.get(new Material(
                 Sheets.BLOCKS_MAPPER.sheet(),
-                Woot.location("block/upgrade_item_" + name)
+                Woot.identifier("block/upgrade_item_" + name)
         ), model);
 
-        variants.put(name, getBlockModelParts(model, bake, texture));
+        variants.put(name, getBlockModelParts(model, bake, texture, cache));
     }
 
-    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processDynamicEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.DynamicEntry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter) {
+    private static <T extends Enum<T> & WootUpgradeEnum<T>> void processDynamicEntry(Map<String, List<BlockModelPart>> variants, UpgradeItemsRegistry.DynamicEntry<T> entry, ResolvedModel model, QuadCollection bake, SpriteGetter spriteGetter, ModelBaker.PartCache cache) {
         for (T variant : entry.variantClass().getEnumConstants()) {
             String name = variant.getSerializedName() + "_" + UpgradeItemsRegistry.getNameFromItem(entry.item());
 
             TextureAtlasSprite texture = spriteGetter.get(new Material(
                     Sheets.BLOCKS_MAPPER.sheet(),
-                    Woot.location("block/upgrade_item_" + name)
+                    Woot.identifier("block/upgrade_item_" + name)
             ), model);
 
-            variants.put(name, getBlockModelParts(model, bake, texture));
+            variants.put(name, getBlockModelParts(model, bake, texture, cache));
         }
     }
 
-    private static List<BlockModelPart> getBlockModelParts(ResolvedModel model, QuadCollection bake, TextureAtlasSprite texture) {
+    private static List<BlockModelPart> getBlockModelParts(ResolvedModel model, QuadCollection bake, TextureAtlasSprite texture, ModelBaker.PartCache cache) {
         QuadCollection.Builder builder = new QuadCollection.Builder();
 
         for(Direction direction : Direction.Plane.VERTICAL)
@@ -78,8 +76,9 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
             BakedQuad quad = bake.getQuads(direction).getFirst();
 
             builder.addCulledFace(direction, FaceBakery.bakeQuad(
-                    new Vector3f(0F, 0F, 0F),
-                    new Vector3f(16F, 16F, 16F),
+                    cache,
+                    cache.vector(0F, 0F, 0F),
+                    cache.vector(16F, 16F, 16F),
                     new BlockElementFace(
                             direction,
                             quad.tintIndex(),
@@ -89,7 +88,7 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
                     ),
                     texture,
                     direction,
-                    BlockModelRotation.X0_Y0,
+                    BlockModelRotation.IDENTITY,
                     null,
                     quad.shade(),
                     quad.lightEmission()
@@ -100,7 +99,7 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
     }
 
     @Override
-    public void collectParts(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull RandomSource random, @NotNull List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         String key = "";
         if(level.getBlockEntity(pos) instanceof FactoryUpgradeBlockEntity blockEntity)
             key = blockEntity.getUpgradeItemName();
@@ -108,7 +107,7 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
     }
 
     @Override
-    public @NotNull TextureAtlasSprite particleIcon(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public TextureAtlasSprite particleIcon(BlockAndTintGetter level, BlockPos pos, BlockState state) {
         String key = "";
         if(level.getBlockEntity(pos) instanceof FactoryUpgradeBlockEntity blockEntity)
             key = blockEntity.getUpgradeItemName();
@@ -117,7 +116,7 @@ public record FactoryUpgradeDynamicModel(Map<String, List<BlockModelPart>> varia
 
     @Override
     @SuppressWarnings("deprecation")
-    public @NotNull TextureAtlasSprite particleIcon() {
+    public TextureAtlasSprite particleIcon() {
         return defaultParticle;
     }
 }

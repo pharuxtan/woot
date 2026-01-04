@@ -7,7 +7,7 @@ import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.util.render.WootContainerScreen;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterRenderPipelines {
     @SubscribeEvent
     public static void registerRenderPipelines(RegisterRenderPipelinesEvent event){

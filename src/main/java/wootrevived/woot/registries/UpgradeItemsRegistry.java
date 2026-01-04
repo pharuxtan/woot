@@ -102,7 +102,7 @@ public class UpgradeItemsRegistry extends WootUpgradeItemRegistration {
 
     /* Forge Items */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(IEventBus bus) {
         ITEMS.register(bus);

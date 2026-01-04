@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.client.render.dye_liquifier.DyeLiquifierContainerScreen;
 import wootrevived.woot.compat.jei.WootJeiPluginTypes;
 import wootrevived.woot.config.DyeLiquifierConfig;
@@ -49,7 +48,7 @@ public class DyeLiquifierRecipeCategory implements IRecipeCategory<DyeLiquifierR
     }
 
     @Override
-    public void draw(DyeLiquifierRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(DyeLiquifierRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
         int totalProgressTick = recipe.getEnergy() / DyeLiquifierConfig.ENERGY_PROCESS_TRANSFER.get();
         int progress = (GlobalClientTicker.tickCounter % totalProgressTick) * 100 / totalProgressTick;
 
@@ -87,22 +86,22 @@ public class DyeLiquifierRecipeCategory implements IRecipeCategory<DyeLiquifierR
     }
 
     @Override
-    public @NotNull IRecipeType<DyeLiquifierRecipe> getRecipeType() {
+    public IRecipeType<DyeLiquifierRecipe> getRecipeType() {
         return WootJeiPluginTypes.DYE_LIQUIFIER_TYPE;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return Component.translatable("gui.woot_revived.dye_liquifier.name");
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, DyeLiquifierRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, DyeLiquifierRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, INPUT_SLOT_X + 1, INPUT_SLOT_Y + 1)
                 .add(recipe.getIngredient());
 

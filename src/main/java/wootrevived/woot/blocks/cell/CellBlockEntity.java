@@ -16,7 +16,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.config.CellConfig;
 import wootrevived.woot.data.CellData;
@@ -37,7 +37,7 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
     private WootFluidResourceHandler createTank() {
         return new WootFluidResourceHandler(1000, false, (stack) -> stack.is(FluidsRegistry.SOURCE_VITALITY_FUEL_FLUID.get())) {
             @Override
-            protected void onContentsChanged(int i, @NotNull FluidStack s) {
+            protected void onContentsChanged(int i, FluidStack s) {
                 setChanged();
             }
         };
@@ -89,22 +89,22 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output){
+    protected void saveAdditional(ValueOutput output){
         super.saveAdditional(output);
         output.store(CellData.ID, CellData.CODEC, getComponent());
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input){
+    public void loadAdditional(ValueInput input){
         super.loadAdditional(input);
         input.read(CellData.ID, CellData.CODEC).ifPresent(this::setComponent);
     }
 
     private static final ProblemReporter.ScopedCollector REPORTER = Woot.reporter("CellBlockEntity");
 
-    @NotNull
+    @NonNull
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider){
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider){
         CompoundTag tag = super.getUpdateTag(provider);
         TagValueOutput output = TagValueOutput.createWithContext(REPORTER, provider);
         saveAdditional(output);
@@ -113,7 +113,7 @@ public class CellBlockEntity extends FactoryBlockBaseEntity {
     }
 
     @Override
-    public void handleUpdateTag(@NotNull ValueInput input){
+    public void handleUpdateTag(ValueInput input){
         super.handleUpdateTag(input);
         loadAdditional(input);
     }

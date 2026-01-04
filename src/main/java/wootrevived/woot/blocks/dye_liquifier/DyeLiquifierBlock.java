@@ -36,8 +36,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.Woot;
 import wootrevived.woot.config.DyeLiquifierConfig;
 import wootrevived.woot.data.DyeLiquifierData;
@@ -53,7 +52,7 @@ import static wootrevived.woot.util.render.WootStyles.UNIT_STYLE;
 public class DyeLiquifierBlock extends Block implements EntityBlock {
     public DyeLiquifierBlock(String tag) {
         super(Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.BLOCK, Woot.identifier(tag)))
                 .mapColor(MapColor.METAL)
                 .sound(SoundType.METAL)
                 .strength(3.5F));
@@ -67,7 +66,7 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
 
     protected StateDefinition<Block, BlockState> dyeLiquifierStateDefinition;
     @Override
-    public @NotNull StateDefinition<Block, BlockState> getStateDefinition() {
+    public StateDefinition<Block, BlockState> getStateDefinition() {
         return this.dyeLiquifierStateDefinition;
     }
 
@@ -81,11 +80,11 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return BlocksRegistry.DYE_LIQUIFIER_BLOCK_ENTITY.get().create(pos, state);
     }
 
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
         return blockEntityType == BlocksRegistry.DYE_LIQUIFIER_BLOCK_ENTITY.get() ? DyeLiquifierBlockEntity::ticker : null;
     }
@@ -94,7 +93,7 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
         public static final Tooltip INSTANCE = new Tooltip();
 
         public static final String ID = "dye_liquifier_block_tooltip";
-        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<Tooltip> CODEC = MapCodec.unit(() -> INSTANCE).codec();
         public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override
@@ -153,7 +152,7 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public InteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        public InteractionResult useItemOn(ItemStack heldItem, Level level, Player player, InteractionHand hand, BlockHitResult hit) {
             if (level.isClientSide())
                 return InteractionResult.SUCCESS;
 
@@ -172,7 +171,7 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult hit){
+        public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit){
             return useItemOn(ItemStack.EMPTY, level, player, InteractionHand.MAIN_HAND, hit);
         }
 
@@ -181,7 +180,7 @@ public class DyeLiquifierBlock extends Block implements EntityBlock {
         }
 
         @Override
-        public @NotNull BlockState mirror(Mirror mirror) {
+        public BlockState mirror(Mirror mirror) {
             return rotate(null, null, mirror.getRotation(getValue(BlockStateProperties.HORIZONTAL_FACING)));
         }
     }

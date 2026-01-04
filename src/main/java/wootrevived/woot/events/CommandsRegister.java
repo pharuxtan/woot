@@ -7,7 +7,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.commands.GiveCommand;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class CommandsRegister {
     @SubscribeEvent
     public static void onRegisterCommandsEvent(RegisterCommandsEvent event) {

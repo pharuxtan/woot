@@ -12,7 +12,7 @@ import wootrevived.woot.client.render.heart.HeartContainerScreen;
 import wootrevived.woot.client.render.item_infuser.ItemInfuserContainerScreen;
 import wootrevived.woot.registries.BlocksRegistry;
 
-@EventBusSubscriber(modid = Woot.MOD_ID, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterMenus {
     @SubscribeEvent
     public static void registerMenus(RegisterMenuScreensEvent event) {

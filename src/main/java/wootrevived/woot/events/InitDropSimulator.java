@@ -2,7 +2,7 @@ package wootrevived.woot.events;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -20,9 +20,9 @@ import wootrevived.woot.registries.WootFactoryMobsRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber(modid = Woot.MOD_ID)
+@EventBusSubscriber(modid = Woot.MOD_NAMESPACE)
 public class InitDropSimulator {
-    public static final List<ResourceLocation> mobLocations = new ArrayList<>();
+    public static final List<Identifier> mobLocations = new ArrayList<>();
 
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
@@ -48,7 +48,7 @@ public class InitDropSimulator {
                         continue;
                     }
 
-                    ResourceLocation location = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+                    Identifier location = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
                     mobLocations.add(location);
                 } catch(Exception ignored){
                     WootFactoryMobsRegistry.removeFactoryMob(entityType);

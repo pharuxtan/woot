@@ -1,9 +1,9 @@
 package wootrevived.woot.datagen;
 
-import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.util.Util;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import wootrevived.woot.datagen.languages.English;
 import wootrevived.woot.datagen.languages.Japanese;

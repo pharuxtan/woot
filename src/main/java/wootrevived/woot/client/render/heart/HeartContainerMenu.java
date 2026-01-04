@@ -15,8 +15,7 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.blocks.cell.CellBlockEntity;
@@ -45,7 +44,7 @@ public class HeartContainerMenu extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack)
+        public boolean isValid(int slot, ItemResource stack)
         {
             return false;
         }
@@ -63,7 +62,7 @@ public class HeartContainerMenu extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean isValid(int slot, @NotNull ItemResource stack)
+        public boolean isValid(int slot, ItemResource stack)
         {
             return false;
         }
@@ -234,12 +233,12 @@ public class HeartContainerMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, BlocksRegistry.HEART_BLOCK.get());
     }
 }

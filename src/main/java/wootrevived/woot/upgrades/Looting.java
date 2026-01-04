@@ -21,7 +21,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.UpgradeDefaultVariant;
 import wootrevived.api.interfaces.WootSpawnProperties;
@@ -36,13 +35,13 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Looting extends WootUpgradeItem<UpgradeDefaultVariant> {
     public Looting(String tag, UpgradeDefaultVariant variant) {
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.LOOTING_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
 
     @Override
-    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
         ItemStack itemStack = properties.getMainHandItem();
 
         if(itemStack.isEnchantable()) {
@@ -57,7 +56,7 @@ public class Looting extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -87,7 +86,7 @@ public class Looting extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.LOOTING_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.LOOTING_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -107,7 +106,7 @@ public class Looting extends WootUpgradeItem<UpgradeDefaultVariant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             consumer.accept(Component.translatable("info.woot_revived.upgrade.looting.desc.0", variant.level()).setStyle(DESCRIPTION_STYLE));
         }
     }

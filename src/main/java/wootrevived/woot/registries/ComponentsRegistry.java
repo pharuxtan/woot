@@ -19,7 +19,7 @@ import wootrevived.woot.items.xp.XpItem;
 import wootrevived.woot.upgrades.*;
 
 public class ComponentsRegistry {
-    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Woot.MOD_ID);
+    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Woot.MOD_NAMESPACE);
 
     public static void register(IEventBus bus) {
         DATA_COMPONENTS.register(bus);

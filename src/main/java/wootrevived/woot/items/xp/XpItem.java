@@ -1,6 +1,7 @@
 package wootrevived.woot.items.xp;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponentGetter;
@@ -22,7 +23,6 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.Woot;
 import wootrevived.woot.registries.ComponentsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
@@ -41,7 +41,7 @@ public class XpItem extends Item {
     final Variant variant;
     public XpItem(Variant variant, String tag) {
         super(new Item.Properties().stacksTo(STACK_SIZE)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                 .component(ComponentsRegistry.XP_ITEM_TOOLTIP, Tooltip.INSTANCE));
         this.variant = variant;
     }
@@ -98,7 +98,7 @@ public class XpItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, @NotNull Player player, @NotNull InteractionHand usedHand){
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand){
         if(level.isClientSide())
             return InteractionResult.PASS;
 
@@ -154,7 +154,7 @@ public class XpItem extends Item {
         public static final Tooltip INSTANCE = new Tooltip();
 
         public static final String ID = "xp_item_tooltip";
-        public static final Codec<Tooltip> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<Tooltip> CODEC = MapCodec.unit(() -> INSTANCE).codec();
         public static final StreamCodec<ByteBuf, Tooltip> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override

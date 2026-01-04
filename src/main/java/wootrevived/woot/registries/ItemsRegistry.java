@@ -23,8 +23,8 @@ import wootrevived.woot.items.stygian_hammer.StygianHammerItem;
 import wootrevived.woot.items.xp.XpItem;
 
 public class ItemsRegistry {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, Woot.MOD_NAMESPACE);
 
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
@@ -68,7 +68,7 @@ public class ItemsRegistry {
 
     public static final String MOB_SHARD_TAG = "mob_shard";
     public static final DeferredHolder<Item, MobShardItem> MOB_SHARD_ITEM = ITEMS.register(MOB_SHARD_TAG, () -> new MobShardItem(MOB_SHARD_TAG));
-    public static final DeferredHolder<EntityType<?>, EntityType<MobShardProjectile>> MOB_SHARD_PROJECTILE = ENTITY_TYPES.register(MOB_SHARD_TAG, () -> EntityType.Builder.<MobShardProjectile>of(MobShardProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).build(ResourceKey.create(Registries.ENTITY_TYPE, Woot.location(MOB_SHARD_TAG))));
+    public static final DeferredHolder<EntityType<?>, EntityType<MobShardProjectile>> MOB_SHARD_PROJECTILE = ENTITY_TYPES.register(MOB_SHARD_TAG, () -> EntityType.Builder.<MobShardProjectile>of(MobShardProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).build(ResourceKey.create(Registries.ENTITY_TYPE, Woot.identifier(MOB_SHARD_TAG))));
 
     /* Xp Shard & Splinter */
 

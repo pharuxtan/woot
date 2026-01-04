@@ -5,7 +5,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplate;
@@ -85,8 +85,8 @@ public class Blocks {
     public static void orientable(DeferredHolder<Block, ? extends Block> block){
         MultiVariant variant = BlockModelGenerators.plainVariant(ModelTemplates.CUBE_ORIENTABLE.create(block.get(), new TextureMapping()
                 .put(TextureSlot.FRONT, TextureMapping.getBlockTexture(block.get()))
-                .put(TextureSlot.SIDE, Woot.location("block/factory_base"))
-                .put(TextureSlot.TOP, Woot.location("block/factory_base")), models.modelOutput));
+                .put(TextureSlot.SIDE, Woot.identifier("block/factory_base"))
+                .put(TextureSlot.TOP, Woot.identifier("block/factory_base")), models.modelOutput));
         models.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.get(), variant).with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
     }
 
@@ -98,14 +98,14 @@ public class Blocks {
     public static void cubeColumn(DeferredHolder<Block, ? extends Block> block){
         MultiVariant variant = BlockModelGenerators.plainVariant(ModelTemplates.CUBE_COLUMN.create(block.get(), new TextureMapping()
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block.get()))
-                .put(TextureSlot.END, Woot.location("block/factory_base")), models.modelOutput));
+                .put(TextureSlot.END, Woot.identifier("block/factory_base")), models.modelOutput));
         models.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.get(), variant));
     }
 
     public static void cubeColumnCreative(DeferredHolder<Block, ? extends Block> block){
         MultiVariant variant = BlockModelGenerators.plainVariant(ModelTemplates.CUBE_COLUMN.create(block.get(), new TextureMapping()
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block.get()))
-                .put(TextureSlot.END, Woot.location("block/creative_base")), models.modelOutput));
+                .put(TextureSlot.END, Woot.identifier("block/creative_base")), models.modelOutput));
         models.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.get(), variant));
     }
 
@@ -118,7 +118,7 @@ public class Blocks {
         TextureSlot primarySlot = TextureSlot.create("primary");
         TextureSlot secondarySlot = TextureSlot.create("secondary");
         TextureSlot[] slots = new TextureSlot[]{ TextureSlot.END, TextureSlot.PARTICLE, primarySlot, secondarySlot };
-        ExtendedModelTemplate template = new ModelTemplate(Optional.of(ResourceLocation.withDefaultNamespace("block/block")), Optional.empty(), slots)
+        ExtendedModelTemplate template = new ModelTemplate(Optional.of(Identifier.withDefaultNamespace("block/block")), Optional.empty(), slots)
                 .extend()
 
                 .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, builder -> {
@@ -154,7 +154,7 @@ public class Blocks {
         TextureSlot bodySlot = TextureSlot.create("body");
         TextureSlot[] slots = new TextureSlot[]{ TextureSlot.PARTICLE, baseSlot, bodySlot, TextureSlot.TOP };
 
-        ExtendedModelTemplate template = new ModelTemplate(Optional.of(ResourceLocation.withDefaultNamespace("block/block")), Optional.empty(), slots)
+        ExtendedModelTemplate template = new ModelTemplate(Optional.of(Identifier.withDefaultNamespace("block/block")), Optional.empty(), slots)
                 .extend()
 
                 .transform(ItemDisplayContext.FIXED, builder -> {
@@ -209,7 +209,7 @@ public class Blocks {
                 .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(block.get()))
                 .put(bodySlot, TextureMapping.getBlockTexture(block.get()))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block.get(), "_top"))
-                .put(baseSlot, ResourceLocation.withDefaultNamespace("block/crying_obsidian"));
+                .put(baseSlot, Identifier.withDefaultNamespace("block/crying_obsidian"));
 
         MultiVariant variant = BlockModelGenerators.plainVariant(template.create(block.get(), mapping, models.modelOutput));
         models.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.get(), variant).with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
@@ -218,7 +218,7 @@ public class Blocks {
     public static void upgrade(DeferredHolder<Block, ? extends Block> block){
         ModelTemplates.CUBE_COLUMN.create(block.get(), new TextureMapping()
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block.get()))
-                .put(TextureSlot.END, Woot.location("block/factory_base")), models.modelOutput);
+                .put(TextureSlot.END, Woot.identifier("block/factory_base")), models.modelOutput);
 
         models.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block.get(), MultiVariant.of(new FactoryUpgradeBlockBaseModel.Builder())));
     }

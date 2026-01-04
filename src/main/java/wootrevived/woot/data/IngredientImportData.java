@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.handlers.WootImportFluidHandler;
 import wootrevived.woot.util.handlers.WootImportItemHandler;
 
@@ -25,7 +24,7 @@ public final class IngredientImportData {
     );
 
     public record Component(
-            @NotNull WootImportItemHandler itemHandler,
-            @NotNull WootImportFluidHandler fluidHandler
+            WootImportItemHandler itemHandler,
+            WootImportFluidHandler fluidHandler
     ) {}
 }

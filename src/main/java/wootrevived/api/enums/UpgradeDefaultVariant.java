@@ -2,7 +2,7 @@ package wootrevived.api.enums;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.interfaces.WootUpgradeEnum;
 
 /**
@@ -45,7 +45,7 @@ public enum UpgradeDefaultVariant implements WootUpgradeEnum<UpgradeDefaultVaria
     }
 
     @Override
-    public @NotNull String getSerializedName() {
+    public @NonNull String getSerializedName() {
         return name;
     }
 

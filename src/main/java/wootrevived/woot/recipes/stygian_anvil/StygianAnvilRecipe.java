@@ -9,7 +9,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.registries.RecipesRegistry;
 import wootrevived.woot.util.recipes.WootRecipeInput;
 
@@ -46,7 +45,7 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
 
     private final int complementaryCount;
 
-    public StygianAnvilRecipe(@NotNull Ingredient base, @NotNull Optional<Ingredient> firstComplementary, @NotNull Optional<Ingredient> secondComplementary, @NotNull Optional<Ingredient> thirdComplementary, @NotNull Optional<Ingredient> fourthComplementary, @NotNull ItemStack outputItem) {
+    public StygianAnvilRecipe(Ingredient base, Optional<Ingredient> firstComplementary, Optional<Ingredient> secondComplementary, Optional<Ingredient> thirdComplementary, Optional<Ingredient> fourthComplementary, ItemStack outputItem) {
         this.base = base;
         this.firstComplementary = firstComplementary;
         this.secondComplementary = secondComplementary;
@@ -87,32 +86,32 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
         return RecipesRegistry.ANVIL_RECIPE_BOOK_CATEGORY.get();
     }
 
-    public @NotNull Ingredient getBase(){
+    public Ingredient getBase(){
         return base;
     }
 
-    public @NotNull Optional<Ingredient> getFirstComplementary(){
+    public Optional<Ingredient> getFirstComplementary(){
         return firstComplementary;
     }
 
-    public @NotNull Optional<Ingredient> getSecondComplementary(){
+    public Optional<Ingredient> getSecondComplementary(){
         return secondComplementary;
     }
 
-    public @NotNull Optional<Ingredient> getThirdComplementary(){
+    public Optional<Ingredient> getThirdComplementary(){
         return thirdComplementary;
     }
 
-    public @NotNull Optional<Ingredient> getFourthComplementary(){
+    public Optional<Ingredient> getFourthComplementary(){
         return fourthComplementary;
     }
 
-    public @NotNull ItemStack getOutput(){
+    public ItemStack getOutput(){
         return outputItem.copy();
     }
 
     @Override
-    public boolean matches(@NotNull WootRecipeInput input, @NotNull Level level) {
+    public boolean matches(WootRecipeInput input, Level level) {
         if(!getBase().test(input.getItem(0)))
             return false;
 
@@ -133,7 +132,7 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
                 matchComplementary(input, validatedSlots, fourthComplementary);
     }
 
-    private boolean matchComplementary(WootRecipeInput container, List<Integer> validatedSlots, @NotNull Optional<Ingredient> complementary){
+    private boolean matchComplementary(WootRecipeInput container, List<Integer> validatedSlots, Optional<Ingredient> complementary){
         if(complementary.isEmpty())
             return true;
 
@@ -150,7 +149,7 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
         return hasFound;
     }
 
-    public static void loadRecipes(@NotNull RecipeMap map){
+    public static void loadRecipes(RecipeMap map){
         Validator.clear();
         for(RecipeHolder<StygianAnvilRecipe> recipeHolder : map.byType(RecipesRegistry.ANVIL_RECIPE_TYPE.get())) {
             Validator.add(recipeHolder.value().base, recipeHolder.value().firstComplementary, recipeHolder.value().secondComplementary, recipeHolder.value().thirdComplementary, recipeHolder.value().fourthComplementary);
@@ -177,7 +176,7 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
             return false;
         }
 
-        protected static void add(@NotNull Ingredient base, @NotNull Optional<Ingredient> firstComplementary, @NotNull Optional<Ingredient> secondComplementary, @NotNull Optional<Ingredient> thirdComplementary, @NotNull Optional<Ingredient> fourthComplementary){
+        protected static void add(Ingredient base, Optional<Ingredient> firstComplementary, Optional<Ingredient> secondComplementary, Optional<Ingredient> thirdComplementary, Optional<Ingredient> fourthComplementary){
             validBaseInputs.add(base);
             firstComplementary.ifPresent(validIngredients::add);
             secondComplementary.ifPresent(validIngredients::add);
@@ -192,7 +191,7 @@ public class StygianAnvilRecipe implements Recipe<WootRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(WootRecipeInput input, HolderLookup.@NotNull Provider provider){
+    public ItemStack assemble(WootRecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 

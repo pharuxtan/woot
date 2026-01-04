@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class WootButton extends AbstractWidget {
@@ -15,10 +14,10 @@ public abstract class WootButton extends AbstractWidget {
     }
 
     @Override
-    protected abstract void renderWidget(@NotNull GuiGraphics gui, int mouseX, int mouseY, float partialTick);
+    protected abstract void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick);
 
     @Override
-    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {}
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public abstract void onPress();
 

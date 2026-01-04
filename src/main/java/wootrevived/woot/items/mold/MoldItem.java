@@ -14,7 +14,7 @@ public class MoldItem extends Item {
     final MoldType moldType;
     public MoldItem(MoldType moldType, String tag) {
         super(new Item.Properties().stacksTo(1)
-                .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag))));
+                .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag))));
         this.moldType = moldType;
     }
 

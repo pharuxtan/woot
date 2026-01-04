@@ -1,7 +1,6 @@
 package wootrevived.woot.util.render.buttons;
 
 import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.render.WootButton;
 
 public class WootHeartInputButton extends WootButton {
@@ -16,7 +15,7 @@ public class WootHeartInputButton extends WootButton {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         if(isViewActive || (active && isHovered())) {
             gui.fill(getX() + 3, getY() + 3, getX() + getWidth() - 3, getY() + getHeight() - 3, 0x80FFFFFF);
         }

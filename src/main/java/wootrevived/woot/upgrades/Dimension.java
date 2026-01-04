@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.api.interfaces.WootUpgradeEnum;
@@ -35,13 +34,13 @@ import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
 public class Dimension extends WootUpgradeItem<Dimension.Variant> {
     public Dimension(String tag, Variant variant){
         super(new Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, Woot.location(tag)))
+                        .setId(ResourceKey.create(Registries.ITEM, Woot.identifier(tag)))
                         .component(ComponentsRegistry.DIMENSION_UPGRADE_TOOLTIP, new Tooltip(variant))
                 , variant);
     }
 
     @Override
-    public void applySpawnProperties(@NotNull WootSpawnProperties properties, @NotNull MutableDataComponentHolder dataComponentHolder) {
+    public void applySpawnProperties(WootSpawnProperties properties, MutableDataComponentHolder dataComponentHolder) {
         properties.setDimension(getVariant(dataComponentHolder).dimension());
     }
 
@@ -64,7 +63,7 @@ public class Dimension extends WootUpgradeItem<Dimension.Variant> {
         }
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return name;
         }
 
@@ -76,7 +75,7 @@ public class Dimension extends WootUpgradeItem<Dimension.Variant> {
 
     /* Upgrade Item registration */
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, Woot.MOD_NAMESPACE);
 
     public static void register(WootUpgradeItemRegistration registration){
         ITEMS.register(registration.getWootEventBus());
@@ -94,7 +93,7 @@ public class Dimension extends WootUpgradeItem<Dimension.Variant> {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext ctx, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag){
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag tooltipFlag){
         if(display.shows(ComponentsRegistry.DIMENSION_UPGRADE_TOOLTIP.get()))
             components().get(ComponentsRegistry.DIMENSION_UPGRADE_TOOLTIP.get()).addToTooltip(ctx, consumer, tooltipFlag, stack.getComponents());
     }
@@ -114,7 +113,7 @@ public class Dimension extends WootUpgradeItem<Dimension.Variant> {
         );
 
         @Override
-        public void addToTooltip(@NotNull TooltipContext ctx, @NotNull Consumer<Component> consumer, @NotNull TooltipFlag tooltipFlag, @NotNull DataComponentGetter dataComponentGetter) {
+        public void addToTooltip(TooltipContext ctx, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
             if(variant == Variant.NETHER){
                 consumer.accept(Component.translatable("info.woot_revived.upgrade.dimension.desc.nether").setStyle(DESCRIPTION_STYLE));
             } else {

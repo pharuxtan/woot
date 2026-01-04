@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 
@@ -38,16 +38,16 @@ public interface WootGenerationProperties {
     int getNumberOfSimulations();
     void setNumberOfSimulations(int numberOfSimulations);
 
-    @NotNull ServerLevel getLevel();
-    @NotNull RandomSource getRandom();
-    @NotNull RegistryAccess getRegistryAccess();
-    @NotNull Tier getFactoryTier();
-    @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull ValueInput getFactoryMobValue();
+    @NonNull ServerLevel getLevel();
+    @NonNull RandomSource getRandom();
+    @NonNull RegistryAccess getRegistryAccess();
+    @NonNull Tier getFactoryTier();
+    @NonNull WootFactoryMob<?> getFactoryMob();
+    @NonNull ValueInput getFactoryMobValue();
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull ServerLevel getHeartLevel();
+    @NonNull ServerLevel getHeartLevel();
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull BlockPos getHeartPos();
+    @NonNull BlockPos getHeartPos();
 }

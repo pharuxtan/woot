@@ -6,7 +6,7 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
@@ -150,10 +150,10 @@ public class Items {
     public static void itemBucket(DeferredHolder<Item, ? extends Item> item, DeferredHolder<Fluid, ? extends Fluid> fluid, DeferredHolder<FluidType, ? extends WootFluidType> type){
         DynamicFluidContainerModel.Unbaked model = new DynamicFluidContainerModel.Unbaked(
                 new DynamicFluidContainerModel.Textures(
-                        Optional.of(ResourceLocation.withDefaultNamespace("item/bucket")),
-                        Optional.of(ResourceLocation.withDefaultNamespace("item/bucket")),
-                        Optional.of(ResourceLocation.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid")),
-                        Optional.of(ResourceLocation.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_cover"))
+                        Optional.of(Identifier.withDefaultNamespace("item/bucket")),
+                        Optional.of(Identifier.withDefaultNamespace("item/bucket")),
+                        Optional.of(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid")),
+                        Optional.of(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_cover"))
                 ),
                 fluid.get(),
                 true,
@@ -170,7 +170,7 @@ public class Items {
     }
 
     public static void itemGeneratedDye(DeferredHolder<Item, ? extends WootDyeItem> item, String texture){
-        ItemModel.Unbaked model = ItemModelUtils.tintedModel(ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(item.get()), TextureMapping.layer0(Woot.location("item/"+texture)), models.modelOutput), ItemModelUtils.constantTint(item.get().getColor()));
+        ItemModel.Unbaked model = ItemModelUtils.tintedModel(ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(item.get()), TextureMapping.layer0(Woot.identifier("item/"+texture)), models.modelOutput), ItemModelUtils.constantTint(item.get().getColor()));
         models.itemModelOutput.accept(item.get(), model);
     }
 

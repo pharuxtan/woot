@@ -14,8 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.api.enums.Tier;
 import wootrevived.woot.multiblock.patterns.Patterns;
 import wootrevived.woot.util.block.FactoryBlockBase;
@@ -27,12 +26,12 @@ public abstract class MultiBlockFactory extends FactoryBlockBase implements Enti
         super(entity, tag, properties);
     }
 
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         if(level.isClientSide()) return null;
         return MultiBlockFactoryEntity::ticker;
     }
 
-    public static Tier updatePattern(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction facing){
+    public static Tier updatePattern(Level level, BlockPos pos, Direction facing){
         Tier tier = Tier.INVALID;
 
         boolean firstTierIsValid = Patterns.TIER_1.isPatternValid(level, pos, facing);
@@ -63,7 +62,7 @@ public abstract class MultiBlockFactory extends FactoryBlockBase implements Enti
         return tier;
     }
 
-    public static void unattachPattern(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction facing){
+    public static void unattachPattern(Level level, BlockPos pos, Direction facing){
         Patterns.TIER_1.setAttached(false, level, pos, facing);
         Patterns.TIER_2.setAttached(false, level, pos, facing);
         Patterns.TIER_3.setAttached(false, level, pos, facing);
@@ -77,7 +76,7 @@ public abstract class MultiBlockFactory extends FactoryBlockBase implements Enti
         }
 
         @Override
-        public void affectNeighborsAfterRemoval(@NotNull ServerLevel level, @NotNull BlockPos pos, boolean movedByPiston) {
+        public void affectNeighborsAfterRemoval(ServerLevel level, BlockPos pos, boolean movedByPiston) {
             super.affectNeighborsAfterRemoval(level, pos, movedByPiston);
 
             if (level.isClientSide())
@@ -88,7 +87,7 @@ public abstract class MultiBlockFactory extends FactoryBlockBase implements Enti
         }
 
         @Override
-        public void onPlace(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        public void onPlace(Level level, BlockPos pos, BlockState newState, boolean isMoving) {
             super.onPlace(level, pos, newState, isMoving);
 
             if(level.isClientSide())

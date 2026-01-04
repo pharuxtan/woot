@@ -7,7 +7,6 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.util.entity.WootTags;
 
 import java.util.Optional;
@@ -27,6 +26,6 @@ public final class FakeSpawnerData {
     );
 
     public record Component(
-            @NotNull Optional<CompoundTag> mobTag
+             Optional<CompoundTag> mobTag
     ) {}
 }

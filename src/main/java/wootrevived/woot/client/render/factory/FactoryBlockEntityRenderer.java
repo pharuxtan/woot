@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 
 public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEntity, FactoryBlockEntityRenderState> {
@@ -48,7 +48,7 @@ public class FactoryBlockEntityRenderer implements BlockEntityRenderer<BlockEnti
     }
 
     @Override
-    public void extractRenderState(BlockEntity blockEntity, FactoryBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+    public void extractRenderState(BlockEntity blockEntity, FactoryBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
         renderState.movingBlock.level = blockEntity.getLevel();
         renderState.movingBlock.blockPos = blockEntity.getBlockPos();

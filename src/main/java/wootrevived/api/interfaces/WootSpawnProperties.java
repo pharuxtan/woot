@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.enums.Tier;
 
@@ -35,11 +35,11 @@ import java.util.function.Consumer;
  * interface themselves.
  */
 public interface WootSpawnProperties {
-    @NotNull ItemStack getMainHandItem();
-    void setMainHandItem(@NotNull ItemStack itemStack);
+    @NonNull ItemStack getMainHandItem();
+    void setMainHandItem(@NonNull ItemStack itemStack);
 
-    @NotNull ItemStack getOffHandItem();
-    void setOffHandItem(@NotNull ItemStack itemStack);
+    @NonNull ItemStack getOffHandItem();
+    void setOffHandItem(@NonNull ItemStack itemStack);
 
     float getLuck();
     void setLuck(float luck);
@@ -53,22 +53,22 @@ public interface WootSpawnProperties {
     boolean isInFire();
     void setIsInFire(boolean isInFire);
 
-    @NotNull ServerLevel getLevel();
-    @NotNull RandomSource getRandom();
-    @NotNull RegistryAccess getRegistryAccess();
-    @NotNull Tier getFactoryTier();
-    @NotNull WootFactoryMob<?> getFactoryMob();
-    @NotNull ValueInput getFactoryMobValue();
+    @NonNull ServerLevel getLevel();
+    @NonNull RandomSource getRandom();
+    @NonNull RegistryAccess getRegistryAccess();
+    @NonNull Tier getFactoryTier();
+    @NonNull WootFactoryMob<?> getFactoryMob();
+    @NonNull ValueInput getFactoryMobValue();
     void setFactoryMobValue(Consumer<ValueOutput> consumer);
 
     @ApiStatus.AvailableSince("1.0.6")
-    @NotNull ResourceKey<Level> getDimension();
+    @NonNull ResourceKey<Level> getDimension();
     @ApiStatus.AvailableSince("1.0.6")
-    void setDimension(@NotNull ResourceKey<Level> dimension);
+    void setDimension(@NonNull ResourceKey<Level> dimension);
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull ServerLevel getHeartLevel();
+    @NonNull ServerLevel getHeartLevel();
 
     @ApiStatus.AvailableSince("1.1.4")
-    @NotNull BlockPos getHeartPos();
+    @NonNull BlockPos getHeartPos();
 }

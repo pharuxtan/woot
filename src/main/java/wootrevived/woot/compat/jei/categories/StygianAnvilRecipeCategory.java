@@ -15,7 +15,6 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import wootrevived.woot.compat.jei.WootJeiPluginTypes;
 import wootrevived.woot.items.mob_shard.MobShardItem;
 import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
@@ -62,7 +61,7 @@ public class StygianAnvilRecipeCategory implements IRecipeCategory<StygianAnvilR
     }
 
     @Override
-    public void draw(@NotNull StygianAnvilRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(StygianAnvilRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
         WootContainerScreen.renderVanillaSlot(gui, BASE_X, BASE_Y);
         WootContainerScreen.renderVanillaSlot(gui, INGREDIENT_0_X, INGREDIENT_0_Y);
         WootContainerScreen.renderVanillaSlot(gui, INGREDIENT_1_X, INGREDIENT_1_Y);
@@ -85,22 +84,22 @@ public class StygianAnvilRecipeCategory implements IRecipeCategory<StygianAnvilR
     }
 
     @Override
-    public @NotNull IRecipeType<StygianAnvilRecipe> getRecipeType() {
+    public IRecipeType<StygianAnvilRecipe> getRecipeType() {
         return WootJeiPluginTypes.STYGIAN_ANVIL_TYPE;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return Component.translatable("gui.woot_revived.anvil.name");
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, StygianAnvilRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, StygianAnvilRecipe recipe, IFocusGroup focuses) {
         IRecipeSlotBuilder baseSlot = builder.addSlot(RecipeIngredientRole.INPUT, BASE_X + 1, BASE_Y + 1)
                 .addRichTooltipCallback(this);
         if(recipe.getBase().getValues().get(0).value() == ItemsRegistry.MOB_SHARD_ITEM.get()){
@@ -128,7 +127,7 @@ public class StygianAnvilRecipeCategory implements IRecipeCategory<StygianAnvilR
     }
 
     @Override
-    public void onRichTooltip(@NotNull IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
+    public void onRichTooltip(IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
         tooltip.add(Component.translatable("info.woot_revived.base_item").setStyle(DESCRIPTION_STYLE));
     }
 }

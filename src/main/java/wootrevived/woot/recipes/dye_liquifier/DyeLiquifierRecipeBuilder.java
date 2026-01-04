@@ -61,7 +61,7 @@ public class DyeLiquifierRecipeBuilder {
 
     public void save(RecipeOutput recipeOutput, String path){
         recipeOutput.accept(
-                ResourceKey.create(Registries.RECIPE, Woot.location(BlocksRegistry.DYE_LIQUIFIER_TAG + "/" + path)),
+                ResourceKey.create(Registries.RECIPE, Woot.identifier(BlocksRegistry.DYE_LIQUIFIER_TAG + "/" + path)),
                 new DyeLiquifierRecipe(energy, red * multiply, yellow * multiply, blue * multiply, white * multiply, ingredient),
                 null
         );
