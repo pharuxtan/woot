@@ -18,6 +18,7 @@ public class CommonConfig {
         ItemInfuserConfig.build(COMMON_BUILDER);
         MagmatorConfig.build(COMMON_BUILDER);
         MobShardConfig.build(COMMON_BUILDER);
+        UpgradesConfig.build(COMMON_BUILDER);
         GuideConfig.build(COMMON_BUILDER);
 
         COMMON_CONFIG = COMMON_BUILDER.build();
