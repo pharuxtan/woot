@@ -71,4 +71,8 @@ public class DefaultsConfig {
         public static final int DIAMOND_TICK_RATE = 5;
         public static final int NETHERITE_TICK_RATE = 1;
     }
+
+    public static class Upgrades {
+        public static final boolean MASS_REROLL_LOOT = true;
+    }
 }
