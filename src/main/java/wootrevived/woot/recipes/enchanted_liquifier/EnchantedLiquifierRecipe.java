@@ -1,5 +1,6 @@
 package wootrevived.woot.recipes.enchanted_liquifier;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -64,7 +65,7 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
         return false;
     }
 
-    public static List<Enchantment> enchantments = new ArrayList<>();
+    public static List<Holder<Enchantment>> enchantments = new ArrayList<>();
 
     public static void loadRecipes(@NotNull Level level){
         RegistryAccess accessor = level.registryAccess();
@@ -73,7 +74,7 @@ public class EnchantedLiquifierRecipe implements Recipe<WootRecipeInput> {
         enchantments.clear();
 
         lookup.listElements().forEach(enchantment -> {
-            enchantments.add(enchantment.value());
+            enchantments.add(enchantment);
         });
     }
 

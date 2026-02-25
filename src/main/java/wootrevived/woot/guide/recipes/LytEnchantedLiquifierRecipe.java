@@ -42,12 +42,12 @@ public class LytEnchantedLiquifierRecipe extends LytBox {
 
     public LytEnchantedLiquifierRecipe(int enchantLevel){
         List<ItemStack> items = new ArrayList<>();
-        for(Enchantment enchantment : EnchantedLiquifierRecipe.enchantments){
-            if(enchantLevel > enchantment.getMaxLevel() || enchantLevel < enchantment.getMinLevel())
+        for(Holder<Enchantment> enchantment : EnchantedLiquifierRecipe.enchantments){
+            if(enchantLevel > enchantment.value().getMaxLevel() || enchantLevel < enchantment.value().getMinLevel())
                 continue;
 
             ItemStack itemStack = Items.ENCHANTED_BOOK.getDefaultInstance();
-            itemStack.enchant(Holder.direct(enchantment), enchantLevel);
+            itemStack.enchant(enchantment, enchantLevel);
             items.add(itemStack);
         }
 
