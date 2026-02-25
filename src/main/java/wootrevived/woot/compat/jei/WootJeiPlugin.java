@@ -105,10 +105,10 @@ public class WootJeiPlugin implements IModPlugin {
         List<EnchantedLiquifierRecipe> enchantedLiquifierRecipes = new ArrayList<>();
 
         Map<Integer, List<ItemStack>> booksMap = new HashMap<>();
-        for(Enchantment enchantment : EnchantedLiquifierRecipe.enchantments){
-            for(int enchantLevel = enchantment.getMinLevel(); enchantLevel <= enchantment.getMaxLevel(); ++enchantLevel) {
+        for(Holder<Enchantment> enchantment : EnchantedLiquifierRecipe.enchantments){
+            for(int enchantLevel = enchantment.value().getMinLevel(); enchantLevel <= enchantment.value().getMaxLevel(); ++enchantLevel) {
                 ItemStack itemStack = Items.ENCHANTED_BOOK.getDefaultInstance();
-                itemStack.enchant(Holder.direct(enchantment), enchantLevel);
+                itemStack.enchant(enchantment, enchantLevel);
                 enchantLevel = Mth.clamp(enchantLevel, 1, EnchantedLiquifierConfig.MAX_ENCHANT_LVL.get());
                 booksMap.computeIfAbsent(enchantLevel, k -> new ArrayList<>());
                 booksMap.get(enchantLevel).add(itemStack);
