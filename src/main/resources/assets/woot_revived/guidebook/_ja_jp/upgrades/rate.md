@@ -19,30 +19,30 @@ navigation:
 
 ## スピードアップグレード I
 
-所要時間を10%短縮します。
+所要時間を10%短縮
 
 <RecipeFor id="copper_rate_upgrade" />
 
 ## スピードアップグレード II
 
-所要時間を20%短縮します。
+所要時間を20%短縮
 
 <RecipeFor id="iron_rate_upgrade" />
 
 ## スピードアップグレード III
 
-所要時間を30%短縮します。
+所要時間を30%短縮
 
 <RecipeFor id="gold_rate_upgrade" />
 
 ## スピードアップグレード IV
 
-所要時間を50%短縮します。
+所要時間を50%短縮
 
 <RecipeFor id="diamond_rate_upgrade" />
 
 ## スピードアップグレード V
 
-所要時間を75%短縮します。
+所要時間を75%短縮
 
 <RecipeFor id="netherite_rate_upgrade" />
