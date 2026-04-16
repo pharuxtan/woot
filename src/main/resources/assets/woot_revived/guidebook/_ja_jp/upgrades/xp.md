@@ -21,29 +21,29 @@ navigation:
 
 ## 経験値アップグレード I
 
-50%の経験値を生産するようになります。
+50%の経験値を生産
 
 <RecipeFor id="copper_xp_upgrade" />
 
 ## 経験値アップグレード II
 
-75%の経験値を生産するようになります。
+75%の経験値を生産
 
 <RecipeFor id="iron_xp_upgrade" />
 
 ## 経験値アップグレード III
 
-100%の経験値を生産するようになります。
+100%の経験値を生産
 
 <RecipeFor id="gold_xp_upgrade" />
 
 ## 経験値アップグレード IV
 
-125%の経験値を生産するようになります。
+125%の経験値を生産
 
 <RecipeFor id="diamond_xp_upgrade" />
 
 ## 経験値アップグレード V
-150%の経験値を生産するようになります。
+150%の経験値を生産
 
 <RecipeFor id="netherite_xp_upgrade" />

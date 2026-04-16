@@ -8,7 +8,7 @@ navigation:
 
 <BlockImage id="factory_upgrade" scale="5" p:attached="true" />
 
-<ItemImage id="factory_upgrade" scale="0.5"/>アップグレードスロットは工場のアップグレードアイテムを保管します。
+<ItemImage id="factory_upgrade" scale="0.5"/>アップグレードスロットはファクトリーのアップグレードアイテムを保管します。
 
 アップグレードで右クリックすると、ブロックに適用できます。
 
