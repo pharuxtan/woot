@@ -21,21 +21,21 @@ public class Japanese extends LanguageProvider {
         add("config.jade.plugin_woot_revived.machines", "Woot機械プラグイン");
 
         addBlock(BlocksRegistry.STYGIAN_ANVIL_BLOCK.get(), "スティジアンの金床");
-        add(ItemsRegistry.STYGIAN_HAMMER_ITEM.get(), "スティジアンのハンマー");
+        add(ItemsRegistry.STYGIAN_HAMMER_ITEM.get(), "スティジアンハンマー");
         add(ItemsRegistry.PLATE_MOLD_ITEM.get(), "板金の金型");
         add(ItemsRegistry.SHARD_MOLD_ITEM.get(), "欠片の金型");
-        add(ItemsRegistry.DYE_CASING_MOLD_ITEM.get(), "染料板の型の金型");
+        add(ItemsRegistry.DYE_CASING_MOLD_ITEM.get(), "染料型の金型");
 
         addBlock(BlocksRegistry.CREATIVE_POWER_BLOCK.get(), "クリエイティブ電源");
         addBlock(BlocksRegistry.CREATIVE_TANK_BLOCK.get(), "クリエイティブタンク");
 
         addBlock(BlocksRegistry.FACTORY_BASE_BLOCK.get(), "ファクトリーベース");
 
-        addBlock(BlocksRegistry.COPPER_MAGMATOR_BLOCK.get(), "銅のマグマーター");
-        addBlock(BlocksRegistry.IRON_MAGMATOR_BLOCK.get(), "鉄のマグマーター");
-        addBlock(BlocksRegistry.GOLD_MAGMATOR_BLOCK.get(), "金のマグマーター");
-        addBlock(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get(), "ダイヤモンドのマグマーター");
-        addBlock(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get(), "ネザライトのマグマーター");
+        addBlock(BlocksRegistry.COPPER_MAGMATOR_BLOCK.get(), "銅のマグメイター");
+        addBlock(BlocksRegistry.IRON_MAGMATOR_BLOCK.get(), "鉄のマグメイター");
+        addBlock(BlocksRegistry.GOLD_MAGMATOR_BLOCK.get(), "金のマグメイター");
+        addBlock(BlocksRegistry.DIAMOND_MAGMATOR_BLOCK.get(), "ダイヤモンドのマグメイター");
+        addBlock(BlocksRegistry.NETHERITE_MAGMATOR_BLOCK.get(), "ネザライトのマグメイター");
 
         addBlock(BlocksRegistry.HEART_BLOCK.get(), "ファクトリーハート");
         addBlock(BlocksRegistry.FAKE_SPAWNER_BLOCK.get(), "疑似スポナー");
@@ -84,7 +84,7 @@ public class Japanese extends LanguageProvider {
         add(Efficiency.GOLD_EFFICIENCY_ITEM.get(), "効率化アップグレード III");
         add(Efficiency.DIAMOND_EFFICIENCY_ITEM.get(), "効率化アップグレード IV");
         add(Efficiency.NETHERITE_EFFICIENCY_ITEM.get(), "効率化アップグレード V");
-        add("info.woot_revived.upgrade.efficiency.desc.0", "バイタリティ燃料液の消費量を%d%%軽減");
+        add("info.woot_revived.upgrade.efficiency.desc.0", "バイタリティ燃料液の消費量を%d%%削減");
 
         add(Looting.COPPER_LOOTING_ITEM.get(), "ドロップ増加アップグレード I");
         add(Looting.IRON_LOOTING_ITEM.get(), "ドロップ増加アップグレード II");
@@ -98,7 +98,7 @@ public class Japanese extends LanguageProvider {
         add(Mass.GOLD_MASS_ITEM.get(), "並列化アップグレード III");
         add(Mass.DIAMOND_MASS_ITEM.get(), "並列化アップグレード IV");
         add(Mass.NETHERITE_MASS_ITEM.get(), "並列化アップグレード V");
-        add("info.woot_revived.upgrade.mass.desc.0", "%d体のモブを倒す");
+        add("info.woot_revived.upgrade.mass.desc.0", "一度に倒せるモブの数が%d体に増加");
 
         add(Rate.COPPER_RATE_ITEM.get(), "スピードアップグレード I");
         add(Rate.IRON_RATE_ITEM.get(), "スピードアップグレード II");
@@ -112,30 +112,30 @@ public class Japanese extends LanguageProvider {
         add(Decapitate.GOLD_DECAPITATE_ITEM.get(), "斬首アップグレード III");
         add(Decapitate.DIAMOND_DECAPITATE_ITEM.get(), "斬首アップグレード IV");
         add(Decapitate.NETHERITE_DECAPITATE_ITEM.get(), "斬首アップグレード V");
-        add("info.woot_revived.upgrade.decapitate.desc.0", "%dxモブの頭ドロップする確率");
+        add("info.woot_revived.upgrade.decapitate.desc.0", "%d個のモブの頭をドロップするようになる");
 
         add(Xp.COPPER_XP_ITEM.get(), "経験値アップグレード I");
         add(Xp.IRON_XP_ITEM.get(), "経験値アップグレード II");
         add(Xp.GOLD_XP_ITEM.get(), "経験値アップグレード III");
         add(Xp.DIAMOND_XP_ITEM.get(), "経験値アップグレード IV");
         add(Xp.NETHERITE_XP_ITEM.get(), "経験値アップグレード V");
-        add("info.woot_revived.upgrade.xp.desc.0", "%d%%の経験値が欠片としてドロップします");
+        add("info.woot_revived.upgrade.xp.desc.0", "%d%%の経験値が欠片としてドロップされる");
 
         add(ShardDrop.IRON_SHARD_DROP_ITEM.get(), "欠片アップグレード I");
         add(ShardDrop.GOLD_SHARD_DROP_ITEM.get(), "欠片アップグレード II");
         add(ShardDrop.DIAMOND_SHARD_DROP_ITEM.get(), "欠片アップグレード III");
         add(ShardDrop.NETHERITE_SHARD_DROP_ITEM.get(), "欠片アップグレード IV");
-        add("info.woot_revived.upgrade.shard_drop.desc.0", "%sの欠片とそれより下位の欠片をドロップします");
-        add("info.woot_revived.upgrade.shard_drop.desc.1", "%s以上のティアが必要です");
+        add("info.woot_revived.upgrade.shard_drop.desc.0", "%sの欠片とそれより下位の欠片をドロップ");
+        add("info.woot_revived.upgrade.shard_drop.desc.1", "%s以上のティアが必要");
         add("info.woot_revived.upgrade.shard_drop.desc.2", "欠片ドロップ率:%d%%");
 
         add(Burn.BURN_ITEM.get(), "火属性アップグレード");
-        add("info.woot_revived.upgrade.burn.desc.0", "シミュレートされたモブを倒した際に炎を付与する");
+        add("info.woot_revived.upgrade.burn.desc.0", "シミュレートされたモブに火を与える");
 
         add(Dimension.NETHER_DIMENSION_ITEM.get(), "ネザーディメンションアップグレード");
         add(Dimension.END_DIMENSION_ITEM.get(), "エンドディメンションアップグレード");
-        add("info.woot_revived.upgrade.dimension.desc.nether", "シミュレーションのディメンションをネザーに設定します");
-        add("info.woot_revived.upgrade.dimension.desc.end", "シミュレーションのディメンションをエンドに設定します");
+        add("info.woot_revived.upgrade.dimension.desc.nether", "シミュレーションのディメンションをネザーに設定する");
+        add("info.woot_revived.upgrade.dimension.desc.end", "シミュレーションのディメンションをエンドに設定する");
 
         add(ItemsRegistry.MOB_SHARD_ITEM.get(), "モブシャード");
         add(ItemsRegistry.MOB_SHARD_PROJECTILE.get(), "モブシャード");
@@ -153,37 +153,37 @@ public class Japanese extends LanguageProvider {
         add(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get(), "アップグレードベース");
 
         addBlock(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), "アイテム注入機");
-        add(ItemsRegistry.WHITE_DYE_CASING_ITEM.get(), "白色の染料板の型");
+        add(ItemsRegistry.WHITE_DYE_CASING_ITEM.get(), "白色の染料型");
         add(ItemsRegistry.WHITE_DYE_PLATE_ITEM.get(), "白色の染料板");
-        add(ItemsRegistry.ORANGE_DYE_CASING_ITEM.get(), "橙色の染料板の型");
+        add(ItemsRegistry.ORANGE_DYE_CASING_ITEM.get(), "橙色の染料型");
         add(ItemsRegistry.ORANGE_DYE_PLATE_ITEM.get(), "橙色の染料板");
-        add(ItemsRegistry.MAGENTA_DYE_CASING_ITEM.get(), "赤紫色の染料板の型");
+        add(ItemsRegistry.MAGENTA_DYE_CASING_ITEM.get(), "赤紫色の染料型");
         add(ItemsRegistry.MAGENTA_DYE_PLATE_ITEM.get(), "赤紫色の染料板");
-        add(ItemsRegistry.LIGHT_BLUE_DYE_CASING_ITEM.get(), "空色の染料板の型");
+        add(ItemsRegistry.LIGHT_BLUE_DYE_CASING_ITEM.get(), "空色の染料型");
         add(ItemsRegistry.LIGHT_BLUE_DYE_PLATE_ITEM.get(), "空色の染料板");
-        add(ItemsRegistry.YELLOW_DYE_CASING_ITEM.get(), "黄色の染料板の型");
+        add(ItemsRegistry.YELLOW_DYE_CASING_ITEM.get(), "黄色の染料型");
         add(ItemsRegistry.YELLOW_DYE_PLATE_ITEM.get(), "黄色の染料板");
-        add(ItemsRegistry.LIME_DYE_CASING_ITEM.get(), "黄緑色の染料板の型");
+        add(ItemsRegistry.LIME_DYE_CASING_ITEM.get(), "黄緑色の染料型");
         add(ItemsRegistry.LIME_DYE_PLATE_ITEM.get(), "黄緑色の染料板");
-        add(ItemsRegistry.PINK_DYE_CASING_ITEM.get(), "桃色の染料板の型");
+        add(ItemsRegistry.PINK_DYE_CASING_ITEM.get(), "桃色の染料型");
         add(ItemsRegistry.PINK_DYE_PLATE_ITEM.get(), "桃色の染料板");
-        add(ItemsRegistry.GRAY_DYE_CASING_ITEM.get(), "灰色の染料板の型");
+        add(ItemsRegistry.GRAY_DYE_CASING_ITEM.get(), "灰色の染料型");
         add(ItemsRegistry.GRAY_DYE_PLATE_ITEM.get(), "灰色の染料板");
-        add(ItemsRegistry.LIGHT_GRAY_DYE_CASING_ITEM.get(), "薄灰色の染料板の型");
+        add(ItemsRegistry.LIGHT_GRAY_DYE_CASING_ITEM.get(), "薄灰色の染料型");
         add(ItemsRegistry.LIGHT_GRAY_DYE_PLATE_ITEM.get(), "薄灰色の染料板");
-        add(ItemsRegistry.CYAN_DYE_CASING_ITEM.get(), "青緑色の染料板の型");
+        add(ItemsRegistry.CYAN_DYE_CASING_ITEM.get(), "青緑色の染料型");
         add(ItemsRegistry.CYAN_DYE_PLATE_ITEM.get(), "青緑色の染料板");
-        add(ItemsRegistry.PURPLE_DYE_CASING_ITEM.get(), "紫色の染料板の型");
+        add(ItemsRegistry.PURPLE_DYE_CASING_ITEM.get(), "紫色の染料型");
         add(ItemsRegistry.PURPLE_DYE_PLATE_ITEM.get(), "紫色の染料板");
-        add(ItemsRegistry.BLUE_DYE_CASING_ITEM.get(), "青色の染料板の型");
+        add(ItemsRegistry.BLUE_DYE_CASING_ITEM.get(), "青色の染料型");
         add(ItemsRegistry.BLUE_DYE_PLATE_ITEM.get(), "青色の染料板");
-        add(ItemsRegistry.BROWN_DYE_CASING_ITEM.get(), "茶色の染料板の型");
+        add(ItemsRegistry.BROWN_DYE_CASING_ITEM.get(), "茶色の染料型");
         add(ItemsRegistry.BROWN_DYE_PLATE_ITEM.get(), "茶色の染料板");
-        add(ItemsRegistry.GREEN_DYE_CASING_ITEM.get(), "緑色の染料板の型");
+        add(ItemsRegistry.GREEN_DYE_CASING_ITEM.get(), "緑色の染料型");
         add(ItemsRegistry.GREEN_DYE_PLATE_ITEM.get(), "緑色の染料板");
-        add(ItemsRegistry.RED_DYE_CASING_ITEM.get(), "赤色の染料板の型");
+        add(ItemsRegistry.RED_DYE_CASING_ITEM.get(), "赤色の染料型");
         add(ItemsRegistry.RED_DYE_PLATE_ITEM.get(), "赤色の染料板");
-        add(ItemsRegistry.BLACK_DYE_CASING_ITEM.get(), "黒色の染料板の型");
+        add(ItemsRegistry.BLACK_DYE_CASING_ITEM.get(), "黒色の染料型");
         add(ItemsRegistry.BLACK_DYE_PLATE_ITEM.get(), "黒色の染料板");
 
         add(ItemsRegistry.GUIDE_BOOK_ITEM.get(), "Wootガイドブック");
@@ -256,8 +256,8 @@ public class Japanese extends LanguageProvider {
         add("info.woot_revived.factory.invalid", "無効");
         add("info.woot_revived.factory.empty", "空");
 
-        add("chat.woot_revived.anvil.cold", "金床はマグマブロックまたはマグマーターの上に設置されている必要があります");
-        add("chat.woot_revived.anvil.nobase", "有効なベースアイテムを最初に置いてください");
+        add("chat.woot_revived.anvil.cold", "マグマブロックまたはマグメイターの上に設置されている必要があります");
+        add("chat.woot_revived.anvil.nobase", "基本となるアイテムを最初に置いてください");
 
         add("misc.woot_revived.tier_1", "銅");
         add("misc.woot_revived.tier_2", "鉄");
@@ -282,30 +282,30 @@ public class Japanese extends LanguageProvider {
         add("gui.woot_revived.heart.vitality_cell", "バイタリティセル");
 
         add("jei.woot_revived.shard", "欠片アップグレードがインストールされたファクトリーが生産します。");
-        add("jei.woot_revived.anvil.0", "金床を右クリックしてアイテムを追加し");
-        add("jei.woot_revived.anvil.1", "スティジアンハンマーを使用することでクラフトできます。");
-        add("jei.woot_revived.anvil.2", "スティジアンの金床はマグマブロック上に配置する必要があります。");
-        add("jei.woot_revived.anvil.3", "疑似スポナーブロックをクラフトするには、完全にプログラムされたモブシャードが必要です。");
-        add("jei.woot_revived.mob_shard.0", "モブシャードでモブを攻撃するか、投げつけることで、プログラミングを開始できます。");
-        add("jei.woot_revived.mob_shard.1", "モブシャードを完全にプログラムするには、記録したモブを複数回倒す必要があります。");
-        add("jei.woot_revived.mob_shard.2", "完全にプログラムすれば、スティジアンの金床を使用して疑似スポナーを作成できます。");
-        add("jei.woot_revived.pure_dye_fluid", "染料液化機で青色%dmB、黄色%dmB、赤色%dmB、白色%dmBを使用して作成できます。");
+        add("jei.woot_revived.anvil.0", "金床を右クリックしてアイテムを置き、");
+        add("jei.woot_revived.anvil.1", "スティジアンハンマーを使うことでクラフトできます。");
+        add("jei.woot_revived.anvil.2", "スティジアンの金床は、マグマブロックの上に設置する必要があります。");
+        add("jei.woot_revived.anvil.3", "疑似スポナーブロックを作るには、完全にプログラムされたモブシャードが必要です。");
+        add("jei.woot_revived.mob_shard.0", "モブシャードでモブを攻撃するか、モブに投げつけることでプログラミングが開始されます。");
+        add("jei.woot_revived.mob_shard.1", "プログラミングを完了するには、同じ種類のモブを規定の回数倒す必要があります。");
+        add("jei.woot_revived.mob_shard.2", "完了後、スティジアンの金床を使って疑似スポナーに加工できます。");
+        add("jei.woot_revived.pure_dye_fluid", "染料液化機で青色%dmB、黄色%dmB、赤色%dmB、白色%dmBを使用して生成されます。");
 
         add("advancements.woot_revived.root.title", "Woot Revived");
         add("advancements.woot_revived.root.description", "このModが恋しかったんじゃない?");
         add("advancements.woot_revived.stygian_ingot.title", "インゴット1個おいくらですか!?");
         add("advancements.woot_revived.stygian_ingot.description", "すべての始まりであるスティジアンインゴットを作成する。");
         add("advancements.woot_revived.stygian_hammer.title", "必要なのはこれだけ!");
-        add("advancements.woot_revived.stygian_hammer.description", "すべての始まりであるスティジアンのハンマーを作成する。");
+        add("advancements.woot_revived.stygian_hammer.description", "すべての始まりであるスティジアンハンマーを作成する。");
         add("advancements.woot_revived.stygian_anvil.title", "モブの苦しみで工場を作ろう!");
         add("advancements.woot_revived.stygian_anvil.description", "すべての始まりであるスティジアンの金床を作成する。");
         add("advancements.woot_revived.shard_mold.title", "お気に入りの金型!");
         add("advancements.woot_revived.shard_mold.description", "スティジアンの金床で欠片の金型を作成する。");
         add("advancements.woot_revived.dye_mold.title", "嫌いな金型!");
-        add("advancements.woot_revived.dye_mold.description", "スティジアンの金床で染料の型の金型を作成する。");
+        add("advancements.woot_revived.dye_mold.description", "スティジアンの金床で染料型の金型を作成する。");
         add("advancements.woot_revived.plate_mold.title", "もう一つの板型?");
-        add("advancements.woot_revived.plate_mold.description", "アイテム注入機で、ガラスと純粋な染料液を使ってプリズムを作成する。");
-        add("advancements.woot_revived.mob_shard.title", "武装した敵なんていなかった、いいね?");
+        add("advancements.woot_revived.plate_mold.description", "スティジアンの金床で板金の金型を作成する。");
+        add("advancements.woot_revived.mob_shard.title", "武装した敵なんていなかった。いいね?");
         add("advancements.woot_revived.mob_shard.description", "スティジアンの金床で欠片の金型を使ってモブシャードを作成する。");
         add("advancements.woot_revived.stygian_plate.title", "スティジアンの皿に盛られて");
         add("advancements.woot_revived.stygian_plate.description", "スティジアンの金床で、板金の金型を使ってスティジアンの板を作成する。");
@@ -314,10 +314,10 @@ public class Japanese extends LanguageProvider {
         add("advancements.woot_revived.fluid_infuser.title", "燃料によろしく伝えといて");
         add("advancements.woot_revived.fluid_infuser.description", "液体注入機を作成する。");
         add("advancements.woot_revived.mob_tears_bucket.title", "敵の涙は蜜の味!");
-        add("advancements.woot_revived.mob_tears_bucket.description", "ネザライトのバイタリティセルを作成する。");
+        add("advancements.woot_revived.mob_tears_bucket.description", "モブの涙液入りバケツを手に入れる");
         add("advancements.woot_revived.vitality_fuel_bucket.title", "彼らの涙からバイタリティ燃料が???");
         add("advancements.woot_revived.vitality_fuel_bucket.description", "バイタリティ燃料液入りバケツを手に入れる。");
-        add("advancements.woot_revived.enchanted_copper_plate.title", "光り輝く銅板?、うーん...");
+        add("advancements.woot_revived.enchanted_copper_plate.title", "輝く銅板?、うーん...");
         add("advancements.woot_revived.enchanted_copper_plate.description", "エンチャントされた銅板を作成する。");
         add("advancements.woot_revived.copper_cell.title", "このタンクは小さすぎる…");
         add("advancements.woot_revived.copper_cell.description", "銅のバイタリティセルを作成する。");
@@ -328,14 +328,14 @@ public class Japanese extends LanguageProvider {
         add("advancements.woot_revived.enchanted_gold_plate.title", "輝く金板、わあ！すごい!");
         add("advancements.woot_revived.enchanted_gold_plate.description", "エンチャントされた金板を作成する。");
         add("advancements.woot_revived.gold_cell.title", "このタンク、すごく明るい！");
-        add("advancements.woot_revived.gold_cell.description", "金の土台を作成する。");
+        add("advancements.woot_revived.gold_cell.description", "金のバイタリティセルを作成する。");
         add("advancements.woot_revived.enchanted_diamond_plate.title", "輝くダイヤモンドの板、なんて豪華なんだ!");
         add("advancements.woot_revived.enchanted_diamond_plate.description", "エンチャントされたダイヤモンドの板を作成する。");
         add("advancements.woot_revived.diamond_cell.title", "このタンクめっちゃ豪華だよ!");
         add("advancements.woot_revived.diamond_cell.description", "ダイヤモンドのバイタリティセルを作成する");
-        add("advancements.woot_revived.enchanted_netherite_plate.title", "キラキラしたネザライトの板!!、最高!!!");
+        add("advancements.woot_revived.enchanted_netherite_plate.title", "輝くネザライトの板!!、最高!!!");
         add("advancements.woot_revived.enchanted_netherite_plate.description", "エンチャントされたネザライトの板を作成する。");
-        add("advancements.woot_revived.netherite_cell.title", "このタンクは文字通り地獄から来たんだ!!!");
+        add("advancements.woot_revived.netherite_cell.title", "このタンクは地獄からやって来た!!!");
         add("advancements.woot_revived.netherite_cell.description", "ネザライトのバイタリティセルを作成する。");
         add("advancements.woot_revived.enchanted_liquifier.title", "その輝いてるの、欲しいんでしょ?");
         add("advancements.woot_revived.enchanted_liquifier.description", "エンチャント液化機を作成する。");
@@ -355,7 +355,7 @@ public class Japanese extends LanguageProvider {
         add("advancements.woot_revived.black_dye_plate.description", "黒色の染料板を作成する。");
         add("advancements.woot_revived.upgrade_base.title", "アップグレードはどこにある!");
         add("advancements.woot_revived.upgrade_base.description", "アップグレードベースを作成する。");
-        add("advancements.woot_revived.copper_shard.title", "さびた欠片!");
+        add("advancements.woot_revived.copper_shard.title", "錆びた欠片!");
         add("advancements.woot_revived.copper_shard.description", "スティジアンの金床で銅の欠片を作成する。");
         add("advancements.woot_revived.copper_pylon.title", "最初のパイロン!");
         add("advancements.woot_revived.copper_pylon.description", "銅のパイロンを作成する");
@@ -372,7 +372,7 @@ public class Japanese extends LanguageProvider {
         add("advancements.woot_revived.gold_shard_upgrade.title", "輝く欠片アップグレード!");
         add("advancements.woot_revived.gold_shard_upgrade.description", "金の欠片アップグレードを作成する。");
         add("advancements.woot_revived.gold_shard.title", "輝く欠片!");
-        add("advancements.woot_revived.gold_shard.description", "金の欠片アップグレードを作成する。");
+        add("advancements.woot_revived.gold_shard.description", "ファクトリーから金の欠片を入手する。");
         add("advancements.woot_revived.gold_pylon.title", "3個目のパイロン!");
         add("advancements.woot_revived.gold_pylon.description", "金のパイロンを作成する。");
         add("advancements.woot_revived.gold_plinth.title", "3個目の土台!");

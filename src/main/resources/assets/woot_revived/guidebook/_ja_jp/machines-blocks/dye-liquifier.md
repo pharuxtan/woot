@@ -13,7 +13,7 @@ navigation:
 染料の種類によって、液化される染料の量は異なります。各色を<WootConfig key="dye_liquifier.color_produce_amount" />mB保有している場合、
 瞬時に<WootConfig key="dye_liquifier.pure_dye_produce_amount" />mBの<ItemImage id="pure_dye_fluid_bucket" scale="0.5"/>純粋な染料液を生成します。
 
-染料そのもの、あるいは花などの染料原料を直接投入できます。
+染料そのもの、あるいは花などの原料を直接投入できます。
 
 <Recipe id="dye_liquifier/white" />
 
