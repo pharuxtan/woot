@@ -15,7 +15,7 @@ navigation:
 
 ## モブの涙液
 
-<ItemImage id="mob_tears_fluid_bucket" scale="0.5"/>モブの涙液は、バイタリティ燃料液をを生成するために使用されます。<ItemImage id="vitality_fuel_fluid_bucket" scale="0.5"/>バイタリティ燃料液をを生成するために使用されます。また、<ItemImage id="item_infuser" scale="0.5"/> [アイテム注入機](item-infuser.md)を使用して、特定のアイテムをクラフトする際にも利用できます。
+<ItemImage id="mob_tears_fluid_bucket" scale="0.5"/>モブの涙液は、<ItemImage id="vitality_fuel_fluid_bucket" scale="0.5"/>バイタリティ燃料液を生成するほか、<ItemImage id="item_infuser" scale="0.5"/> [アイテム注入機](item-infuser.md)を使用して、特定のアイテムをクラフトする際にも利用できます。
 
 <Row>
   <Recipe id="fluid_infuser/mob_tears_0" />
