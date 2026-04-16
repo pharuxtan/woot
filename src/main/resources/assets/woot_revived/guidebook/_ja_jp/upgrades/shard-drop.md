@@ -14,7 +14,7 @@ navigation:
   <ItemImage id="netherite_shard_drop_upgrade" scale="3"/>
 </Row>
 
-欠片アップグレードは、ファクトリーが各ティアシャードを生産するようになります。
+欠片アップグレードは、ファクトリーが各ティアの欠片を生産するようになります。
 
 ## 銅の欠片を入手するには
 
@@ -35,7 +35,7 @@ navigation:
 
 <ItemImage id="iron_shard" scale="0.5"/>鉄の欠片を50%の確率で生産します。
 
-<ItemImage id="iron_shard" scale="0.5"/>鉄の欠片をドロップするには、少なくとも銅ティアのファクトリーにアップグレードを適用する必要があります。
+<ItemImage id="iron_shard" scale="0.5"/>鉄の欠片をドロップするには、銅ティア以上のファクトリーにアップグレードを適用する必要があります。
 
 <RecipeFor id="iron_shard_drop_upgrade" />
 
@@ -45,7 +45,7 @@ navigation:
 
 <ItemImage id="gold_shard" scale="0.5"/>金の欠片を30%の確率で生産します。
 
-<ItemImage id="gold_shard" scale="0.5"/>金の欠片をドロップするには、少なくとも鉄ティアのファクトリーにアップグレードを適用する必要があります。
+<ItemImage id="gold_shard" scale="0.5"/>金の欠片をドロップするには、鉄ティア以上のファクトリーにアップグレードを適用する必要があります。
 
 <RecipeFor id="gold_shard_drop_upgrade" />
 
@@ -55,7 +55,7 @@ navigation:
 
 <ItemImage id="diamond_shard" scale="0.5"/>ダイヤモンドの欠片を15％の確率で生産します。
 
-<ItemImage id="diamond_shard" scale="0.5"/>ダイヤモンドの欠片をドロップするには、少なくとも金ティアのファクトリーにアップグレードを適用する必要があります。
+<ItemImage id="diamond_shard" scale="0.5"/>ダイヤモンドの欠片をドロップするには、金ティア以上のファクトリーにアップグレードを適用する必要があります。
 
 <RecipeFor id="diamond_shard_drop_upgrade" />
 
@@ -65,6 +65,6 @@ navigation:
 
 <ItemImage id="netherite_shard" scale="0.5"/>ネザライトの欠片を5%の確率で生産します。
 
-<ItemImage id="netherite_shard" scale="0.5"/>ネザライトの欠片をドロップするには、少なくともダイヤモンドティアのファクトリーにアップグレードを適用する必要があります。
+<ItemImage id="netherite_shard" scale="0.5"/>ネザライトの欠片をドロップするには、ダイヤモンドティア以上のファクトリーにアップグレードを適用する必要があります。
 
 <RecipeFor id="netherite_shard_drop_upgrade" />
