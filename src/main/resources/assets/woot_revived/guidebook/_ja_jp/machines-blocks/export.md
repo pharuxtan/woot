@@ -8,7 +8,7 @@ navigation:
 
 <BlockImage id="export" scale="5" p:attached="true" />
 
-<ItemImage id="export" scale="0.5"/>戦利品搬出機は、生産したアイテムや液体が搬出されるブロックです
+<ItemImage id="export" scale="0.5"/>戦利品搬出機は、ファクトリーが生産したアイテムや液体が搬出されるブロックです。
 
 アイテムや液体を入手するには、このブロックの横にチェストやタンクを配置する必要があります。
 

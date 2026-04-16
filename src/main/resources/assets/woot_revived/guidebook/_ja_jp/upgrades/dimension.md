@@ -16,12 +16,12 @@ navigation:
 
 ## ネザーディメンションアップグレード
 
-ディメンションをネザーに設定します。
+ディメンションをネザーに設定
 
 <RecipeFor id="nether_dimension_upgrade" />
 
 ## エンドディメンションアップグレード
 
-ディメンションをエンドに設定します。
+ディメンションをエンドに設定
 
 <RecipeFor id="end_dimension_upgrade" />

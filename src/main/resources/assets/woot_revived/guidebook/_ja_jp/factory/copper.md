@@ -15,7 +15,7 @@ MODを始めるのにも、基本的なモブ1体用のファクトリーを作�
 
 まずファクトリーの中央を建設し、その後周囲の建設を完了させます。
 
-最初のティアに設定した<ItemImage id="layout" scale="0.5"/>[レイアウト](../machines-blocks/layout.md#copper)、は建設をするのに役に立ちます。
+最初のティアに設定した<ItemImage id="layout" scale="0.5"/>[レイアウト](../machines-blocks/layout.md#copper)は建設をするのに役に立ちます。
 
 <Row>
     <GameScene zoom="2.5" interactive={true}>
@@ -37,7 +37,7 @@ MODを始めるのにも、基本的なモブ1体用のファクトリーを作�
   <BlockImage id="copper_cell" scale="4" p:attached="true" />
 </Row>
 
-工場には、[共通ブロック](common-blocks.md)に加え、そのティア固有のブロックも必要です。
+工場には、[汎用ブロック](common-blocks.md)に加え、そのティア固有のブロックも必要です。
 
 これには、
 <ItemImage id="copper_pylon" scale="0.5"/>銅のパイロンが17個、

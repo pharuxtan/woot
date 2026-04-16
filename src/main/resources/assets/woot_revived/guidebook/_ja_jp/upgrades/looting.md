@@ -21,30 +21,30 @@ navigation:
 
 ## ドロップ増加アップグレード I
 
-ドロップ増加Iを付与します。
+ドロップ増加Iを付与
 
 <RecipeFor id="copper_looting_upgrade" />
 
 ## ドロップ増加アップグレード II
 
-ドロップ増加IIを付与します。
+ドロップ増加IIを付与
 
 <RecipeFor id="iron_looting_upgrade" />
 
 ## ドロップ増加アップグレード III
 
-ドロップ増加IIIを付与します。
+ドロップ増加IIIを付与
 
 <RecipeFor id="gold_looting_upgrade" />
 
 ## ドロップ増加アップグレード IV
 
-ドロップ増加IVを付与します。
+ドロップ増加IVを付与
 
 <RecipeFor id="diamond_looting_upgrade" />
 
 ## ドロップ増加アップグレード V
 
-ドロップ増加Vを付与します。
+ドロップ増加Vを付与
 
 <RecipeFor id="netherite_looting_upgrade" />

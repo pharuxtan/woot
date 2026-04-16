@@ -13,7 +13,7 @@ navigation:
 
 プレビューで小さく表示される疑似スポナーはオプションであることに注意してください。
 
-2つ目のティアに設定した<ItemImage id="layout" scale="0.5"/>[レイアウト](../machines-blocks/layout.md#iron)、は建設をするのに役に立ちます。
+2つ目のティアに設定した<ItemImage id="layout" scale="0.5"/>[レイアウト](../machines-blocks/layout.md#iron)は建設をするのに役に立ちます。
 
 <GameScene zoom="2.5" interactive={true}>
     <ImportStructure src="../assets/factory/iron.snbt" />

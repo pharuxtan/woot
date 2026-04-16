@@ -19,29 +19,29 @@ navigation:
 
 ## 斬首アップグレード I
 
-頭を1つ落とします。
+頭を1つドロップ
 
 <RecipeFor id="copper_decapitate_upgrade" />
 
 ## 斬首アップグレード II
-頭を2つ落とします。
+頭を2つドロップ
 
 <RecipeFor id="iron_decapitate_upgrade" />
 
 ## 斬首アップグレード III
 
-頭を3つ落とします。
+頭を3つドロップ
 
 <RecipeFor id="gold_decapitate_upgrade" />
 
 ## 斬首アップグレードIV
 
-頭を4つ落とします。
+頭を4つドロップ
 
 <RecipeFor id="diamond_decapitate_upgrade" />
 
 ## 斬首アップグレード V
 
-頭を5つ落とします。
+頭を5つドロップ
 
 <RecipeFor id="netherite_decapitate_upgrade" />

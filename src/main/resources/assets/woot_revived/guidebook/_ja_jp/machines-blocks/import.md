@@ -1,14 +1,14 @@
 ---
 navigation:
     parent: machines-blocks/machines-blocks-index.md
-    title: "原材料搬入口"
+    title: "原材料搬入機"
     icon: "woot_revived:import"
 ---
-# 原材料搬入口
+# 原材料搬入機
 
 <BlockImage id="import" scale="5" p:attached="true" />
 
-<ItemImage id="import" scale="0.5"/>原材料搬入口は、モブをスポーンさせるために必要なアイテムや液体を搬入できます。
+<ItemImage id="import" scale="0.5"/>原材料搬入機は、ファクトリーにモブをスポーンさせるために必要なアイテムや液体を搬入できます。
 
 アイテムを入れるチェスト、液体を入れるタンクを設置するか、パイプを使用することも可能です。
 
