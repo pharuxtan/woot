@@ -19,28 +19,28 @@ navigation:
 
 ## 並列化アップグレード I
 
-一度のシミュレーションで2体のモブを倒します。
+一度のシミュレーションで2体のモブを倒す
 
 <RecipeFor id="copper_mass_upgrade" />
 
 ## 並列化アップグレード II
-一度のシミュレーションで4体のモブを倒します。
+一度のシミュレーションで4体のモブを倒す
 
 <RecipeFor id="iron_mass_upgrade" />
 
 ## 並列化アップグレード III
 
-一度のシミュレーションで6体のモブを倒します。
+一度のシミュレーションで6体のモブを倒す
 
 <RecipeFor id="gold_mass_upgrade" />
 
 ## 並列化アップグレード IV
 
-一度のシミュレーションで8体のモブを倒します。
+一度のシミュレーションで8体のモブを倒す
 
 <RecipeFor id="diamond_mass_upgrade" />
 
 ## 並列化アップグレード V
-一度のシミュレーションで10体のモブを倒します。
+一度のシミュレーションで10体のモブを倒す
 
 <RecipeFor id="netherite_mass_upgrade" />
