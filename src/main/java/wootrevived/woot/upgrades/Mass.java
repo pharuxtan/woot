@@ -48,7 +48,9 @@ public class Mass extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     public void modifyDrops(WootDropsProperties properties, MutableDataComponentHolder dataComponentHolder) {
-        if(!UpgradesConfig.MASS_REROLL_LOOT.get()) {
+        if(!UpgradesConfig.MASS_REROLL_LOOT.get() && !properties.getSpawnContextData().contains("woot_revived_mass_upgrade_applied")){
+            properties.getSpawnContextData().putBoolean("woot_revived_mass_upgrade_applied", true);
+
             int multiplier = 2 * getVariant(dataComponentHolder).level();
 
             for(ItemStack stack : properties.getItemDrops())

@@ -2,6 +2,7 @@ package wootrevived.api.interfaces;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -11,11 +12,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
+import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -67,4 +71,10 @@ public interface WootDropsProperties {
 
     @ApiStatus.AvailableSince("1.1.4")
     @NonNull BlockPos getHeartPos();
+
+    @ApiStatus.AvailableSince("21.11.1.4")
+    @NotNull CompoundTag getSpawnContextData();
+
+    @ApiStatus.AvailableSince("21.11.1.4")
+    @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades();
 }

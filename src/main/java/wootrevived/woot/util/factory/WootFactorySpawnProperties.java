@@ -13,12 +13,15 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootFactoryMob;
+import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.drops.simulator.DropSimulator;
 import wootrevived.woot.util.helper.SerializeEntityValueHelper;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
 public class WootFactorySpawnProperties implements WootSpawnProperties {
@@ -35,13 +38,16 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     private boolean isInFire = false;
     private boolean doSimulateChargedCreeper = false;
     private ResourceKey<Level> dimension = Level.OVERWORLD;
+    private final CompoundTag spawnContextData = new CompoundTag();
+    private Collection<? extends WootUpgradeItem<?>> upgrades;
 
-    public WootFactorySpawnProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, ServerLevel heartLevel, BlockPos heartPos) {
+    public WootFactorySpawnProperties(Tier factoryTier, WootFactoryMob<?> factoryMob, CompoundTag factoryMobTag, ServerLevel heartLevel, BlockPos heartPos, Collection<? extends WootUpgradeItem<?>> upgrades) {
         this.factoryTier = factoryTier;
         this.factoryMob = factoryMob;
         this.factoryMobTag = factoryMobTag;
         this.heartLevel = heartLevel;
         this.heartPos = heartPos;
+        this.upgrades = upgrades;
     }
 
     @Override
@@ -162,5 +168,15 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     @Override
     public BlockPos getHeartPos() {
         return heartPos;
+    }
+
+    @Override
+    public @NotNull CompoundTag getSpawnContextData() {
+        return spawnContextData;
+    }
+
+    @Override
+    public @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
+        return upgrades;
     }
 }
