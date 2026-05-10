@@ -13,12 +13,14 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
+import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.drops.simulator.DropSimulator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class WootFactoryDropsProperties implements WootDropsProperties {
@@ -131,5 +133,15 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     @Override
     public @NotNull BlockPos getHeartPos() {
         return wootSpawnProperties.getHeartPos();
+    }
+
+    @Override
+    public @NotNull CompoundTag getSpawnContextData() {
+        return wootSpawnProperties.getSpawnContextData();
+    }
+
+    @Override
+    public @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
+        return wootSpawnProperties.getUpgrades();
     }
 }
