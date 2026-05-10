@@ -66,6 +66,10 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         return upgradeItem == null ? "" : UpgradeItemsRegistry.getNameFromItem(upgradeItem);
     }
 
+    public WootUpgradeItem<?> getUpgradeItem() {
+        return upgradeItem;
+    }
+
     public ItemStack getUpgradeItemStack() {
         return upgradeStack;
     }

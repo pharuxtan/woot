@@ -25,6 +25,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
+import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
@@ -42,9 +43,7 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.WootFactoryMobsRegistry;
 import wootrevived.woot.util.factory.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuProvider {
@@ -248,11 +247,17 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
         WootFactoryMob<?> mob = fakeSpawner.getMob();
         CompoundTag mobTag = fakeSpawner.getMobTag();
 
+        Collection<? extends WootUpgradeItem<?>> upgradesList = Arrays.stream(upgrades)
+                .filter(Objects::nonNull)
+                .map(FactoryUpgradeBlockEntity::getUpgradeItem)
+                .filter(Objects::nonNull)
+                .toList();
+
         List<ItemStack> unconcatItems = new ArrayList<>();
         List<FluidStack> unconcatFluids = new ArrayList<>();
 
         for (int i = 0; i < fakeSpawner.getNumberOfSimulations(); i++) {
-            WootSpawnProperties spawnProperties = new WootFactorySpawnProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos());
+            WootSpawnProperties spawnProperties = new WootFactorySpawnProperties(tier, mob, mobTag, (ServerLevel) level, getBlockPos(), upgradesList);
 
             for(FactoryUpgradeBlockEntity upgradeBlockEntity : upgrades){
                 if(upgradeBlockEntity != null)
