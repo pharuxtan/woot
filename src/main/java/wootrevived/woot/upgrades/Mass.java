@@ -20,6 +20,7 @@ import wootrevived.woot.Woot;
 import wootrevived.woot.config.UpgradesConfig;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 import static wootrevived.woot.util.render.WootStyles.DESCRIPTION_STYLE;
@@ -37,7 +38,9 @@ public class Mass extends WootUpgradeItem<UpgradeDefaultVariant> {
 
     @Override
     public void modifyDrops(@NotNull WootDropsProperties properties, @NotNull CompoundTag itemTag) {
-        if(!UpgradesConfig.MASS_REROLL_LOOT.get()){
+        if(!UpgradesConfig.MASS_REROLL_LOOT.get() && !properties.getSpawnContextData().contains("woot_revived_mass_upgrade_applied")){
+            properties.getSpawnContextData().putBoolean("woot_revived_mass_upgrade_applied", true);
+
             int multiplier = 2 * getVariant(itemTag).level();
 
             for(ItemStack stack : properties.getItemDrops())
